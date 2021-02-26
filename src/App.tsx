@@ -1,23 +1,33 @@
 import React from 'react';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header>
-        <p>
-          <span>Haemato-</span><span>Oncology</span> <span>Rota</span> <span>Shift</span> <span>Evaluator</span>
-        </p>
-      </header>
-      <ControlPanel/>
-      <InstructionPanel/>
-      <footer>
-        <p>
-          Version {process.env.REACT_APP_VERSION}
-        </p>
-      </footer>
-    </div>
-  );
+type AppState = {
+  hasFinished: boolean;
+};
+
+class App extends React.Component<{}, AppState> {
+  state: AppState = {
+    hasFinished: false,
+  }
+
+  render() {
+    return (
+      <div className="App">
+        <header>
+          <p>
+            <span>Haemato-</span><span>Oncology</span> <span>Rota</span> <span>Shift</span> <span>Evaluator</span>
+          </p>
+        </header>
+        <ControlPanel/>
+        <InstructionPanel hasFinished={this.state.hasFinished}/>
+        <footer>
+          <p>
+            Version {process.env.REACT_APP_VERSION}
+          </p>
+        </footer>
+      </div>
+    );
+  }
 }
 
 function ControlPanel() {
@@ -53,28 +63,42 @@ function HorseAnimation() {
   );
 }
 
-function InstructionPanel() {
+function InstructionPanel(props: { hasFinished: boolean }) {
   return (
     <div className="Panel">
       <h2>Instructions</h2>
-      <ul>
-        <li>
-          <span>Start by clicking the "Choose file" button above. A file selection window will open.</span>
-        </li>
-        <li>
-        <span>Browse to the folder containing the shift rota file (e.g. "Shifts.xlsx") and select that file. Click
-        "Open". The file selection window will close, and you will see the name of the selected file next to the
-        "Choose file" button.</span>
-        </li>
-        <li>
-        <span>Now click the "Enter sheet name" input field, and enter the name of the sheet to be planned, e.g.
-        "25-01-2021".</span>
-        </li>
-        <li>
-        <span>Click the "Upload file" button. Wait for about 5 seconds while HORSE plans the rota for the sheet
-        you chose.</span>
-        </li>
-      </ul>
+      {!props.hasFinished ? (
+        <ul>
+          <li>
+            <span>Start by clicking the "Choose file" button above. A file selection window will open.</span>
+          </li>
+          <li>
+            <span>Browse to the folder containing the shift rota file (e.g. "Shifts.xlsx") and select that file. Click
+            "Open". The file selection window will close, and you will see the name of the selected file next to the
+            "Choose file" button.</span>
+          </li>
+          <li>
+            <span>Now click the "Enter sheet name" input field, and enter the name of the sheet to be planned, e.g.
+            "25-01-2021".</span>
+          </li>
+          <li>
+            <span>Click the "Upload file" button. Wait for about 5 seconds while HORSE plans the rota for the sheet
+            you chose.</span>
+          </li>
+        </ul>
+      ) : (
+        <ul>
+          <li>
+            <span>When the "Save As" window opens, click "Save". The downloaded file is saved the file under the name
+            of the uploaded file with a "(1)" suffix, e.g. "Shifts (1).xlsx".</span>
+          </li>
+          <li>
+            <span>Finally, open the downloaded file and check that the rota has been planned as desired. If all is well,
+            save the downloaded file so that it overwrites the original file, and then delete the file with the "(1)"
+            suffix.</span>
+          </li>
+        </ul>
+      )}
     </div>
   );
 }
