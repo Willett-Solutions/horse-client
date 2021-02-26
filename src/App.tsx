@@ -48,16 +48,24 @@ class ControlPanel extends React.Component<{}, ControlPanelState> {
   render() {
     return (
       <div className="Panel ControlPanel">
-        {(this.state.phase !== Phase.FINISHED) ? <UploadForm/> : <DownloadNotice/>}
+        {(this.state.phase !== Phase.FINISHED)
+          ? <UploadForm onUpload={() => this.setState({phase: Phase.SOLVING})}/>
+          : <DownloadNotice/>}
         <HorseAnimation phase={this.state.phase}/>
       </div>
     );
   }
 }
 
-function UploadForm() {
+function UploadForm(props: { onUpload: () => void }) {
+
+  function handleSubmit(event: React.FormEvent) {
+    event.preventDefault();
+    props.onUpload();
+  }
+
   return (
-    <form className="UploadForm">
+    <form onSubmit={event => handleSubmit(event)}>
       <label>
         File containing rota:
         <input type="file"/>
