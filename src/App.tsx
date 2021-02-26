@@ -13,7 +13,7 @@ function App() {
       <InstructionPanel/>
       <footer>
         <p>
-          Version 0.0.0
+          Version {process.env.REACT_APP_VERSION}
         </p>
       </footer>
     </div>
