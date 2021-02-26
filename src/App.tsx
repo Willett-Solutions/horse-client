@@ -38,7 +38,7 @@ function UploadForm() {
       </label>
       <label>
         Sheet to be planned:
-        <input type="text"/>
+        <input type="text" placeholder="Enter sheet name"/>
       </label>
       <button type="submit">
         Upload file

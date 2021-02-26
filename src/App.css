@@ -51,6 +51,11 @@ input[type=text] {
   height: 2.25rem;
 }
 
+input:focus {
+  border-color: dodgerblue;
+  outline: 0 none;
+}
+
 button {
   border: transparent;
   border-radius: 0.25rem;
@@ -68,6 +73,7 @@ img {
 
 ul {
   list-style-image: url(./horseshoe.png);
+  line-height: 1.5;
 }
 
 .App {
