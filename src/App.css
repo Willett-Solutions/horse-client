@@ -66,6 +66,10 @@ img {
   object-fit: contain;
 }
 
+ul {
+  list-style-image: url(./horseshoe.png);
+}
+
 .App {
   max-width: 800px;
   margin: auto;
