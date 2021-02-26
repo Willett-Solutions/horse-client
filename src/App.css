@@ -62,6 +62,10 @@ button {
   font-family: inherit;
 }
 
+img {
+  object-fit: contain;
+}
+
 .App {
   max-width: 800px;
   margin: auto;
