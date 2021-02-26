@@ -30,13 +30,29 @@ class App extends React.Component<{}, AppState> {
   }
 }
 
-function ControlPanel() {
-  return (
-    <div className="Panel ControlPanel">
-      <UploadForm/>
-      <HorseAnimation/>
-    </div>
-  );
+enum Phase {
+  INITIAL,
+  SOLVING,
+  FINISHED,
+}
+
+type ControlPanelState = {
+  phase: Phase,
+}
+
+class ControlPanel extends React.Component<{}, ControlPanelState> {
+  state: ControlPanelState = {
+    phase: Phase.INITIAL,
+  }
+
+  render() {
+    return (
+      <div className="Panel ControlPanel">
+        <UploadForm/>
+        <HorseAnimation phase={this.state.phase}/>
+      </div>
+    );
+  }
 }
 
 function UploadForm() {
@@ -57,10 +73,15 @@ function UploadForm() {
   );
 }
 
-function HorseAnimation() {
-  return (
-    <img src="horse-start.gif" alt="Horse ready and waiting"/>
-  );
+function HorseAnimation(props: { phase: Phase }) {
+  switch (props.phase) {
+    case Phase.INITIAL:
+      return <img src="horse-start.gif" alt="Horse ready and waiting"/>
+    case Phase.SOLVING:
+      return <img src="horse-animation.gif" alt="Horse working hard"/>
+    case Phase.FINISHED:
+      return <img src="horse-end.gif" alt="Horse all finished"/>
+  }
 }
 
 function InstructionPanel(props: { hasFinished: boolean }) {
