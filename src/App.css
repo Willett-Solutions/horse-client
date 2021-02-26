@@ -1,6 +1,7 @@
 .App {
   max-width: 800px;
   margin: auto;
+  padding: 1rem;
 }
 
 .App-header {
@@ -16,6 +17,13 @@
 .App-header span::first-letter {
   color: blue;
   font-style: italic;
+}
+
+.App-panel {
+  margin: 1rem 0;
+  border: 1px solid lightgray;
+  border-radius: 0.25rem;
+  padding: 1rem;
 }
 
 .App-footer {

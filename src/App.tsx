@@ -9,11 +9,29 @@ function App() {
           <span>Haemato-</span><span>Oncology</span> <span>Rota</span> <span>Shift</span> <span>Evaluator</span>
         </p>
       </header>
+      <ControlPanel/>
+      <InstructionPanel/>
       <footer className="App-footer">
         <p>
           Version 0.0.0
         </p>
       </footer>
+    </div>
+  );
+}
+
+function ControlPanel() {
+  return (
+    <div className="App-panel">
+      <p>Dummy</p>
+    </div>
+  );
+}
+
+function InstructionPanel() {
+  return (
+    <div className="App-panel">
+      <p>Dummy</p>
     </div>
   );
 }
