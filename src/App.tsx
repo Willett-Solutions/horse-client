@@ -46,18 +46,21 @@ class ControlPanel extends React.Component<{}, ControlPanelState> {
   }
 
   render() {
+    const {phase} = this.state;
     return (
       <div className="Panel ControlPanel">
-        {(this.state.phase !== Phase.FINISHED)
-          ? <UploadForm onUpload={() => this.setState({phase: Phase.SOLVING})}/>
+        {(phase !== Phase.FINISHED)
+          ? <UploadForm
+            onUpload={() => this.setState({phase: Phase.SOLVING})}
+            disabled={phase !== Phase.INITIAL}/>
           : <DownloadNotice/>}
-        <HorseAnimation phase={this.state.phase}/>
+        <HorseAnimation phase={phase}/>
       </div>
     );
   }
 }
 
-function UploadForm(props: { onUpload: () => void }) {
+function UploadForm(props: { onUpload: () => void, disabled: boolean }) {
 
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
@@ -66,17 +69,19 @@ function UploadForm(props: { onUpload: () => void }) {
 
   return (
     <form onSubmit={event => handleSubmit(event)}>
-      <label>
-        File containing rota:
-        <input type="file"/>
-      </label>
-      <label>
-        Sheet to be planned:
-        <input type="text" placeholder="Enter sheet name"/>
-      </label>
-      <button type="submit">
-        Upload file
-      </button>
+      <fieldset disabled={props.disabled}>
+        <label>
+          File containing rota:
+          <input type="file"/>
+        </label>
+        <label>
+          Sheet to be planned:
+          <input type="text" placeholder="Enter sheet name"/>
+        </label>
+        <button type="submit">
+          Upload file
+        </button>
+      </fieldset>
     </form>
   );
 }
