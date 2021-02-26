@@ -76,6 +76,10 @@ ul {
   line-height: 1.5;
 }
 
+p {
+  margin-top: 0;
+}
+
 .App {
   max-width: 800px;
   margin: auto;
