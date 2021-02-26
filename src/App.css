@@ -19,13 +19,21 @@
   font-style: italic;
 }
 
-.App-panel {
+.App-footer {
+  text-align: right;
+}
+
+.Panel {
   margin: 1rem 0;
   border: 1px solid lightgray;
   border-radius: 0.25rem;
   padding: 1rem;
 }
 
-.App-footer {
-  text-align: right;
+.ControlPanel {
+  display: flex;
+}
+
+.UploadForm {
+  flex: 1;
 }

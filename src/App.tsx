@@ -22,16 +22,31 @@ function App() {
 
 function ControlPanel() {
   return (
-    <div className="App-panel">
-      <p>Dummy</p>
+    <div className="Panel ControlPanel">
+      <UploadForm/>
+      <HorseAnimation/>
     </div>
+  );
+}
+
+function UploadForm() {
+  return (
+    <form className="UploadForm">
+      <input type="file"/>
+    </form>
+  );
+}
+
+function HorseAnimation() {
+  return (
+    <img src="horse-start.gif" alt="Horse ready and waiting"/>
   );
 }
 
 function InstructionPanel() {
   return (
-    <div className="App-panel">
-      <p>Dummy</p>
+    <div className="Panel">
+      <p>Instruction Panel</p>
     </div>
   );
 }
