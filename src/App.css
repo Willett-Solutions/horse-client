@@ -1,8 +1,10 @@
 .App {
-  text-align: center;
+  max-width: 800px;
+  margin: auto;
 }
 
 .App-header {
+  text-align: center;
   font-size: 2.5rem;
   font-weight: 500;
 }
@@ -14,4 +16,8 @@
 .App-header span::first-letter {
   color: blue;
   font-style: italic;
+}
+
+.App-footer {
+  text-align: right;
 }

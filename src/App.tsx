@@ -9,6 +9,11 @@ function App() {
           <span>Haemato-</span><span>Oncology</span> <span>Rota</span> <span>Shift</span> <span>Evaluator</span>
         </p>
       </header>
+      <footer className="App-footer">
+        <p>
+          Version 0.0.0
+        </p>
+      </footer>
     </div>
   );
 }
