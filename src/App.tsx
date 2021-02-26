@@ -32,7 +32,17 @@ function ControlPanel() {
 function UploadForm() {
   return (
     <form className="UploadForm">
-      <input type="file"/>
+      <label>
+        File containing rota:
+        <input type="file"/>
+      </label>
+      <label>
+        Sheet to be planned:
+        <input type="text"/>
+      </label>
+      <button type="submit">
+        Upload file
+      </button>
     </form>
   );
 }
