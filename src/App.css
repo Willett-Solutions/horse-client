@@ -1,26 +1,41 @@
-.App {
-  max-width: 800px;
-  margin: auto;
-  padding: 1rem;
-}
-
-.App-header {
+header {
   text-align: center;
   font-size: 2.5rem;
   font-weight: 500;
 }
 
-.App-header span {
+header span {
   display: inline-block;
 }
 
-.App-header span::first-letter {
+header span::first-letter {
   color: blue;
   font-style: italic;
 }
 
-.App-footer {
+footer {
   text-align: right;
+}
+
+input {
+  font-size: inherit;
+  font-family: inherit;
+}
+
+/* For Chrome */
+input[type=file]::-webkit-file-upload-button {
+  font-family: inherit;
+}
+
+/* For Firefox */
+input[type=file]::file-selector-button {
+  font-family: inherit;
+}
+
+.App {
+  max-width: 800px;
+  margin: auto;
+  padding: 1rem;
 }
 
 .Panel {

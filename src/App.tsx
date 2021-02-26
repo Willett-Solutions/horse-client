@@ -4,14 +4,14 @@ import './App.css';
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
+      <header>
         <p>
           <span>Haemato-</span><span>Oncology</span> <span>Rota</span> <span>Shift</span> <span>Evaluator</span>
         </p>
       </header>
       <ControlPanel/>
       <InstructionPanel/>
-      <footer className="App-footer">
+      <footer>
         <p>
           Version 0.0.0
         </p>
