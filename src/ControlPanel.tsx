@@ -58,30 +58,45 @@ class ControlPanel extends React.Component<ControlPanelProps, ControlPanelState>
   }
 }
 
-function UploadForm(props: { onUpload: () => void, disabled: boolean }) {
+type UploadFormProps = {
+  onUpload: () => void,
+  disabled: boolean,
+}
 
-  function handleSubmit(event: React.FormEvent) {
-    event.preventDefault();
-    props.onUpload();
+class UploadForm extends React.Component<UploadFormProps> {
+  private readonly fileInput: React.RefObject<HTMLInputElement>;
+
+  constructor(props: UploadFormProps) {
+    super(props);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.fileInput = React.createRef();
   }
 
-  return (
-    <form onSubmit={handleSubmit}>
-      <fieldset disabled={props.disabled}>
-        <label>
-          File containing rota:
-          <input type="file"/>
-        </label>
-        <label>
-          Sheet to be planned:
-          <input type="text" placeholder="Enter sheet name"/>
-        </label>
-        <button type="submit">
-          Upload file
-        </button>
-      </fieldset>
-    </form>
-  );
+  handleSubmit(event: React.FormEvent) {
+    event.preventDefault();
+    this.props.onUpload();
+    console.log(this.fileInput.current?.files?.[0]?.name);
+  }
+
+  render() {
+    return (
+      <form onSubmit={this.handleSubmit}>
+        <fieldset disabled={this.props.disabled}>
+          <label>
+            File containing rota:
+            <input type="file" ref={this.fileInput}/>
+          </label>
+          <label>
+            Sheet to be planned:
+            <input type="text" placeholder="Enter sheet name"/>
+          </label>
+          <button type="submit">
+            Upload file
+          </button>
+        </fieldset>
+      </form>
+    );
+  }
 }
 
 function DownloadNotice() {
