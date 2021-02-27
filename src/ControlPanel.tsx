@@ -22,10 +22,11 @@ class ControlPanel extends React.Component<ControlPanelProps, ControlPanelState>
     this.state = {
       hasStartedSolving: false,
     };
-    this.handleUpload = this.handleUpload.bind(this);
+    this.handleUploadFile = this.handleUploadFile.bind(this);
   }
 
-  handleUpload() {
+  handleUploadFile(file: File | undefined) {
+    console.log(file?.name);
     this.setState({hasStartedSolving: true});
     const rotaDoc = new Rota.Document();
     rotaDoc.load().then(() => {
@@ -49,7 +50,7 @@ class ControlPanel extends React.Component<ControlPanelProps, ControlPanelState>
       <div className="Panel ControlPanel">
         {(!this.props.hasFinished)
           ? <UploadForm
-            onUpload={this.handleUpload}
+            onUploadFile={this.handleUploadFile}
             disabled={this.state.hasStartedSolving}/>
           : <DownloadNotice/>}
         <HorseAnimation phase={phase}/>
@@ -59,7 +60,7 @@ class ControlPanel extends React.Component<ControlPanelProps, ControlPanelState>
 }
 
 type UploadFormProps = {
-  onUpload: () => void,
+  onUploadFile: (file: File | undefined) => void,
   disabled: boolean,
 }
 
@@ -74,8 +75,7 @@ class UploadForm extends React.Component<UploadFormProps> {
 
   handleSubmit(event: React.FormEvent) {
     event.preventDefault();
-    this.props.onUpload();
-    console.log(this.fileInput.current?.files?.[0]?.name);
+    this.props.onUploadFile(this.fileInput.current?.files?.[0]);
   }
 
   render() {
