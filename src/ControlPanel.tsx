@@ -11,8 +11,18 @@ type ControlPanelState = {
 }
 
 class ControlPanel extends React.Component<{}, ControlPanelState> {
-  state: ControlPanelState = {
-    phase: Phase.INITIAL,
+  constructor(props: {}) {
+    super(props);
+    this.state = {
+      phase: Phase.INITIAL,
+    };
+    this.handleUpload = this.handleUpload.bind(this);
+  }
+
+  handleUpload() {
+    this.setState({
+      phase: Phase.SOLVING,
+    });
   }
 
   render() {
@@ -21,7 +31,7 @@ class ControlPanel extends React.Component<{}, ControlPanelState> {
       <div className="Panel ControlPanel">
         {(phase !== Phase.FINISHED)
           ? <UploadForm
-            onUpload={() => this.setState({phase: Phase.SOLVING})}
+            onUpload={this.handleUpload}
             disabled={phase !== Phase.INITIAL}/>
           : <DownloadNotice/>}
         <HorseAnimation phase={phase}/>
