@@ -8,8 +8,11 @@ type AppState = {
 };
 
 class App extends React.Component<{}, AppState> {
-  state: AppState = {
-    hasFinished: false,
+  constructor(props: {}) {
+    super(props);
+    this.state = {
+      hasFinished: false,
+    }
   }
 
   render() {
@@ -20,7 +23,10 @@ class App extends React.Component<{}, AppState> {
             <span>Haemato-</span><span>Oncology</span> <span>Rota</span> <span>Shift</span> <span>Evaluator</span>
           </p>
         </header>
-        <ControlPanel/>
+        <ControlPanel
+          hasFinished={this.state.hasFinished}
+          onFinished={() => this.setState({hasFinished: true})}
+        />
         <InstructionPanel hasFinished={this.state.hasFinished}/>
         <footer>
           <p>

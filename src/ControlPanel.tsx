@@ -7,37 +7,50 @@ enum Phase {
   FINISHED,
 }
 
-type ControlPanelState = {
-  phase: Phase,
-}
+type ControlPanelProps = {
+  hasFinished: boolean,
+  onFinished: () => void,
+};
 
-class ControlPanel extends React.Component<{}, ControlPanelState> {
-  constructor(props: {}) {
+type ControlPanelState = {
+  hasStartedSolving: boolean,
+};
+
+class ControlPanel extends React.Component<ControlPanelProps, ControlPanelState> {
+  constructor(props: ControlPanelProps) {
     super(props);
     this.state = {
-      phase: Phase.INITIAL,
+      hasStartedSolving: false,
     };
     this.handleUpload = this.handleUpload.bind(this);
   }
 
   handleUpload() {
-    this.setState({phase: Phase.SOLVING});
+    this.setState({hasStartedSolving: true});
     const rotaDoc = new Rota.Document();
     rotaDoc.load().then(() => {
       rotaDoc.solve().then(() => {
-        this.setState({phase: Phase.FINISHED});
+        this.props.onFinished();
       });
     });
   }
 
   render() {
-    const {phase} = this.state;
+    let phase: Phase;
+    if (!this.state.hasStartedSolving) {
+      phase = Phase.INITIAL;
+    } else if (!this.props.hasFinished) {
+      phase = Phase.SOLVING;
+    } else {
+      phase = Phase.FINISHED;
+    }
+
     return (
       <div className="Panel ControlPanel">
-        {(phase !== Phase.FINISHED)
+        {(!this.props.hasFinished)
           ? <UploadForm
             onUpload={this.handleUpload}
-            disabled={phase !== Phase.INITIAL}/>
+            disabled={this.state.hasStartedSolving}/>
           : <DownloadNotice/>}
         <HorseAnimation phase={phase}/>
       </div>
