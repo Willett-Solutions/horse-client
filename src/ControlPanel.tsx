@@ -26,10 +26,10 @@ class ControlPanel extends React.Component<ControlPanelProps, ControlPanelState>
   }
 
   handleUploadFile(file: File | undefined) {
-    console.log(file?.name);
+    if (file === undefined) return;
     this.setState({hasStartedSolving: true});
     const rotaDoc = new Rota.Document();
-    rotaDoc.load().then(() => {
+    rotaDoc.load(file).then(() => {
       rotaDoc.solve().then(() => {
         this.props.onFinished();
       });
