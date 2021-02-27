@@ -68,7 +68,7 @@ function UploadForm(props: { onUpload: () => void, disabled: boolean }) {
   }
 
   return (
-    <form onSubmit={event => handleSubmit(event)}>
+    <form onSubmit={handleSubmit}>
       <fieldset disabled={props.disabled}>
         <label>
           File containing rota:
