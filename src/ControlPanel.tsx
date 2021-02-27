@@ -1,4 +1,5 @@
 import React from "react";
+import * as Rota from "./rota";
 
 enum Phase {
   INITIAL,
@@ -20,8 +21,12 @@ class ControlPanel extends React.Component<{}, ControlPanelState> {
   }
 
   handleUpload() {
-    this.setState({
-      phase: Phase.SOLVING,
+    this.setState({phase: Phase.SOLVING});
+    const rotaDoc = new Rota.Document();
+    rotaDoc.load().then(() => {
+      rotaDoc.solve().then(() => {
+        this.setState({phase: Phase.FINISHED});
+      });
     });
   }
 
