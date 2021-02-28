@@ -17,6 +17,8 @@ type ControlPanelState = {
 };
 
 class ControlPanel extends React.Component<ControlPanelProps, ControlPanelState> {
+  private solvedFile: File | null = null;
+
   constructor(props: ControlPanelProps) {
     super(props);
     this.state = {
@@ -30,7 +32,9 @@ class ControlPanel extends React.Component<ControlPanelProps, ControlPanelState>
     this.setState({hasStartedSolving: true});
     const rotaDoc = new Rota.Document();
     rotaDoc.load(file).then(() => {
-      rotaDoc.solve().then(() => {
+      rotaDoc.solve().then(file => {
+        console.log(file.name);
+        this.solvedFile = file;
         this.props.onFinished();
       });
     });
