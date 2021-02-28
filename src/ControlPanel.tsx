@@ -101,7 +101,7 @@ class UploadForm extends React.Component<UploadFormProps> {
           </label>
           <label>
             Sheet to be planned:
-            <input type="text" placeholder="Enter sheet name"/>
+            <select disabled />
           </label>
           <button type="submit">
             Upload file

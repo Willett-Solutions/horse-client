@@ -31,7 +31,7 @@ label {
   margin-bottom: 1rem;
 }
 
-input {
+input, select {
   box-sizing: border-box;
   display: block;
   width: 100%;
@@ -55,14 +55,14 @@ input[type=file]::file-selector-button {
   font-family: inherit;
 }
 
-input[type=text] {
-  padding: 0.375rem 0.75rem;
-  height: 2.25rem;
-}
-
 input:focus {
   border-color: dodgerblue;
   outline: 0 none;
+}
+
+select {
+  padding: 0.375rem 0.75rem;
+  height: 2.25rem;
 }
 
 button {
