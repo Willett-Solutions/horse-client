@@ -1,5 +1,4 @@
 import Excel from "exceljs";
-import assert from "assert";
 
 export class Document {
   private filename: string | null = null;
@@ -16,13 +15,11 @@ export class Document {
   }
 
   async solve(): Promise<File> {
-    assert(this.filename !== null);
-
     // Simulate wait for solving
     await new Promise(resolve => setTimeout(resolve, 5000));
 
     const buffer = await this.workbook.xlsx.writeBuffer();
-    return new File([buffer], this.filename, {
+    return new File([buffer], this.filename!, {
       type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     });
   }

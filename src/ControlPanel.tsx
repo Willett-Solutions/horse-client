@@ -1,4 +1,5 @@
 import React from "react";
+import FileSaver from "file-saver";
 import * as Rota from "./rota";
 
 enum Phase {
@@ -17,11 +18,14 @@ type ControlPanelState = {
 };
 
 class ControlPanel extends React.Component<ControlPanelProps, ControlPanelState> {
-  private _solvedFile: File | null = null;
+  private _downloadFile: File | null = null;
 
-  private set solvedFile(file: File) {
-    console.log(file.name);
-    this._solvedFile = file;
+  private get downloadFile() {
+    return this._downloadFile!;
+  }
+
+  private set downloadFile(file: File) {
+    this._downloadFile = file;
     this.props.onFinished();
   }
 
@@ -39,7 +43,7 @@ class ControlPanel extends React.Component<ControlPanelProps, ControlPanelState>
     const rotaDoc = new Rota.Document();
     rotaDoc.load(file).then(() => {
       rotaDoc.solve().then(file => {
-        this.solvedFile = file;
+        this.downloadFile = file;
       });
     });
   }
@@ -60,7 +64,8 @@ class ControlPanel extends React.Component<ControlPanelProps, ControlPanelState>
           ? <UploadForm
             onUploadFile={this.handleUploadFile}
             disabled={this.state.hasStartedSolving}/>
-          : <DownloadNotice/>}
+          : <DownloadNotice
+            onDownloadFile={() => FileSaver.saveAs(this.downloadFile)}/>}
         <HorseAnimation phase={phase}/>
       </div>
     );
@@ -107,13 +112,13 @@ class UploadForm extends React.Component<UploadFormProps> {
   }
 }
 
-function DownloadNotice() {
+function DownloadNotice(props: { onDownloadFile: () => void }) {
   return (
     <div>
       <p>All done! HORSE has successfully completed the staff rota for the specified week. If you are happy with
         the assignments listed in the table, click the "Download file" button to download the file containing the
         completed rota, then follow the instructions below.</p>
-      <button>Download file</button>
+      <button onClick={props.onDownloadFile}>Download file</button>
     </div>
   );
 }
