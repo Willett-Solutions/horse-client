@@ -18,8 +18,8 @@ class UploadForm extends React.Component<UploadFormProps> {
     this.handleFileInputChange = this.handleFileInputChange.bind(this);
   }
 
-  handleFileInputChange(event: React.FormEvent) {
-    const file = this.fileInput.current?.files?.[0];
+  handleFileInputChange(event: React.FormEvent<HTMLInputElement>) {
+    const file = event.currentTarget.files?.[0];
     if (file) {
       this.rotaDoc.load(file).then(sheetNames => console.log(sheetNames));
     }
