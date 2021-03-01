@@ -1,4 +1,5 @@
 import React from "react";
+import Select from "react-select";
 import * as Rota from "./rota";
 
 type UploadFormProps = {
@@ -40,7 +41,7 @@ class UploadForm extends React.Component<UploadFormProps> {
           </label>
           <label>
             Sheet to be planned:
-            <select disabled />
+            <Select />
           </label>
           <button type="submit">
             Upload file
