@@ -1,5 +1,6 @@
 import React from "react";
 import FileSaver from "file-saver";
+import UploadForm from "./UploadForm";
 import * as Rota from "./rota";
 
 enum Phase {
@@ -68,46 +69,6 @@ class ControlPanel extends React.Component<ControlPanelProps, ControlPanelState>
             onDownloadFile={() => FileSaver.saveAs(this.downloadFile)}/>}
         <HorseAnimation phase={phase}/>
       </div>
-    );
-  }
-}
-
-type UploadFormProps = {
-  onUploadFile: (file: File | undefined) => void,
-  disabled: boolean,
-}
-
-class UploadForm extends React.Component<UploadFormProps> {
-  private readonly fileInput: React.RefObject<HTMLInputElement>;
-
-  constructor(props: UploadFormProps) {
-    super(props);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.fileInput = React.createRef();
-  }
-
-  handleSubmit(event: React.FormEvent) {
-    event.preventDefault();
-    this.props.onUploadFile(this.fileInput.current?.files?.[0]);
-  }
-
-  render() {
-    return (
-      <form onSubmit={this.handleSubmit}>
-        <fieldset disabled={this.props.disabled}>
-          <label>
-            File containing rota:
-            <input type="file" ref={this.fileInput}/>
-          </label>
-          <label>
-            Sheet to be planned:
-            <select disabled />
-          </label>
-          <button type="submit">
-            Upload file
-          </button>
-        </fieldset>
-      </form>
     );
   }
 }
