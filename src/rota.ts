@@ -8,10 +8,11 @@ export class Document {
     this.workbook = new Excel.Workbook();
   }
 
-  async load(file: File) {
+  async load(file: File): Promise<string[]> {
     this.filename = file.name;
     const buffer = await file.arrayBuffer();
     await this.workbook.xlsx.load(buffer);
+    return this.workbook.worksheets.map(sheet => sheet.name);
   }
 
   async solve(): Promise<File> {

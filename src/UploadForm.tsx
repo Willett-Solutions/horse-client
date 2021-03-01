@@ -1,4 +1,5 @@
 import React from "react";
+import * as Rota from "./rota";
 
 type UploadFormProps = {
   onUploadFile: (file: File | undefined) => void,
@@ -7,11 +8,21 @@ type UploadFormProps = {
 
 class UploadForm extends React.Component<UploadFormProps> {
   private readonly fileInput: React.RefObject<HTMLInputElement>;
+  private rotaDoc: Rota.Document;
 
   constructor(props: UploadFormProps) {
     super(props);
-    this.handleSubmit = this.handleSubmit.bind(this);
     this.fileInput = React.createRef();
+    this.rotaDoc = new Rota.Document();
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleFileInputChange = this.handleFileInputChange.bind(this);
+  }
+
+  handleFileInputChange(event: React.FormEvent) {
+    const file = this.fileInput.current?.files?.[0];
+    if (file) {
+      this.rotaDoc.load(file).then(sheetNames => console.log(sheetNames));
+    }
   }
 
   handleSubmit(event: React.FormEvent) {
@@ -25,7 +36,7 @@ class UploadForm extends React.Component<UploadFormProps> {
         <fieldset disabled={this.props.disabled}>
           <label>
             File containing rota:
-            <input type="file" ref={this.fileInput}/>
+            <input type="file" ref={this.fileInput} onChange={this.handleFileInputChange}/>
           </label>
           <label>
             Sheet to be planned:
