@@ -8,7 +8,7 @@ type UploadFormProps = {
 
 class UploadForm extends React.Component<UploadFormProps> {
   private readonly fileInput: React.RefObject<HTMLInputElement>;
-  private rotaDoc: Rota.Document;
+  private readonly rotaDoc: Rota.Document;
 
   constructor(props: UploadFormProps) {
     super(props);
