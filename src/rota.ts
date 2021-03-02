@@ -1,7 +1,7 @@
 import Excel from "exceljs";
 
 export class Document {
-  private filename: string | null = null;
+  private file: File | null = null;
   private workbook: Excel.Workbook;
 
   constructor() {
@@ -9,7 +9,7 @@ export class Document {
   }
 
   async load(file: File): Promise<string[]> {
-    this.filename = file.name;
+    this.file = file;
     const buffer = await file.arrayBuffer();
     await this.workbook.xlsx.load(buffer);
     return this.workbook.worksheets.map(sheet => sheet.name);
@@ -22,8 +22,6 @@ export class Document {
     await new Promise(resolve => setTimeout(resolve, 5000));
 
     const buffer = await this.workbook.xlsx.writeBuffer();
-    return new File([buffer], this.filename!, {
-      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    });
+    return new File([buffer], this.file!.name, {type: this.file!.type});
   }
 }
