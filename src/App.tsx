@@ -1,6 +1,8 @@
+import "bootstrap/dist/css/bootstrap.min.css";
 import React from "react";
 import ControlPanel from "./ControlPanel";
 import InstructionPanel from "./InstructionPanel";
+import Container from "react-bootstrap/Container";
 import "./App.css";
 
 type AppState = {
@@ -17,23 +19,27 @@ class App extends React.Component<{}, AppState> {
 
   render() {
     return (
-      <div className="App">
+      <Container fluid id="content">
         <header>
-          <p>
+          <h1>
             <span>Haemato-</span><span>Oncology</span> <span>Rota</span> <span>Shift</span> <span>Evaluator</span>
-          </p>
+          </h1>
         </header>
-        <ControlPanel
-          hasFinished={this.state.hasFinished}
-          onFinished={() => this.setState({hasFinished: true})}
-        />
-        <InstructionPanel hasFinished={this.state.hasFinished}/>
+        <main>
+          <section>
+            <ControlPanel
+              hasFinished={this.state.hasFinished}
+              onFinished={() => this.setState({hasFinished: true})}
+            />
+          </section>
+          <section>
+            <InstructionPanel hasFinished={this.state.hasFinished}/>
+          </section>
+        </main>
         <footer>
-          <p>
-            Version {process.env.REACT_APP_VERSION}
-          </p>
+          <p>Version {process.env.REACT_APP_VERSION}</p>
         </footer>
-      </div>
+      </Container>
     );
   }
 }

@@ -1,7 +1,6 @@
 header {
+  margin: 1rem 0;
   text-align: center;
-  font-size: 2.5rem;
-  font-weight: 500;
 }
 
 header span {
@@ -13,95 +12,18 @@ header span::first-letter {
   font-style: italic;
 }
 
-footer {
-  text-align: right;
-}
-
-form {
-  flex: 1;
-  padding-right: 1rem;
-}
-
-fieldset {
-  border: 0 none;
-}
-
-label {
-  display: block;
-  margin-bottom: 1rem;
-}
-
-input, select {
-  box-sizing: border-box;
-  display: block;
-  width: 100%;
-  margin-top: 0.5rem;
-  border: 1px solid lightgray;
-  border-radius: 0.25rem;
-  padding: 1px 2px;
-  font-size: inherit;
-  font-family: inherit;
-}
-
-/* For Chrome */
-input[type=file]::-webkit-file-upload-button {
-  height: 2rem;
-  font-family: inherit;
-}
-
-/* For Firefox */
-input[type=file]::file-selector-button {
-  height: 2rem;
-  font-family: inherit;
-}
-
-input:focus {
-  border-color: dodgerblue;
-  outline: 0 none;
-}
-
-select {
-  padding: 0.375rem 0.75rem;
-  height: 2.25rem;
-}
-
-button {
-  border: transparent;
-  border-radius: 0.25rem;
-  height: 2.25rem;
-  padding: 0.375rem 0.75rem;
-  background-color: dodgerblue;
-  color: white;
-  font-size: inherit;
-  font-family: inherit;
-}
-
-img {
-  object-fit: contain;
-}
-
-ul {
-  list-style-image: url(./horseshoe.png);
-  line-height: 1.5;
-}
-
-p {
-  margin-top: 0;
-}
-
-.App {
-  max-width: 800px;
-  margin: auto;
-  padding: 1rem;
-}
-
-.Panel {
+section {
   margin: 1rem 0;
   border: 1px solid lightgray;
   border-radius: 0.25rem;
   padding: 1rem;
 }
 
-.ControlPanel {
-  display: flex;
+footer {
+  text-align: right;
+}
+
+#content {
+  max-width: 800px;
+  min-width: 500px;
 }

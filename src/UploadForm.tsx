@@ -1,5 +1,7 @@
 import React from "react";
 import Select from "react-select";
+import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
 import * as Rota from "./rota";
 
 type UploadFormProps = {
@@ -53,25 +55,25 @@ class UploadForm extends React.Component<UploadFormProps, UploadFormState> {
 
   render() {
     return (
-      <form onSubmit={this.handleSubmit}>
+      <Form onSubmit={this.handleSubmit}>
         <fieldset disabled={this.props.disabled}>
-          <label>
-            File containing rota:
-            <input type="file" ref={this.fileInput} onChange={this.handleFileInputChange}/>
-          </label>
-          <label>
-            Sheet to be planned:
+          <Form.Group>
+            <Form.Label>File containing rota:</Form.Label>
+            <Form.File ref={this.fileInput} onChange={this.handleFileInputChange}/>
+          </Form.Group>
+          <Form.Group>
+            <Form.Label>Sheet to be planned:</Form.Label>
             <Select
               options={this.state.sheetOptions}
               value={this.state.selectedOption}
               onChange={this.handleSheetChange}
               placeholder="Select sheet"/>
-          </label>
-          <button type="submit">
+          </Form.Group>
+          <Button type="submit">
             Upload file
-          </button>
+          </Button>
         </fieldset>
-      </form>
+      </Form>
     );
   }
 }

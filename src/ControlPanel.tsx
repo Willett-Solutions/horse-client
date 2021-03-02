@@ -1,4 +1,8 @@
 import React from "react";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import Button from "react-bootstrap/Button";
 import FileSaver from "file-saver";
 import UploadForm from "./UploadForm";
 import * as Rota from "./rota";
@@ -60,15 +64,21 @@ class ControlPanel extends React.Component<ControlPanelProps, ControlPanelState>
     }
 
     return (
-      <div className="Panel ControlPanel">
-        {(!this.props.hasFinished)
-          ? <UploadForm
-            onUploadFile={this.handleUploadFile}
-            disabled={this.state.hasStartedSolving}/>
-          : <DownloadNotice
-            onDownloadFile={() => FileSaver.saveAs(this.downloadFile)}/>}
-        <HorseAnimation phase={phase}/>
-      </div>
+      <Container fluid className="p-0">
+        <Row noGutters>
+          <Col>
+            {(!this.props.hasFinished)
+              ? <UploadForm
+                onUploadFile={this.handleUploadFile}
+                disabled={this.state.hasStartedSolving}/>
+              : <DownloadNotice
+                onDownloadFile={() => FileSaver.saveAs(this.downloadFile)}/>}
+          </Col>
+          <Col xs="auto" className="pl-3">
+            <HorseAnimation phase={phase}/>
+          </Col>
+        </Row>
+      </Container>
     );
   }
 }
@@ -79,7 +89,7 @@ function DownloadNotice(props: { onDownloadFile: () => void }) {
       <p>All done! HORSE has successfully completed the staff rota for the specified week. If you are happy with
         the assignments listed in the table, click the "Download file" button to download the file containing the
         completed rota, then follow the instructions below.</p>
-      <button onClick={props.onDownloadFile}>Download file</button>
+      <Button onClick={props.onDownloadFile}>Download file</Button>
     </div>
   );
 }
