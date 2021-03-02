@@ -12,16 +12,14 @@ function InstructionPanel(props: { hasFinished: boolean }) {
           </li>
           <li>
             Browse to the folder containing the shift rota file (e.g. "Shifts.xlsx") and select that file. Click
-            "Open".
-            The file selection window will close, and you will see the name of the selected file next to the "Choose
-            file" button.
+            "Open". The file selection window will close, and you will see the name of the selected file next to the
+            "Choose file" button.
           </li>
           <li>
-            Now click the "Enter sheet name" input field, and enter the name of the sheet to be planned, e.g.
-            "25-01-2021".
+            Now click the "Select sheet" input field, and select the sheet to be planned, e.g. "25-01-2021".
           </li>
           <li>
-            Click the "Upload file" button. Wait for about 5 seconds while HORSE plans the rota for the sheet you
+            Click the "Upload file" button, and wait for about 5 seconds while HORSE plans the rota for the sheet you
             chose.
           </li>
         </ul>

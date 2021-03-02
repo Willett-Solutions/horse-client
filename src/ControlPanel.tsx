@@ -74,7 +74,7 @@ class ControlPanel extends React.Component<ControlPanelProps, ControlPanelState>
               : <DownloadNotice
                 onDownloadFile={() => FileSaver.saveAs(this.downloadFile)}/>}
           </Col>
-          <Col xs="auto" className="pl-3">
+          <Col xs="auto" className="pl-3 align-self-end">
             <HorseAnimation phase={phase}/>
           </Col>
         </Row>

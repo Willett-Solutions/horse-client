@@ -67,9 +67,10 @@ class UploadForm extends React.Component<UploadFormProps, UploadFormState> {
               options={this.state.sheetOptions}
               value={this.state.selectedOption}
               onChange={this.handleSheetChange}
+              isDisabled={this.state.sheetOptions.length === 0}
               placeholder="Select sheet"/>
           </Form.Group>
-          <Button type="submit">
+          <Button type="submit" disabled={this.state.selectedOption === null}>
             Upload file
           </Button>
         </fieldset>
