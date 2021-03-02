@@ -42,13 +42,6 @@ class ControlPanel extends React.Component<ControlPanelProps, ControlPanelState>
     this.handlePlanRotaSheet = this.handlePlanRotaSheet.bind(this);
   }
 
-  handlePlanRotaSheet(rotaDocument: Rota.Document) {
-    this.setState({hasStartedSolving: true});
-    rotaDocument.solve().then(file => {
-      this.solvedFile = file;
-    });
-  }
-
   render() {
     let phase: Phase;
     if (!this.state.hasStartedSolving) {
@@ -76,6 +69,13 @@ class ControlPanel extends React.Component<ControlPanelProps, ControlPanelState>
         </Row>
       </Container>
     );
+  }
+
+  private handlePlanRotaSheet(rotaDocument: Rota.Document) {
+    this.setState({hasStartedSolving: true});
+    rotaDocument.solve().then(file => {
+      this.solvedFile = file;
+    });
   }
 }
 

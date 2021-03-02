@@ -31,29 +31,6 @@ class SelectionForm extends React.Component<SelectionFormProps, SelectionFormSta
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleFileInputChange(event: React.FormEvent<HTMLInputElement>) {
-    const file = event.currentTarget.files?.[0];
-    if (file) {
-      this.rotaDocument.load(file).then(sheetNames =>
-        this.setState({
-          sheetOptions: sheetNames.map(sheetName =>
-            ({value: sheetName, label: sheetName})),
-          selectedOption: null,
-        })
-      );
-    }
-  }
-
-  handleSheetChange(option: { value: string, label: string } | null) {
-    this.setState({selectedOption: option})
-  }
-
-  handleSubmit(event: React.FormEvent) {
-    event.preventDefault();
-    this.rotaDocument.sheetName = this.state.selectedOption!.value;
-    this.props.onPlanRotaSheet(this.rotaDocument);
-  }
-
   render() {
     return (
       <Form onSubmit={this.handleSubmit}>
@@ -77,6 +54,29 @@ class SelectionForm extends React.Component<SelectionFormProps, SelectionFormSta
         </fieldset>
       </Form>
     );
+  }
+
+  private handleFileInputChange(event: React.FormEvent<HTMLInputElement>) {
+    const file = event.currentTarget.files?.[0];
+    if (file) {
+      this.rotaDocument.load(file).then(sheetNames =>
+        this.setState({
+          sheetOptions: sheetNames.map(sheetName =>
+            ({value: sheetName, label: sheetName})),
+          selectedOption: null,
+        })
+      );
+    }
+  }
+
+  private handleSheetChange(option: { value: string, label: string } | null) {
+    this.setState({selectedOption: option})
+  }
+
+  private handleSubmit(event: React.FormEvent) {
+    event.preventDefault();
+    this.rotaDocument.sheetName = this.state.selectedOption!.value;
+    this.props.onPlanRotaSheet(this.rotaDocument);
   }
 }
 
