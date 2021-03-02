@@ -39,17 +39,13 @@ class ControlPanel extends React.Component<ControlPanelProps, ControlPanelState>
     this.state = {
       hasStartedSolving: false,
     };
-    this.handleUploadFile = this.handleUploadFile.bind(this);
+    this.handlePlanRotaSheet = this.handlePlanRotaSheet.bind(this);
   }
 
-  handleUploadFile(file: File | undefined) {
-    if (file === undefined) return;
+  handlePlanRotaSheet(rotaDocument: Rota.Document) {
     this.setState({hasStartedSolving: true});
-    const rotaDoc = new Rota.Document();
-    rotaDoc.load(file).then(() => {
-      rotaDoc.solve().then(file => {
-        this.solvedFile = file;
-      });
+    rotaDocument.solve().then(file => {
+      this.solvedFile = file;
     });
   }
 
@@ -69,7 +65,7 @@ class ControlPanel extends React.Component<ControlPanelProps, ControlPanelState>
           <Col>
             {(!this.props.hasFinished)
               ? <SelectionForm
-                onPlanRotaSheet={this.handleUploadFile}
+                onPlanRotaSheet={this.handlePlanRotaSheet}
                 disabled={this.state.hasStartedSolving}/>
               : <SolvedNotice
                 onSaveRotaFile={() => FileSaver.saveAs(this.solvedFile)}/>}

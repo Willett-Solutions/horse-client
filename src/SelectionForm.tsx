@@ -5,7 +5,7 @@ import Button from "react-bootstrap/Button";
 import * as Rota from "./rota";
 
 type SelectionFormProps = {
-  onPlanRotaSheet: (file: File | undefined) => void,
+  onPlanRotaSheet: (rotaDocument: Rota.Document) => void,
   disabled: boolean,
 }
 
@@ -16,7 +16,7 @@ type SelectionFormState = {
 
 class SelectionForm extends React.Component<SelectionFormProps, SelectionFormState> {
   private readonly fileInput: React.RefObject<HTMLInputElement>;
-  private readonly rotaDoc: Rota.Document;
+  private readonly rotaDocument: Rota.Document;
 
   constructor(props: SelectionFormProps) {
     super(props);
@@ -25,7 +25,7 @@ class SelectionForm extends React.Component<SelectionFormProps, SelectionFormSta
       selectedOption: null,
     }
     this.fileInput = React.createRef();
-    this.rotaDoc = new Rota.Document();
+    this.rotaDocument = new Rota.Document();
     this.handleFileInputChange = this.handleFileInputChange.bind(this);
     this.handleSheetChange = this.handleSheetChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -34,7 +34,7 @@ class SelectionForm extends React.Component<SelectionFormProps, SelectionFormSta
   handleFileInputChange(event: React.FormEvent<HTMLInputElement>) {
     const file = event.currentTarget.files?.[0];
     if (file) {
-      this.rotaDoc.load(file).then(sheetNames =>
+      this.rotaDocument.load(file).then(sheetNames =>
         this.setState({
           sheetOptions: sheetNames.map(sheetName =>
             ({value: sheetName, label: sheetName})),
@@ -50,7 +50,7 @@ class SelectionForm extends React.Component<SelectionFormProps, SelectionFormSta
 
   handleSubmit(event: React.FormEvent) {
     event.preventDefault();
-    this.props.onPlanRotaSheet(this.fileInput.current?.files?.[0]);
+    this.props.onPlanRotaSheet(this.rotaDocument);
   }
 
   render() {
