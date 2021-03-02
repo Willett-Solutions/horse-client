@@ -4,8 +4,6 @@ export class Document {
   private filename: string | null = null;
   private workbook: Excel.Workbook;
 
-  sheetName: string | null = null;
-
   constructor() {
     this.workbook = new Excel.Workbook();
   }
@@ -17,8 +15,8 @@ export class Document {
     return this.workbook.worksheets.map(sheet => sheet.name);
   }
 
-  async solve(): Promise<File> {
-    console.log(this.sheetName);
+  async solve(sheetName: string): Promise<File> {
+    console.log(sheetName);
 
     // Simulate wait for solving
     await new Promise(resolve => setTimeout(resolve, 5000));

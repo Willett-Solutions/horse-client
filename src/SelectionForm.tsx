@@ -5,7 +5,7 @@ import Button from "react-bootstrap/Button";
 import * as Rota from "./rota";
 
 type SelectionFormProps = {
-  onPlanRotaSheet: (rotaDocument: Rota.Document) => void,
+  onPlanRotaSheet: (rotaDocument: Rota.Document, sheetName: string) => void,
   disabled: boolean,
 }
 
@@ -75,8 +75,7 @@ class SelectionForm extends React.Component<SelectionFormProps, SelectionFormSta
 
   private handleSubmit(event: React.FormEvent) {
     event.preventDefault();
-    this.rotaDocument.sheetName = this.state.selectedOption!.value;
-    this.props.onPlanRotaSheet(this.rotaDocument);
+    this.props.onPlanRotaSheet(this.rotaDocument, this.state.selectedOption!.value);
   }
 }
 

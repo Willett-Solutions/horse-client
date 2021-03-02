@@ -71,9 +71,9 @@ class ControlPanel extends React.Component<ControlPanelProps, ControlPanelState>
     );
   }
 
-  private handlePlanRotaSheet(rotaDocument: Rota.Document) {
+  private handlePlanRotaSheet(rotaDocument: Rota.Document, sheetName: string) {
     this.setState({hasStartedSolving: true});
-    rotaDocument.solve().then(file => {
+    rotaDocument.solve(sheetName).then(file => {
       this.solvedFile = file;
     });
   }
