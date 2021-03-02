@@ -4,7 +4,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import FileSaver from "file-saver";
-import UploadForm from "./UploadForm";
+import SelectionForm from "./SelectionForm";
 import * as Rota from "./rota";
 
 enum Phase {
@@ -23,14 +23,14 @@ type ControlPanelState = {
 };
 
 class ControlPanel extends React.Component<ControlPanelProps, ControlPanelState> {
-  private _downloadFile: File | null = null;
+  private _solvedFile: File | null = null;
 
-  private get downloadFile() {
-    return this._downloadFile!;
+  private get solvedFile() {
+    return this._solvedFile!;
   }
 
-  private set downloadFile(file: File) {
-    this._downloadFile = file;
+  private set solvedFile(file: File) {
+    this._solvedFile = file;
     this.props.onFinished();
   }
 
@@ -48,7 +48,7 @@ class ControlPanel extends React.Component<ControlPanelProps, ControlPanelState>
     const rotaDoc = new Rota.Document();
     rotaDoc.load(file).then(() => {
       rotaDoc.solve().then(file => {
-        this.downloadFile = file;
+        this.solvedFile = file;
       });
     });
   }
@@ -68,11 +68,11 @@ class ControlPanel extends React.Component<ControlPanelProps, ControlPanelState>
         <Row noGutters>
           <Col>
             {(!this.props.hasFinished)
-              ? <UploadForm
-                onUploadFile={this.handleUploadFile}
+              ? <SelectionForm
+                onPlanRotaSheet={this.handleUploadFile}
                 disabled={this.state.hasStartedSolving}/>
-              : <DownloadNotice
-                onDownloadFile={() => FileSaver.saveAs(this.downloadFile)}/>}
+              : <SolvedNotice
+                onSaveRotaFile={() => FileSaver.saveAs(this.solvedFile)}/>}
           </Col>
           <Col xs="auto" className="pl-3 align-self-end">
             <HorseAnimation phase={phase}/>
@@ -83,13 +83,13 @@ class ControlPanel extends React.Component<ControlPanelProps, ControlPanelState>
   }
 }
 
-function DownloadNotice(props: { onDownloadFile: () => void }) {
+function SolvedNotice(props: { onSaveRotaFile: () => void }) {
   return (
     <div>
-      <p>All done! HORSE has successfully completed the staff rota for the specified week. If you are happy with
-        the assignments listed in the table, click the "Download file" button to download the file containing the
+      <p>All done! HORSE has successfully completed the rota sheet for the specified week. If you are happy with
+        the assignments listed in the table, click the "Save rota file" button to save the file containing the
         completed rota, then follow the instructions below.</p>
-      <Button onClick={props.onDownloadFile}>Download file</Button>
+      <Button onClick={props.onSaveRotaFile}>Save rota file</Button>
     </div>
   );
 }

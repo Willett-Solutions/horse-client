@@ -4,21 +4,21 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import * as Rota from "./rota";
 
-type UploadFormProps = {
-  onUploadFile: (file: File | undefined) => void,
+type SelectionFormProps = {
+  onPlanRotaSheet: (file: File | undefined) => void,
   disabled: boolean,
 }
 
-type UploadFormState = {
+type SelectionFormState = {
   sheetOptions: { value: string, label: string }[],
   selectedOption: { value: string, label: string } | null,
 }
 
-class UploadForm extends React.Component<UploadFormProps, UploadFormState> {
+class SelectionForm extends React.Component<SelectionFormProps, SelectionFormState> {
   private readonly fileInput: React.RefObject<HTMLInputElement>;
   private readonly rotaDoc: Rota.Document;
 
-  constructor(props: UploadFormProps) {
+  constructor(props: SelectionFormProps) {
     super(props);
     this.state = {
       sheetOptions: [],
@@ -50,7 +50,7 @@ class UploadForm extends React.Component<UploadFormProps, UploadFormState> {
 
   handleSubmit(event: React.FormEvent) {
     event.preventDefault();
-    this.props.onUploadFile(this.fileInput.current?.files?.[0]);
+    this.props.onPlanRotaSheet(this.fileInput.current?.files?.[0]);
   }
 
   render() {
@@ -58,20 +58,20 @@ class UploadForm extends React.Component<UploadFormProps, UploadFormState> {
       <Form onSubmit={this.handleSubmit}>
         <fieldset disabled={this.props.disabled}>
           <Form.Group>
-            <Form.Label>File containing rota:</Form.Label>
+            <Form.Label>File containing rota sheet:</Form.Label>
             <Form.File ref={this.fileInput} onChange={this.handleFileInputChange}/>
           </Form.Group>
           <Form.Group>
-            <Form.Label>Sheet to be planned:</Form.Label>
+            <Form.Label>Rota sheet to be planned:</Form.Label>
             <Select
               options={this.state.sheetOptions}
               value={this.state.selectedOption}
               onChange={this.handleSheetChange}
               isDisabled={this.state.sheetOptions.length === 0}
-              placeholder="Select sheet"/>
+              placeholder="Select rota sheet"/>
           </Form.Group>
           <Button type="submit" disabled={this.state.selectedOption === null}>
-            Upload file
+            Plan rota sheet
           </Button>
         </fieldset>
       </Form>
@@ -79,4 +79,4 @@ class UploadForm extends React.Component<UploadFormProps, UploadFormState> {
   }
 }
 
-export default UploadForm;
+export default SelectionForm;

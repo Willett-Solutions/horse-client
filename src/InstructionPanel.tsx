@@ -16,24 +16,22 @@ function InstructionPanel(props: { hasFinished: boolean }) {
             "Choose file" button.
           </li>
           <li>
-            Now click the "Select sheet" input field, and select the sheet to be planned, e.g. "25-01-2021".
+            Now click the "Select rota sheet" input field, and select the sheet to be planned.
           </li>
           <li>
-            Click the "Upload file" button, and wait for about 5 seconds while HORSE plans the rota for the sheet you
-            chose.
+            Click the "Plan rota sheet" button, and wait for about 5 seconds while HORSE plans the rota for the sheet
+            you chose.
           </li>
         </ul>
       ) : (
         <ul className="horseshoe">
           <li>
-            When the "Save As" window opens, click "Save". The downloaded file is saved the file under the name of the
-            uploaded file with a "(1)" suffix, e.g. "Shifts (1).xlsx".
+            When the "Save As" window opens, click "Save". The rota file will then be saved with a "(1)" suffix, e.g.
+            "Shifts (1).xlsx".
           </li>
           <li>
-            Finally, open the downloaded file and check that the rota has been planned as desired. If all is well,
-            save
-            the downloaded file so that it overwrites the original file, and then delete the file with the "(1)"
-            suffix.
+            Finally, open the saved file and check that the rota has been planned as desired. If all is well, save the
+            new file so that it overwrites the original file, and then delete the file with the "(1)" suffix.
           </li>
         </ul>
       )}
