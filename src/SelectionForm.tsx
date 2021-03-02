@@ -50,6 +50,7 @@ class SelectionForm extends React.Component<SelectionFormProps, SelectionFormSta
 
   handleSubmit(event: React.FormEvent) {
     event.preventDefault();
+    this.rotaDocument.sheetName = this.state.selectedOption!.value;
     this.props.onPlanRotaSheet(this.rotaDocument);
   }
 
