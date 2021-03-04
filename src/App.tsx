@@ -1,7 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React from "react";
-import ControlPanel from "./ControlPanel";
-import InstructionPanel from "./InstructionPanel";
+import ControlPanel from "./components/ControlPanel";
+import InstructionPanel from "./components/InstructionPanel";
 import Container from "react-bootstrap/Container";
 import "./App.css";
 

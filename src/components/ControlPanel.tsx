@@ -5,7 +5,10 @@ import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import FileSaver from "file-saver";
 import SelectionForm from "./SelectionForm";
-import * as Rota from "./rota";
+import * as Rota from "../rota";
+import horse_start from "./horse-start.gif";
+import horse_animation from "./horse-animation.gif";
+import horse_end from "./horse-end.gif";
 
 enum Phase {
   INITIAL,
@@ -93,11 +96,11 @@ function SolvedNotice(props: { onSaveRotaFile: () => void }) {
 function HorseAnimation(props: { phase: Phase }) {
   switch (props.phase) {
     case Phase.INITIAL:
-      return <img src="horse-start.gif" alt="Horse ready and waiting"/>
+      return <img src={horse_start} alt="Horse ready and waiting"/>
     case Phase.SOLVING:
-      return <img src="horse-animation.gif" alt="Horse working hard"/>
+      return <img src={horse_animation} alt="Horse working hard"/>
     case Phase.FINISHED:
-      return <img src="horse-end.gif" alt="Horse all finished"/>
+      return <img src={horse_end} alt="Horse all finished"/>
   }
 }
 

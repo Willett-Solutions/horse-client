@@ -2,7 +2,7 @@ import React from "react";
 import Select from "react-select";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import * as Rota from "./rota";
+import * as Rota from "../rota";
 
 type SelectionFormProps = {
   onPlanRotaSheet: (rotaDocument: Rota.Document, sheetName: string) => void,
