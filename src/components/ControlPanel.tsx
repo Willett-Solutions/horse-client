@@ -5,7 +5,7 @@ import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import FileSaver from "file-saver";
 import SelectionForm from "./SelectionForm";
-import * as Rota from "./model/excel";
+import * as Rota from "./model/rota";
 import horse_start from "./horse-start.gif";
 import horse_animation from "./horse-animation.gif";
 import horse_end from "./horse-end.gif";
