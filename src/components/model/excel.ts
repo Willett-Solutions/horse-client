@@ -1,5 +1,5 @@
 import Excel, {CellValue} from "exceljs";
-import {Enumify} from "enumify";
+import {Shift, Team} from "./domain";
 
 export class Document {
   private file: File | null = null;
@@ -108,40 +108,5 @@ class Columns {
   private static findColumn(sheet: Excel.Worksheet, label: string): number {
     const values = sheet.getRow(1).values as CellValue[];
     return values.findIndex(value => value === label);
-  }
-}
-
-class Shift extends Enumify {
-  static MONDAY_AM = new Shift();
-  static MONDAY_PM = new Shift();
-  static TUESDAY_AM = new Shift();
-  static TUESDAY_PM = new Shift();
-  static WEDNESDAY_AM = new Shift();
-  static WEDNESDAY_PM = new Shift();
-  static THURSDAY_AM = new Shift();
-  static THURSDAY_PM = new Shift();
-  static FRIDAY_AM = new Shift();
-  static FRIDAY_PM = new Shift();
-  static _ = Shift.closeEnum();
-}
-
-class Team extends Enumify {
-  readonly name: string;
-
-  constructor(name: string) {
-    super();
-    this.name = name;
-  }
-
-  static PRINCIPALS = new Team("Principals");
-  static AML_MDS = new Team("AML/MDS");
-  static MPN_CML = new Team("MPN/CML");
-  static LYMPHOID = new Team("Lymphoid");
-  static _ = Team.closeEnum();
-
-  static exists(name: string): boolean {
-    // @ts-ignore
-    const teams: Team[] = [...Team];
-    return teams.find(team => team.name === name) !== undefined;
   }
 }
