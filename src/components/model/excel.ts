@@ -1,10 +1,9 @@
-import Excel, {CellValue} from "exceljs";
-import {Shift, Team} from "./domain";
+import Excel from "exceljs";
+import {Employee, Roster, Shift, Task, Team} from "./domain";
 
 export class Document {
   private file: File | null = null;
   private workbook: Excel.Workbook;
-  private table: Table | null = null;
 
   constructor() {
     this.workbook = new Excel.Workbook();
@@ -18,13 +17,21 @@ export class Document {
   }
 
   async solve(sheetName: string): Promise<File> {
-    this.table = new Table(this.workbook.getWorksheet(sheetName));
+    const roster = Document.getRoster(this.workbook.getWorksheet(sheetName));
+    console.log(roster);
 
     // Simulate wait for solving
     await new Promise(resolve => setTimeout(resolve, 5000));
 
     const buffer = await this.workbook.xlsx.writeBuffer();
     return new File([buffer], this.file!.name, {type: this.file!.type});
+  }
+
+  private static getRoster(sheet: Excel.Worksheet): Roster {
+    const table = new Table(sheet);
+    const taskList = table.createTaskList();
+    const employeeList = table.createEmployeeList();
+    return new Roster(employeeList, taskList);
   }
 }
 
@@ -41,6 +48,14 @@ class Table {
       }
     });
     console.log(this.recordList);
+  }
+
+  createEmployeeList(): Array<Employee> {
+    return [];
+  }
+
+  createTaskList(): Array<Task> {
+    return [];
   }
 }
 
@@ -127,7 +142,7 @@ class Columns {
   }
 
   private static findColumn(sheet: Excel.Worksheet, label: string): number {
-    const values = sheet.getRow(1).values as CellValue[];
+    const values = sheet.getRow(1).values as Excel.CellValue[];
     return values.findIndex(value => value === label);
   }
 }
