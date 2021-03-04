@@ -42,16 +42,14 @@ class Table {
     const columns = new Columns(sheet);
     sheet.eachRow(row => {
       const teamName = row.getCell(columns.team).text;
-
       if (Team.exists(teamName)) {
         this.recordList.push(new Record(columns, row));
       }
     });
-    console.log(this.recordList);
   }
 
   createEmployeeList(): Array<Employee> {
-    return [];
+    return this.recordList.map(record => record.createEmployee());
   }
 
   createTaskList(): Array<Task> {
@@ -60,13 +58,13 @@ class Table {
 }
 
 class Record {
-  private readonly teamField: Field;
-  private readonly nameField: Field;
-  private readonly shiftFields: Field[];
-  private readonly fishField: Field;
-  private readonly dsFields: Field[];
-  private readonly lateDSFields: Field[];
-  private readonly ssField: Field;
+  private readonly teamField: TextField;
+  private readonly nameField: TextField;
+  private readonly shiftFields: ShiftField[];
+  private readonly fishField: TextField;
+  private readonly dsFields: TextField[];
+  private readonly lateDSFields: TextField[];
+  private readonly ssField: TextField;
 
   constructor(columns: Columns, row: Excel.Row) {
     this.teamField = new TextField(row.getCell(columns.team));
@@ -95,10 +93,14 @@ class Record {
 
     this.ssField = new TextField(row.getCell(columns.ss));
   }
+
+  createEmployee(): Employee {
+    return new Employee(this.nameField.content);
+  }
 }
 
 abstract class Field {
-  private cell: Excel.Cell;
+  protected cell: Excel.Cell;
 
   constructor(cell: Excel.Cell) {
     this.cell = cell;
@@ -106,7 +108,9 @@ abstract class Field {
 }
 
 class TextField extends Field {
-
+  get content(): string {
+    return this.cell.text;
+  }
 }
 
 class ShiftField extends Field {

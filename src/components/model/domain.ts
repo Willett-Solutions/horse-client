@@ -1,8 +1,12 @@
 import {Enumify} from "enumify";
 
 export class Roster {
-  constructor(employeeList: Array<Employee>, taskList: Array<Task>) {
+  private readonly employeeList: Employee[];
+  private readonly taskList: Task[];
 
+  constructor(employeeList: Employee[], taskList: Task[]) {
+    this.employeeList = employeeList;
+    this.taskList = taskList;
   }
 }
 
@@ -11,7 +15,11 @@ export class Task {
 }
 
 export class Employee {
+  private readonly name: string;
 
+  constructor(name: string) {
+    this.name = name;
+  }
 }
 
 export class Team extends Enumify {
