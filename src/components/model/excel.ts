@@ -54,40 +54,48 @@ class Record {
   private readonly ssField: Field;
 
   constructor(columns: Columns, row: Excel.Row) {
-    this.teamField = new Field(row.getCell(columns.team));
-    this.nameField = new Field(row.getCell(columns.name));
+    this.teamField = new TextField(row.getCell(columns.team));
+    this.nameField = new TextField(row.getCell(columns.name));
 
     this.shiftFields = Array(Shift.enumValues.length);
     // @ts-ignore
     for (const shift of Shift) {
-      this.shiftFields[shift.enumOrdinal] = new Field(row.getCell(columns.shift(shift)));
+      this.shiftFields[shift.enumOrdinal] = new ShiftField(row.getCell(columns.shift(shift)));
     }
 
-    this.fishField = new Field(row.getCell(columns.fish));
+    this.fishField = new TextField(row.getCell(columns.fish));
 
     this.dsFields = Array(Shift.enumValues.length);
     // @ts-ignore
     for (const shift of Shift) {
-      this.dsFields[shift.enumOrdinal] = new Field(row.getCell(columns.ds(shift)));
+      this.dsFields[shift.enumOrdinal] = new TextField(row.getCell(columns.ds(shift)));
     }
 
     this.lateDSFields = Array(Shift.enumValues.length / 2);
     // @ts-ignore
     for (const shift of Shift) {
       if (shift.enumOrdinal % 2 === 0) continue;
-      this.lateDSFields[Math.trunc(shift.enumOrdinal / 2)] = new Field(row.getCell(columns.lateDS(shift)));
+      this.lateDSFields[Math.trunc(shift.enumOrdinal / 2)] = new TextField(row.getCell(columns.lateDS(shift)));
     }
 
-    this.ssField = new Field(row.getCell(columns.ss));
+    this.ssField = new TextField(row.getCell(columns.ss));
   }
 }
 
-class Field {
-  private content: string;
+abstract class Field {
+  private cell: Excel.Cell;
 
   constructor(cell: Excel.Cell) {
-    this.content = cell.text;
+    this.cell = cell;
   }
+}
+
+class TextField extends Field {
+
+}
+
+class ShiftField extends Field {
+
 }
 
 class Columns {
