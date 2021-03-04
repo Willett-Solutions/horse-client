@@ -17,10 +17,12 @@ export class Task {
 export class Employee {
   private readonly name: string;
   private readonly team: Team;
+  private readonly availability: Availability;
 
-  constructor(name: string, team: Team) {
+  constructor(name: string, team: Team, availability: Availability) {
     this.name = name;
     this.team = team;
+    this.availability = availability;
   }
 }
 
@@ -46,6 +48,41 @@ export class Team extends Enumify {
     // @ts-ignore
     const teams: Team[] = [...Team];
     return teams.find(team => team.name === name);
+  }
+}
+
+export class Availability {
+  entries: boolean[][];
+
+  constructor() {
+    this.entries = Array(Shift.enumValues.length);
+    // @ts-ignore
+    for (const shift of Shift) {
+      this.entries[shift.enumOrdinal] = Array(Duty.enumValues.length);
+      // @ts-ignore
+      for (const duty of Duty) {
+        this.entries[shift.enumOrdinal][duty.enumOrdinal] = false;
+      }
+    }
+  }
+}
+
+export class Duty extends Enumify {
+  private readonly tasksPerShift: number[];
+
+  constructor(tasksPerShift: number[]) {
+    super();
+    this.tasksPerShift = tasksPerShift;
+  }
+
+  static FISH = new Duty([1, 1, 1, 1, 2, 2, 1, 1, 1, 1]);
+  static DS = new Duty([1, 1, 1, 1, 1, 1, 1, 1, 1, 1]);
+  static LATE_DS = new Duty([0, 0, 0, 0, 0, 1, 0, 1, 0, 1]);
+  static SS = new Duty([1, 1, 1, 1, 1, 1, 1, 1, 1, 1]);
+  static _ = Duty.closeEnum();
+
+  getNumTasks(shift: Shift): number {
+    return this.tasksPerShift[shift.enumOrdinal];
   }
 }
 

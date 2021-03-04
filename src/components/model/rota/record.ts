@@ -1,5 +1,5 @@
 import Excel from "exceljs";
-import {Employee, Shift, Team} from "../domain";
+import {Availability, Duty, Employee, Shift, Team} from "../domain";
 import {TextField, ShiftField, AvailabilityField} from "./field";
 import {Columns} from "./columns";
 
@@ -42,7 +42,19 @@ export class Record {
   }
 
   createEmployee(): Employee {
+    const name: string = this.nameField.content;
     const team: Team = Team.fromName(this.teamField.content)!;
-    return new Employee(this.nameField.content, team);
+
+    const availability = new Availability();
+    // @ts-ignore
+    for (const shift of Shift) {
+      availability.entries[shift.enumOrdinal][Duty.FISH.enumOrdinal] = this.fishField.available;
+      availability.entries[shift.enumOrdinal][Duty.DS.enumOrdinal] = this.dsFields[shift.enumOrdinal].available;
+      availability.entries[shift.enumOrdinal][Duty.LATE_DS.enumOrdinal]
+        = this.lateDSFields[Math.trunc(shift.enumOrdinal / 2)].available;
+      availability.entries[shift.enumOrdinal][Duty.SS.enumOrdinal] = this.ssField.available;
+    }
+
+    return new Employee(name, team, availability);
   }
 }
