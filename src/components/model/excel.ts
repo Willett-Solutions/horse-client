@@ -47,16 +47,23 @@ class Table {
 class Record {
   private readonly teamField: Field;
   private readonly nameField: Field;
+  private readonly shiftFields: Field[];
   private readonly fishField: Field;
-  private readonly ssField: Field;
   private readonly dsFields: Field[];
   private readonly lateDSFields: Field[];
+  private readonly ssField: Field;
 
   constructor(columns: Columns, row: Excel.Row) {
     this.teamField = new Field(row.getCell(columns.team));
     this.nameField = new Field(row.getCell(columns.name));
+
+    this.shiftFields = Array(Shift.enumValues.length);
+    // @ts-ignore
+    for (const shift of Shift) {
+      this.shiftFields[shift.enumOrdinal] = new Field(row.getCell(columns.shift(shift)));
+    }
+
     this.fishField = new Field(row.getCell(columns.fish));
-    this.ssField = new Field(row.getCell(columns.ss));
 
     this.dsFields = Array(Shift.enumValues.length);
     // @ts-ignore
@@ -70,6 +77,8 @@ class Record {
       if (shift.enumOrdinal % 2 === 0) continue;
       this.lateDSFields[Math.trunc(shift.enumOrdinal / 2)] = new Field(row.getCell(columns.lateDS(shift)));
     }
+
+    this.ssField = new Field(row.getCell(columns.ss));
   }
 }
 
@@ -95,6 +104,10 @@ class Columns {
     this.ss = Columns.findColumn(sheet, "SS");
     this.firstDSColumn = Columns.findColumn(sheet, "DS");
     this.firstLateDSColumn = Columns.findColumn(sheet, "Late DS");
+  }
+
+  shift(shift: Shift): number {
+    return 2 + shift.enumOrdinal;
   }
 
   ds(shift: Shift): number {
