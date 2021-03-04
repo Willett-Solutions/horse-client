@@ -17,3 +17,9 @@ export class TextField extends Field {
 export class ShiftField extends Field {
 
 }
+
+export class AvailabilityField extends Field {
+  get available(): boolean {
+    return this.cell.text === "Y";
+  }
+}
