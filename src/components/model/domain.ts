@@ -16,9 +16,11 @@ export class Task {
 
 export class Employee {
   private readonly name: string;
+  private readonly team: Team;
 
-  constructor(name: string) {
+  constructor(name: string, team: Team) {
     this.name = name;
+    this.team = team;
   }
 }
 
@@ -37,9 +39,13 @@ export class Team extends Enumify {
   static _ = Team.closeEnum();
 
   static exists(name: string): boolean {
+    return Team.fromName(name) !== undefined
+  }
+
+  static fromName(name: string): Team | undefined{
     // @ts-ignore
     const teams: Team[] = [...Team];
-    return teams.find(team => team.name === name) !== undefined;
+    return teams.find(team => team.name === name);
   }
 }
 

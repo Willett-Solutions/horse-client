@@ -95,7 +95,8 @@ class Record {
   }
 
   createEmployee(): Employee {
-    return new Employee(this.nameField.content);
+    const team: Team = Team.fromName(this.teamField.content)!;
+    return new Employee(this.nameField.content, team);
   }
 }
 
