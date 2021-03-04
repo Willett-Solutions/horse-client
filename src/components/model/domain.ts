@@ -15,7 +15,7 @@ export class Task {
 }
 
 export class Employee {
-  private readonly name: string;
+  readonly name: string;
   private readonly team: Team;
   private readonly availability: Availability;
 

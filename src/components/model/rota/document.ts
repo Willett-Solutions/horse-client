@@ -30,8 +30,8 @@ export class Document {
 
   private static getRoster(sheet: Excel.Worksheet): Roster {
     const table = new Table(sheet);
-    const taskList = table.createTaskList();
     const employeeList = table.createEmployeeList();
+    const taskList = table.createTaskList(employeeList);
     return new Roster(employeeList, taskList);
   }
 }

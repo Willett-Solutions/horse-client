@@ -1,5 +1,5 @@
 import Excel from "exceljs";
-import {Availability, Duty, Employee, Shift, Team} from "../domain";
+import {Availability, Duty, Employee, Shift, Task, Team} from "../domain";
 import {TextField, ShiftField, AvailabilityField} from "./field";
 import {Columns} from "./columns";
 
@@ -41,6 +41,10 @@ export class Record {
     this.ssField = new AvailabilityField(row.getCell(columns.ss));
   }
 
+  get name() {
+    return this.nameField.content;
+  }
+
   createEmployee(): Employee {
     const name: string = this.nameField.content;
     const team: Team = Team.fromName(this.teamField.content)!;
@@ -56,5 +60,9 @@ export class Record {
     }
 
     return new Employee(name, team, availability);
+  }
+
+  createTaskList(employee: Employee): Task[] {
+    return [];
   }
 }

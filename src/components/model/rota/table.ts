@@ -16,11 +16,22 @@ export class Table {
     });
   }
 
-  createEmployeeList(): Array<Employee> {
+  createEmployeeList(): Employee[] {
     return this.recordList.map(record => record.createEmployee());
   }
 
-  createTaskList(): Array<Task> {
-    return [];
+  createTaskList(employeeList: Employee[]): Task[] {
+    const taskList: Task[] = [];
+    for (const employee of employeeList) {
+      const record = this.findRecord(employee.name);
+      if (record !== undefined) {
+        taskList.concat(record.createTaskList(employee));
+      }
+    }
+    return taskList;
+  }
+
+  private findRecord(name: string): Record | undefined {
+    return this.recordList.find(record => record.name === name);
   }
 }
