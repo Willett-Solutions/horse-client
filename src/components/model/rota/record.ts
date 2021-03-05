@@ -63,6 +63,17 @@ export class Record {
   }
 
   createTaskList(employee: Employee): Task[] {
-    return [];
+    const taskList: Task[] = [];
+    // @ts-ignore
+    for (const shift of Shift) {
+      this.getDuty(shift);
+    }
+    return taskList;
+  }
+
+  private getDuty(shift: Shift): Duty | null {
+    const colorCode = this.shiftFields[shift.enumOrdinal].colorCode;
+    console.log(colorCode);
+    return null;
   }
 }

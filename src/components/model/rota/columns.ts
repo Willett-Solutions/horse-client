@@ -18,7 +18,7 @@ export class Columns {
   }
 
   shift(shift: Shift): number {
-    return 2 + shift.enumOrdinal;
+    return 3 + shift.enumOrdinal;
   }
 
   ds(shift: Shift): number {
