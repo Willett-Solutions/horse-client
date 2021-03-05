@@ -11,7 +11,16 @@ export class Roster {
 }
 
 export class Task {
+  private readonly duty: Duty;
+  private readonly shift: Shift;
 
+  employee: Employee | null = null;
+  isPinned: boolean = false;
+
+  constructor(duty: Duty, shift: Shift) {
+    this.duty = duty;
+    this.shift = shift;
+  }
 }
 
 export class Employee {

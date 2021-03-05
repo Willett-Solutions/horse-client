@@ -1,6 +1,6 @@
 import Excel from "exceljs";
 import {Availability, Duty, Employee, Shift, Task, Team} from "../domain";
-import {TextField, ShiftField, AvailabilityField} from "./field";
+import {TextField, ShiftField, AvailabilityField, ColorCode} from "./field";
 import {Columns} from "./columns";
 
 export class Record {
@@ -66,14 +66,29 @@ export class Record {
     const taskList: Task[] = [];
     // @ts-ignore
     for (const shift of Shift) {
-      this.getDuty(shift);
+      const duty = this.getDuty(shift);
+      if (duty !== null) {
+        const task = new Task(duty, shift);
+        task.employee = employee;
+        task.isPinned = true;
+        taskList.push(task);
+      }
     }
     return taskList;
   }
 
   private getDuty(shift: Shift): Duty | null {
     const colorCode = this.shiftFields[shift.enumOrdinal].colorCode;
-    console.log(colorCode);
+    switch (colorCode) {
+      case ColorCode.DUTY_FISH:
+        return Duty.FISH
+      case ColorCode.DUTY_DS:
+        return Duty.DS
+      case ColorCode.DUTY_LATE_DS:
+        return Duty.LATE_DS
+      case ColorCode.DUTY_SS:
+        return Duty.SS
+    }
     return null;
   }
 }

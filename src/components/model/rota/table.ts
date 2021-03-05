@@ -21,14 +21,14 @@ export class Table {
   }
 
   createTaskList(employeeList: Employee[]): Task[] {
-    const taskList: Task[] = [];
+    const taskList: Task[][] = [];
     for (const employee of employeeList) {
       const record = this.findRecord(employee.name);
       if (record !== undefined) {
-        taskList.concat(record.createTaskList(employee));
+        taskList.push(record.createTaskList(employee));
       }
     }
-    return taskList;
+    return taskList.flat();
   }
 
   private findRecord(name: string): Record | undefined {
