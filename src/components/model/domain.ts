@@ -11,8 +11,8 @@ export class Roster {
 }
 
 export class Task {
-  private readonly duty: Duty;
-  private readonly shift: Shift;
+  readonly duty: Duty;
+  readonly shift: Shift;
 
   employee: Employee | null = null;
   isPinned: boolean = false;

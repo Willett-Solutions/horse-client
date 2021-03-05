@@ -1,5 +1,5 @@
 import Excel from "exceljs";
-import {Roster} from "../domain";
+import {Duty, Roster, Shift, Task} from "../domain";
 import {Table} from "./table";
 
 export class Document {
@@ -32,6 +32,21 @@ export class Document {
     const table = new Table(sheet);
     const employeeList = table.createEmployeeList();
     const taskList = table.createTaskList(employeeList);
+    this.addUnassignedTasks(taskList);
     return new Roster(employeeList, taskList);
+  }
+
+  private static addUnassignedTasks(taskList: Task[]) {
+    // @ts-ignore
+    for (const duty of Duty) {
+      // @ts-ignore
+      for (const shift of Shift) {
+        const tasksRequired: number = duty.getNumTasks(shift);
+        const tasksPresent = taskList.filter(task => task.duty === duty && task.shift === shift).length;
+        for (let i = 0; i < tasksRequired - tasksPresent; i++) {
+          taskList.push(new Task(duty, shift));
+        }
+      }
+    }
   }
 }
