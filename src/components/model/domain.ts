@@ -97,6 +97,10 @@ export class Duty extends Enumify {
   getNumTasks(shift: Shift): number {
     return this.tasksPerShift[shift.enumOrdinal];
   }
+
+  toJSON() {
+    return this.enumKey;
+  }
 }
 
 export class Shift extends Enumify {
@@ -111,4 +115,8 @@ export class Shift extends Enumify {
   static FRIDAY_AM = new Shift();
   static FRIDAY_PM = new Shift();
   static _ = Shift.closeEnum();
+
+  toJSON() {
+    return this.enumKey;
+  }
 }
