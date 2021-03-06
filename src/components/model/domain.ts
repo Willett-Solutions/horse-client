@@ -36,11 +36,11 @@ export class Employee {
 }
 
 export class Team extends Enumify {
-  readonly name: string;
+  readonly title: string;
 
-  constructor(name: string) {
+  constructor(title: string) {
     super();
-    this.name = name;
+    this.title = title;
   }
 
   static PRINCIPALS = new Team("Principals");
@@ -49,14 +49,18 @@ export class Team extends Enumify {
   static LYMPHOID = new Team("Lymphoid");
   static _ = Team.closeEnum();
 
-  static exists(name: string): boolean {
-    return Team.fromName(name) !== undefined
+  static exists(title: string): boolean {
+    return Team.fromTitle(title) !== undefined
   }
 
-  static fromName(name: string): Team | undefined{
+  static fromTitle(title: string): Team | undefined{
     // @ts-ignore
     const teams: Team[] = [...Team];
-    return teams.find(team => team.name === name);
+    return teams.find(team => team.title === title);
+  }
+
+  toJSON() {
+    return this.enumKey;
   }
 }
 

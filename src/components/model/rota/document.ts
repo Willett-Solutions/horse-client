@@ -18,21 +18,17 @@ export class Document {
   }
 
   async solve(sheetName: string): Promise<File> {
-    const roster = Document.getRoster(this.workbook.getWorksheet(sheetName));
-    console.log(roster);
-
+    const problem = Document.getRoster(this.workbook.getWorksheet(sheetName));
     const response = await fetch("http://localhost:8080/solve", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(roster),
+      body: JSON.stringify(problem),
     });
-    const body = await response.json()
-    console.log(body);
-
-    // Simulate wait for solving
-    // await new Promise(resolve => setTimeout(resolve, 5000));
+    const body = await response.json();
+    const solution = new Roster(body.employeeList, body.taskList);  // Ugly!
+    console.log(solution);
 
     const buffer = await this.workbook.xlsx.writeBuffer();
     return new File([buffer], this.file!.name, {type: this.file!.type});

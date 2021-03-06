@@ -47,7 +47,7 @@ export class Record {
 
   createEmployee(): Employee {
     const name: string = this.nameField.content;
-    const team: Team = Team.fromName(this.teamField.content)!;
+    const team: Team = Team.fromTitle(this.teamField.content)!;
 
     const availability = new Availability();
     // @ts-ignore
