@@ -2,7 +2,7 @@ import {Enumify} from "enumify";
 
 export class Roster {
   private readonly employeeList: Employee[];
-  private readonly taskList: Task[];
+  readonly taskList: Task[];
 
   constructor(employeeList: Employee[], taskList: Task[]) {
     this.employeeList = employeeList;

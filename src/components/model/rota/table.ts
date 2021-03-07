@@ -31,6 +31,11 @@ export class Table {
     return taskList.flat();
   }
 
+  enterTask(task: Task) {
+    const record = this.findRecord(task.employee!.name);
+    record?.enterTask(task);
+  }
+
   private findRecord(name: string): Record | undefined {
     return this.recordList.find(record => record.name === name);
   }

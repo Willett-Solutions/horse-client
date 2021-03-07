@@ -18,7 +18,8 @@ export class Document {
   }
 
   async solve(sheetName: string): Promise<File> {
-    const problem = Document.getRoster(this.workbook.getWorksheet(sheetName));
+    const table = new Table(this.workbook.getWorksheet(sheetName));
+    const problem = Document.getRoster(table);
     const response = await fetch("http://localhost:8080/solve", {
       method: "POST",
       headers: {
@@ -29,13 +30,13 @@ export class Document {
     const body = await response.json();
     const solution = new Roster(body.employeeList, body.taskList);  // Ugly!
     console.log(solution);
+    Document.setRoster(table, solution);
 
     const buffer = await this.workbook.xlsx.writeBuffer();
     return new File([buffer], this.file!.name, {type: this.file!.type});
   }
 
-  private static getRoster(sheet: Excel.Worksheet): Roster {
-    const table = new Table(sheet);
+  private static getRoster(table: Table): Roster {
     const employeeList = table.createEmployeeList();
     const taskList = table.createTaskList(employeeList);
     this.addUnassignedTasks(taskList);
@@ -54,5 +55,9 @@ export class Document {
         }
       }
     }
+  }
+
+  private static setRoster(table: Table, roster: Roster) {
+    roster.taskList.forEach(task => table.enterTask(task));
   }
 }

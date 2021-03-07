@@ -47,6 +47,15 @@ export class ShiftField extends Field {
     if (color === undefined) return undefined;
     return ColorCode.fromColor(color);
   }
+
+  set colorCode(value) {
+    const color = value!.color;
+    this.cell.fill = {
+      type: "pattern",
+      pattern: "solid",
+      fgColor: {argb: color},
+    }
+  }
 }
 
 export class AvailabilityField extends Field {
@@ -56,7 +65,7 @@ export class AvailabilityField extends Field {
 }
 
 export class ColorCode extends Enumify {
-  private readonly color: string;
+  readonly color: string;
 
   constructor(color: string) {
     super();

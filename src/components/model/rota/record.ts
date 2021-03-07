@@ -77,6 +77,24 @@ export class Record {
     return taskList;
   }
 
+  enterTask(task: Task) {
+    const field = this.shiftFields[task.shift.enumOrdinal];
+    switch (task.duty) {
+      case Duty.FISH:
+        field.colorCode = ColorCode.DUTY_FISH;
+        break;
+      case Duty.DS:
+        field.colorCode = ColorCode.DUTY_DS;
+        break;
+      case Duty.LATE_DS:
+        field.colorCode = ColorCode.DUTY_LATE_DS;
+        break;
+      case Duty.SS:
+        field.colorCode = ColorCode.DUTY_SS;
+        break;
+    }
+  }
+
   private getDuty(shift: Shift): Duty | null {
     const colorCode = this.shiftFields[shift.enumOrdinal].colorCode;
     switch (colorCode) {
