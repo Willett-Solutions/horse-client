@@ -1,5 +1,5 @@
 import Excel from "exceljs";
-import {Duty, Roster, Shift, Task} from "../domain";
+import {Duty, Roster, Shift, Task, Team} from "../domain";
 import {Table} from "./table";
 
 export class Document {
@@ -27,13 +27,27 @@ export class Document {
       },
       body: JSON.stringify(problem),
     });
-    const body = await response.json();
+    const text = await response.text();
+    const body = JSON.parse(text, Document.reviver);
     const solution = new Roster(body.employeeList, body.taskList);  // Ugly!
     console.log(solution);
     Document.setRoster(table, solution);
 
     const buffer = await this.workbook.xlsx.writeBuffer();
     return new File([buffer], this.file!.name, {type: this.file!.type});
+  }
+
+  private static reviver(key: string, value: string) {
+    switch (key) {
+      case "team":
+        return Team.enumValueOf(value);
+      case "duty":
+        return Duty.enumValueOf(value);
+      case "shift":
+        return Shift.enumValueOf(value);
+      default:
+        return value;
+    }
   }
 
   private static getRoster(table: Table): Roster {
