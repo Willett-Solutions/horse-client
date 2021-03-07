@@ -1,6 +1,7 @@
 import Excel from "exceljs";
 import {Enumify} from "enumify";
 import assert from "assert";
+import {Duty} from "../domain";
 
 export enum Status {
   AT_WORK,
@@ -79,6 +80,40 @@ export class ShiftField extends Field {
         return Status.AT_WORK;
     }
   }
+
+  get duty(): Duty | null {
+    switch (this.colorCode) {
+      case ColorCode.DUTY_FISH:
+        return Duty.FISH;
+      case ColorCode.DUTY_DS:
+        return Duty.DS;
+      case ColorCode.DUTY_LATE_DS:
+        return Duty.LATE_DS;
+      case ColorCode.DUTY_SS:
+        return Duty.SS;
+      default:
+        return null;
+    }
+  }
+
+  set duty(value) {
+    switch (value) {
+      case Duty.FISH:
+        this.colorCode = ColorCode.DUTY_FISH;
+        break;
+      case Duty.DS:
+        this.colorCode = ColorCode.DUTY_DS;
+        break;
+      case Duty.LATE_DS:
+        this.colorCode = ColorCode.DUTY_LATE_DS;
+        break;
+      case Duty.SS:
+        this.colorCode = ColorCode.DUTY_SS;
+        break;
+      default:
+        this.colorCode = ColorCode.UNASSIGNED;
+    }
+  }
 }
 
 export class AvailabilityField extends Field {
@@ -87,7 +122,7 @@ export class AvailabilityField extends Field {
   }
 }
 
-export class ColorCode extends Enumify {
+class ColorCode extends Enumify {
   readonly color: string;
 
   constructor(color: string) {

@@ -1,6 +1,6 @@
 import Excel from "exceljs";
 import {Availability, Duty, Employee, Shift, Task, Team} from "../domain";
-import {TextField, ShiftField, AvailabilityField, ColorCode, Status} from "./field";
+import {TextField, ShiftField, AvailabilityField, Status} from "./field";
 import {Columns} from "./columns";
 
 export class Record {
@@ -74,7 +74,7 @@ export class Record {
     const taskList: Task[] = [];
     // @ts-ignore
     for (const shift of Shift) {
-      const duty = this.getDuty(shift);
+      const duty = this.shiftFields[shift.enumOrdinal].duty;
       if (duty !== null) {
         const task = new Task(duty, shift);
         task.employee = employee;
@@ -86,35 +86,6 @@ export class Record {
   }
 
   enterTask(task: Task) {
-    const field = this.shiftFields[task.shift.enumOrdinal];
-    switch (task.duty) {
-      case Duty.FISH:
-        field.colorCode = ColorCode.DUTY_FISH;
-        break;
-      case Duty.DS:
-        field.colorCode = ColorCode.DUTY_DS;
-        break;
-      case Duty.LATE_DS:
-        field.colorCode = ColorCode.DUTY_LATE_DS;
-        break;
-      case Duty.SS:
-        field.colorCode = ColorCode.DUTY_SS;
-        break;
-    }
-  }
-
-  private getDuty(shift: Shift): Duty | null {
-    const colorCode = this.shiftFields[shift.enumOrdinal].colorCode;
-    switch (colorCode) {
-      case ColorCode.DUTY_FISH:
-        return Duty.FISH
-      case ColorCode.DUTY_DS:
-        return Duty.DS
-      case ColorCode.DUTY_LATE_DS:
-        return Duty.LATE_DS
-      case ColorCode.DUTY_SS:
-        return Duty.SS
-    }
-    return null;
+    this.shiftFields[task.shift.enumOrdinal].duty = task.duty;
   }
 }
