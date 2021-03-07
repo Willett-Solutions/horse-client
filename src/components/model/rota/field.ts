@@ -50,10 +50,13 @@ export class ShiftField extends Field {
 
   set colorCode(value) {
     const color = value!.color;
-    this.cell.fill = {
-      type: "pattern",
-      pattern: "solid",
-      fgColor: {argb: color},
+    this.cell.style = {
+      ...this.cell.style,
+      fill: {
+        type: "pattern",
+        pattern: "solid",
+        fgColor: {argb: color},
+      }
     }
   }
 }
