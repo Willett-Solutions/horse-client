@@ -1,6 +1,6 @@
 import Excel from "exceljs";
 import {Availability, Duty, Employee, Shift, Task, Team} from "../domain";
-import {TextField, ShiftField, AvailabilityField, ColorCode} from "./field";
+import {TextField, ShiftField, AvailabilityField, ColorCode, Status} from "./field";
 import {Columns} from "./columns";
 
 export class Record {
@@ -52,13 +52,21 @@ export class Record {
     const availability = new Availability();
     // @ts-ignore
     for (const shift of Shift) {
-      availability.entries[shift.enumOrdinal][Duty.FISH.enumOrdinal] = this.fishField.available;
-      availability.entries[shift.enumOrdinal][Duty.DS.enumOrdinal] = this.dsFields[shift.enumOrdinal].available;
-      availability.entries[shift.enumOrdinal][Duty.LATE_DS.enumOrdinal]
-        = this.lateDSFields[Math.trunc(shift.enumOrdinal / 2)].available;
-      availability.entries[shift.enumOrdinal][Duty.SS.enumOrdinal] = this.ssField.available;
+      availability.entries[shift.enumOrdinal][Duty.FISH.enumOrdinal] =
+        this.fishField.available;
+      availability.entries[shift.enumOrdinal][Duty.DS.enumOrdinal] =
+        this.dsFields[shift.enumOrdinal].available;
+      availability.entries[shift.enumOrdinal][Duty.LATE_DS.enumOrdinal] =
+        this.lateDSFields[Math.trunc(shift.enumOrdinal / 2)].available;
+      availability.entries[shift.enumOrdinal][Duty.SS.enumOrdinal] =
+        this.ssField.available;
+      // @ts-ignore
+      for (const duty of Duty) {
+        availability.entries[shift.enumOrdinal][duty.enumOrdinal] =
+          availability.entries[shift.enumOrdinal][duty.enumOrdinal] &&
+          this.shiftFields[shift.enumOrdinal].status === Status.AT_WORK;
+      }
     }
-
     return new Employee(name, team, availability);
   }
 

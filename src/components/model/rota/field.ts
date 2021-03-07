@@ -2,6 +2,13 @@ import Excel from "exceljs";
 import {Enumify} from "enumify";
 import assert from "assert";
 
+export enum Status {
+  AT_WORK,
+  WORKING_FROM_HOME,
+  ANNUAL_LEAVE,
+  DOES_NOT_WORK
+}
+
 abstract class Field {
   protected cell: Excel.Cell;
 
@@ -57,6 +64,19 @@ export class ShiftField extends Field {
         pattern: "solid",
         fgColor: {argb: color},
       }
+    }
+  }
+
+  get status(): Status {
+    switch (this.colorCode) {
+      case ColorCode.DOES_NOT_WORK:
+        return Status.DOES_NOT_WORK;
+      case ColorCode.ANNUAL_LEAVE:
+        return Status.ANNUAL_LEAVE;
+      case ColorCode.WORKING_FROM_HOME:
+        return Status.WORKING_FROM_HOME;
+      default:
+        return Status.AT_WORK;
     }
   }
 }
