@@ -1,6 +1,7 @@
+import assert from "assert";
+import convert from "color-convert";
 import Excel from "exceljs";
 import {Enumify} from "enumify";
-import assert from "assert";
 import {Duty} from "../domain";
 
 export enum Status {
@@ -36,8 +37,15 @@ export class ShiftField extends Field {
           if (fgColor.hasOwnProperty("argb")) {
             return fgColor.argb;
           } else if (fgColor.hasOwnProperty("theme")) {
+            // This is a complete cludge. We assume that if the cell color is represented by a theme (which must be 0),
+            // then, if it has a tint, it must be gray. Otherwise it is assumed to be white. Yuk. This needs fixing.
             assert(fgColor.theme === 0);
-            return "FFFFFFFF";
+            if (fgColor.hasOwnProperty("tint")) {
+              return "FFBFBFBF";
+            }
+            else {
+              return "FFFFFFFF";
+            }
           } else {
             return undefined;
           }
@@ -53,7 +61,14 @@ export class ShiftField extends Field {
   get colorCode(): ColorCode | undefined {
     const color = this.getColor();
     if (color === undefined) return undefined;
-    return ColorCode.fromColor(color);
+    let colorCode = ColorCode.fromColor(color);
+    if (colorCode !== undefined) return colorCode;
+    if (ShiftField.isShadeOfGray(color)) return ColorCode.ANNUAL_LEAVE;
+    return undefined;
+  }
+
+  private static isShadeOfGray(color: string) {
+    return convert.hex.rgb(color).every((val, i, arr) => val === arr[0]);
   }
 
   set colorCode(value) {
