@@ -78,7 +78,6 @@ export class Record {
       if (duty !== null) {
         const task = new Task(duty, shift);
         task.employee = employee;
-        task.isPinned = true;
         taskList.push(task);
       }
     }
