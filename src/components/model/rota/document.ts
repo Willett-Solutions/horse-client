@@ -1,10 +1,12 @@
 import Excel from "exceljs";
-import {Duty, Roster, Shift, Task, Team} from "../domain";
+import date from 'date-and-time';
+import {Duty, Employee, Roster, Shift, Task, Team} from "../domain";
 import {Table} from "./table";
 
 export class Document {
-  private file: File | null = null;
   private workbook: Excel.Workbook;
+  private file: File | null = null;
+  private table: Table | null = null;
 
   constructor() {
     this.workbook = new Excel.Workbook();
@@ -18,8 +20,8 @@ export class Document {
   }
 
   async solve(sheetName: string): Promise<File> {
-    const table = new Table(this.workbook.getWorksheet(sheetName));
-    const problem = Document.getRoster(table);
+    this.table = new Table(this.workbook.getWorksheet(sheetName));
+    const problem = this.getRoster();
     const response = await fetch("http://localhost:8080/solve", {
       method: "POST",
       headers: {
@@ -30,8 +32,7 @@ export class Document {
     const text = await response.text();
     const body = JSON.parse(text, Document.reviver);
     const solution = new Roster(body.employeeList, body.taskList);  // Ugly!
-    console.log(solution);
-    Document.setRoster(table, solution);
+    this.setRoster(solution);
 
     const buffer = await this.workbook.xlsx.writeBuffer();
     return new File([buffer], this.file!.name, {type: this.file!.type});
@@ -50,11 +51,26 @@ export class Document {
     }
   }
 
-  private static getRoster(table: Table): Roster {
-    const employeeList = table.createEmployeeList();
-    const taskList = table.createTaskList(employeeList);
-    this.addUnassignedTasks(taskList);
+  private getRoster(): Roster {
+    const employeeList = this.createEmployeeList();
+    const taskList = this.table!.createTaskList(employeeList);
+    Document.addUnassignedTasks(taskList);
     return new Roster(employeeList, taskList);
+  }
+
+  private createEmployeeList(): Employee[] {
+    const employeeList = this.table!.createEmployeeList();
+    this.table!.addPriorShiftsTo(employeeList);
+    this.workbook.eachSheet(sheet => {
+      const sheetName = sheet.name;
+      const sheetDate = date.parse(sheetName, "DD-MM-YYYY");
+      if (sheetDate < new Date()) {
+        const table = new Table(sheet);
+        table.addPriorShiftsTo(employeeList);
+        table.addPriorTasksTo(employeeList);
+      }
+    });
+    return employeeList;
   }
 
   private static addUnassignedTasks(taskList: Task[]) {
@@ -71,7 +87,7 @@ export class Document {
     }
   }
 
-  private static setRoster(table: Table, roster: Roster) {
-    roster.taskList.forEach(task => table.enterTask(task));
+  private setRoster(roster: Roster) {
+    roster.taskList.forEach(task => this.table!.enterTask(task));
   }
 }

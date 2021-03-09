@@ -20,6 +20,18 @@ export class Table {
     return this.recordList.map(record => record.createEmployee());
   }
 
+  addPriorShiftsTo(employeeList: Employee[]) {
+    employeeList.forEach(employee => {
+      this.findRecord(employee.name)?.addPriorShiftsTo(employee);
+    });
+  }
+
+  addPriorTasksTo(employeeList:Employee[]) {
+    employeeList.forEach(employee => {
+      this.findRecord(employee.name)?.addPriorTasksTo(employee);
+    });
+  }
+
   createTaskList(employeeList: Employee[]): Task[] {
     const taskList: Task[][] = [];
     for (const employee of employeeList) {

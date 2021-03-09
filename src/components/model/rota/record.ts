@@ -1,6 +1,6 @@
 import Excel from "exceljs";
 import {Availability, Duty, Employee, Shift, Task, Team} from "../domain";
-import {TextField, ShiftField, AvailabilityField, Status} from "./field";
+import {AvailabilityField, ShiftField, Status, TextField} from "./field";
 import {Columns} from "./columns";
 
 export class Record {
@@ -68,6 +68,29 @@ export class Record {
       }
     }
     return new Employee(name, team, availability);
+  }
+
+  addPriorShiftsTo(employee: Employee) {
+    // @ts-ignore
+    for (const shift of Shift) {
+      const status = this.shiftFields[shift.enumOrdinal].status;
+      if (status === Status.AT_WORK || status === Status.WORKING_FROM_HOME) {
+        employee.incrementPriorShifts();
+      }
+    }
+  }
+
+  addPriorTasksTo(employee: Employee) {
+    // @ts-ignore
+    for (const shift of Shift) {
+      const status = this.shiftFields[shift.enumOrdinal].status;
+      if (status === Status.AT_WORK) {
+        const duty = this.shiftFields[shift.enumOrdinal].duty;
+        if (duty) {
+          employee.incrementPriorTasks();
+        }
+      }
+    }
   }
 
   createTaskList(employee: Employee): Task[] {

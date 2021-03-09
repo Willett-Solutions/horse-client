@@ -26,11 +26,21 @@ export class Employee {
   readonly name: string;
   private readonly team: Team;
   private readonly availability: Availability;
+  priorShifts = 0;
+  priorTasks = 0;
 
   constructor(name: string, team: Team, availability: Availability) {
     this.name = name;
     this.team = team;
     this.availability = availability;
+  }
+
+  incrementPriorShifts() {
+    this.priorShifts++;
+  }
+
+  incrementPriorTasks() {
+    this.priorTasks++;
   }
 }
 
