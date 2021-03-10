@@ -39,14 +39,21 @@ export class ShiftField extends Field {
           if (fgColor.hasOwnProperty("argb")) {
             return fgColor.argb;
           } else if (fgColor.hasOwnProperty("theme")) {
-            // This is a complete cludge. We assume that if the cell color is represented by a theme (which must be 0),
-            // then, if it has a tint, it must be gray. Otherwise it is assumed to be white. Yuk. This needs fixing.
-            assert(fgColor.theme === 0);
+            assert (fgColor.theme === 0 || fgColor.theme === 1);
+            const color = this.themeColors[fgColor.theme];
             if (fgColor.hasOwnProperty("tint")) {
-              return "FFBFBFBF";
+              // @ts-ignore
+              const tint = fgColor.tint;
+              const hsl = convert.hex.hsl(color);
+              if (tint < 0) {
+                hsl[2] = hsl[2] * (1 + tint);
+              } else if (tint > 0) {
+                hsl[2] = hsl[2] * (1 - tint) + (255 - 255 * (1 - tint));
+              }
+              return convert.hsl.hex(hsl);
             }
             else {
-              return "FFFFFFFF";
+              return color;
             }
           } else {
             return undefined;
