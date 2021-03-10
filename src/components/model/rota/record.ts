@@ -12,22 +12,22 @@ export class Record {
   private readonly lateDSFields: AvailabilityField[];
   private readonly ssField: AvailabilityField;
 
-  constructor(workbook: Excel.Workbook, columns: Columns, row: Excel.Row) {
-    this.teamField = new TextField(workbook, row.getCell(columns.team));
-    this.nameField = new TextField(workbook, row.getCell(columns.name));
+  constructor(themeColors: string[], columns: Columns, row: Excel.Row) {
+    this.teamField = new TextField(themeColors, row.getCell(columns.team));
+    this.nameField = new TextField(themeColors, row.getCell(columns.name));
 
     this.shiftFields = Array(Shift.enumValues.length);
     // @ts-ignore
     for (const shift of Shift) {
-      this.shiftFields[shift.enumOrdinal] = new ShiftField(workbook, row.getCell(columns.shift(shift)));
+      this.shiftFields[shift.enumOrdinal] = new ShiftField(themeColors, row.getCell(columns.shift(shift)));
     }
 
-    this.fishField = new AvailabilityField(workbook, row.getCell(columns.fish));
+    this.fishField = new AvailabilityField(themeColors, row.getCell(columns.fish));
 
     this.dsFields = Array(Shift.enumValues.length);
     // @ts-ignore
     for (const shift of Shift) {
-      this.dsFields[shift.enumOrdinal] = new AvailabilityField(workbook, row.getCell(columns.ds(shift)));
+      this.dsFields[shift.enumOrdinal] = new AvailabilityField(themeColors, row.getCell(columns.ds(shift)));
     }
 
     this.lateDSFields = Array(Shift.enumValues.length / 2);
@@ -35,10 +35,10 @@ export class Record {
     for (const shift of Shift) {
       if (shift.enumOrdinal % 2 === 0) continue;
       this.lateDSFields[Math.trunc(shift.enumOrdinal / 2)]
-        = new AvailabilityField(workbook, row.getCell(columns.lateDS(shift)));
+        = new AvailabilityField(themeColors, row.getCell(columns.lateDS(shift)));
     }
 
-    this.ssField = new AvailabilityField(workbook, row.getCell(columns.ss));
+    this.ssField = new AvailabilityField(themeColors, row.getCell(columns.ss));
   }
 
   get name() {

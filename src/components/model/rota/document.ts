@@ -4,7 +4,8 @@ import {Duty, Employee, Roster, Shift, Task, Team} from "../domain";
 import {Table} from "./table";
 
 export class Document {
-  private workbook: Excel.Workbook;
+  private readonly workbook: Excel.Workbook;
+  private themeColors: string[] = Array(2);
   private file: File | null = null;
   private table: Table | null = null;
 
@@ -16,11 +17,24 @@ export class Document {
     this.file = file;
     const buffer = await file.arrayBuffer();
     await this.workbook.xlsx.load(buffer);
+    this.setThemeColors();
     return this.workbook.worksheets.map(sheet => sheet.name);
   }
 
+  private setThemeColors() {
+    const themes = this.workbook.model.themes;
+    // @ts-ignore
+    const theme = themes["theme1"];
+    const parser = new DOMParser();
+    const themeXml = parser.parseFromString(theme, "text/xml");
+    const lt1 = themeXml.getElementsByTagName("a:lt1")[0];
+    this.themeColors[0] = lt1.getElementsByTagName("a:sysClr")[0].getAttribute("lastClr")!;
+    const dk1 = themeXml.getElementsByTagName("a:dk1")[0];
+    this.themeColors[1] = dk1.getElementsByTagName("a:sysClr")[0].getAttribute("lastClr")!;
+  }
+
   async solve(sheetName: string): Promise<File> {
-    this.table = new Table(this.workbook, sheetName);
+    this.table = new Table(this.themeColors, this.workbook.getWorksheet(sheetName));
     const problem = this.getRoster();
     const response = await fetch("http://localhost:8080/solve", {
       method: "POST",
@@ -65,7 +79,7 @@ export class Document {
       const sheetName = sheet.name;
       const sheetDate = date.parse(sheetName, "DD-MM-YYYY");
       if (sheetDate < new Date()) {
-        const table = new Table(this.workbook, sheetName);
+        const table = new Table(this.themeColors, sheet);
         table.addPriorShiftsTo(employeeList);
         table.addPriorTasksTo(employeeList);
       }
