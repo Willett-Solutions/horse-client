@@ -12,10 +12,12 @@ export enum Status {
 }
 
 abstract class Field {
+  protected workbook: Excel.Workbook
   protected cell: Excel.Cell;
 
-  constructor(cell: Excel.Cell) {
+  constructor(workbook: Excel.Workbook, cell: Excel.Cell) {
     this.cell = cell;
+    this.workbook = workbook;
   }
 }
 

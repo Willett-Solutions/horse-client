@@ -6,12 +6,13 @@ import {Columns} from "./columns";
 export class Table {
   private recordList: Record[] = [];
 
-  constructor(sheet: Excel.Worksheet) {
+  constructor(workbook: Excel.Workbook, sheetName: string) {
+    const sheet = workbook.getWorksheet(sheetName);
     const columns = new Columns(sheet);
     sheet.eachRow(row => {
       const teamName = row.getCell(columns.team).text;
       if (Team.exists(teamName)) {
-        this.recordList.push(new Record(columns, row));
+        this.recordList.push(new Record(workbook, columns, row));
       }
     });
   }

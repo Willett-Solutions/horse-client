@@ -20,7 +20,7 @@ export class Document {
   }
 
   async solve(sheetName: string): Promise<File> {
-    this.table = new Table(this.workbook.getWorksheet(sheetName));
+    this.table = new Table(this.workbook, sheetName);
     const problem = this.getRoster();
     const response = await fetch("http://localhost:8080/solve", {
       method: "POST",
@@ -65,7 +65,7 @@ export class Document {
       const sheetName = sheet.name;
       const sheetDate = date.parse(sheetName, "DD-MM-YYYY");
       if (sheetDate < new Date()) {
-        const table = new Table(sheet);
+        const table = new Table(this.workbook, sheetName);
         table.addPriorShiftsTo(employeeList);
         table.addPriorTasksTo(employeeList);
       }
