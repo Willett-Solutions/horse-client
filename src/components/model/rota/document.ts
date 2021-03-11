@@ -36,7 +36,8 @@ export class Document {
   async solve(sheetName: string): Promise<File> {
     this.table = new Table(this.themeColors, this.workbook.getWorksheet(sheetName));
     const problem = this.getRoster();
-    const response = await fetch("http://localhost:8080/solve", {
+    const authority = process.env.REACT_APP_AUTHORITY;
+    const response = await fetch("http://" + authority + "/solve", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
