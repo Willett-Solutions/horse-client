@@ -1,12 +1,22 @@
 import {Enumify} from "enumify";
 
 export class Roster {
-  private readonly employeeList: Employee[];
+  readonly employeeList: Employee[];
   readonly taskList: Task[];
 
   constructor(employeeList: Employee[], taskList: Task[]) {
     this.employeeList = employeeList;
     this.taskList = taskList;
+  }
+
+  summary(): { [name: string]: number[] } {
+    const items = Object.assign({}, ...this.employeeList.map(employee => ({
+      [employee.name]: new Array(4).fill(0)
+    })));
+    for (const task of this.taskList) {
+      items[task.employee!.name][task.duty.enumOrdinal]++;
+    }
+    return items;
   }
 }
 

@@ -6,6 +6,7 @@ import InstructionPanel from "./components/InstructionPanel";
 import Container from "react-bootstrap/Container";
 import * as Rota from "./components/model/rota";
 import "./App.css";
+import SummaryTable from "./components/SummaryTable";
 
 type AppState = {
   solvedRotaDocument: Rota.Document | null;
@@ -36,6 +37,8 @@ class App extends React.Component<{}, AppState> {
               onSaveFile={this.handleSaveFile}
             />
           </section>
+          {this.state.solvedRotaDocument !== null
+          && <SummaryTable summary={this.state.solvedRotaDocument.solution!.summary()}/>}
           <section>
             <InstructionPanel hasFinished={this.state.solvedRotaDocument !== null}/>
           </section>
