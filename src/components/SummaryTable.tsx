@@ -1,5 +1,4 @@
 import React from "react";
-import * as Rota from "./model/rota";
 import "./SummaryTable.css";
 
 function SummaryTable(props: { summary: { [name: string]: number[] } }) {
@@ -19,7 +18,7 @@ function SummaryTable(props: { summary: { [name: string]: number[] } }) {
         <tbody>
         {
           Object.entries(props.summary)
-          .filter(([name, counts]) => counts.some(count => count > 0))
+          .filter(([, counts]) => counts.some(count => count > 0))
           .map(([name, counts]) =>
             <tr>
               <td>{name}</td>
