@@ -48,9 +48,7 @@ export class Record {
   createEmployee(): Employee {
     const name: string = this.nameField.content;
     const team: Team = Team.fromTitle(this.teamField.content)!;
-
     const statuses = this.shiftFields.map(field => field.status);
-
 
     const availability = new Availability();
     // @ts-ignore
@@ -63,12 +61,6 @@ export class Record {
         this.lateDSFields[Math.trunc(shift.enumOrdinal / 2)].available;
       availability.entries[shift.enumOrdinal][Duty.SS.enumOrdinal] =
         this.ssField.available;
-      // @ts-ignore
-      // for (const duty of Duty) {
-      //   availability.entries[shift.enumOrdinal][duty.enumOrdinal] =
-      //     availability.entries[shift.enumOrdinal][duty.enumOrdinal] &&
-      //     this.shiftFields[shift.enumOrdinal].status === Status.AT_WORK;
-      // }
     }
     return new Employee(name, team, statuses, availability);
   }
