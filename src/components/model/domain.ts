@@ -1,4 +1,5 @@
 import {Enumify} from "enumify";
+import {Status} from "./rota/field";
 
 export class Roster {
   readonly employeeList: Employee[];
@@ -35,13 +36,15 @@ export class Task {
 export class Employee {
   readonly name: string;
   private readonly team: Team;
+  private readonly statuses: Status[];
   private readonly availability: Availability;
   priorShifts = 0;
   priorTasks = 0;
 
-  constructor(name: string, team: Team, availability: Availability) {
+  constructor(name: string, team: Team, statuses: Status[], availability: Availability) {
     this.name = name;
     this.team = team;
+    this.statuses = statuses;
     this.availability = availability;
   }
 

@@ -49,6 +49,9 @@ export class Record {
     const name: string = this.nameField.content;
     const team: Team = Team.fromTitle(this.teamField.content)!;
 
+    const statuses = this.shiftFields.map(field => field.status);
+
+
     const availability = new Availability();
     // @ts-ignore
     for (const shift of Shift) {
@@ -61,13 +64,13 @@ export class Record {
       availability.entries[shift.enumOrdinal][Duty.SS.enumOrdinal] =
         this.ssField.available;
       // @ts-ignore
-      for (const duty of Duty) {
-        availability.entries[shift.enumOrdinal][duty.enumOrdinal] =
-          availability.entries[shift.enumOrdinal][duty.enumOrdinal] &&
-          this.shiftFields[shift.enumOrdinal].status === Status.AT_WORK;
-      }
+      // for (const duty of Duty) {
+      //   availability.entries[shift.enumOrdinal][duty.enumOrdinal] =
+      //     availability.entries[shift.enumOrdinal][duty.enumOrdinal] &&
+      //     this.shiftFields[shift.enumOrdinal].status === Status.AT_WORK;
+      // }
     }
-    return new Employee(name, team, availability);
+    return new Employee(name, team, statuses, availability);
   }
 
   addPriorShiftsTo(employee: Employee) {
