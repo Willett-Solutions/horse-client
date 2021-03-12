@@ -50,10 +50,9 @@ export class ShiftField extends Field {
               } else if (tint > 0) {
                 hsl[2] = hsl[2] * (1 - tint) + (255 - 255 * (1 - tint));
               }
-              return convert.hsl.hex(hsl);
-            }
-            else {
-              return color;
+              return "FF" + convert.hsl.hex(hsl);
+            } else {
+              return "FF" + color;
             }
           } else {
             return undefined;
