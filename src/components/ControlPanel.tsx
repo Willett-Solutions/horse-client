@@ -3,7 +3,6 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
-import FileSaver from "file-saver";
 import SelectionForm from "./SelectionForm";
 import * as Rota from "./model/rota";
 import horse_start from "./horse-start.gif";
@@ -18,7 +17,8 @@ enum Phase {
 
 type ControlPanelProps = {
   hasFinished: boolean,
-  onFinished: () => void,
+  onFinished: (solvedRotaDocument: Rota.Document) => void,
+  onSaveFile: () => void,
 };
 
 type ControlPanelState = {
@@ -26,17 +26,6 @@ type ControlPanelState = {
 };
 
 class ControlPanel extends React.Component<ControlPanelProps, ControlPanelState> {
-  private _solvedFile: File | null = null;
-
-  private get solvedFile() {
-    return this._solvedFile!;
-  }
-
-  private set solvedFile(file: File) {
-    this._solvedFile = file;
-    this.props.onFinished();
-  }
-
   constructor(props: ControlPanelProps) {
     super(props);
     this.state = {
@@ -64,7 +53,9 @@ class ControlPanel extends React.Component<ControlPanelProps, ControlPanelState>
                 onPlanRotaSheet={this.handlePlanRotaSheet}
                 disabled={this.state.hasStartedSolving}/>
               : <SolvedNotice
-                onSaveRotaFile={() => FileSaver.saveAs(this.solvedFile)}/>}
+                onSaveRotaFile={() => this.props.onSaveFile()}
+                />
+            }
           </Col>
           <Col xs="auto" className="pl-3 align-self-end">
             <HorseAnimation phase={phase}/>
@@ -76,9 +67,7 @@ class ControlPanel extends React.Component<ControlPanelProps, ControlPanelState>
 
   private handlePlanRotaSheet(rotaDocument: Rota.Document, sheetName: string) {
     this.setState({hasStartedSolving: true});
-    rotaDocument.solve(sheetName).then(file => {
-      this.solvedFile = file;
-    });
+    rotaDocument.solve(sheetName).then(() => {this.props.onFinished(rotaDocument)});
   }
 }
 

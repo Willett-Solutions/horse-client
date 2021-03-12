@@ -8,6 +8,7 @@ export class Document {
   private themeColors: string[] = Array(2);
   private file: File | null = null;
   private table: Table | null = null;
+  solution: Roster | null = null;
 
   constructor() {
     this.workbook = new Excel.Workbook();
@@ -33,7 +34,7 @@ export class Document {
     this.themeColors[1] = dk1.getElementsByTagName("a:sysClr")[0].getAttribute("lastClr")!;
   }
 
-  async solve(sheetName: string): Promise<File> {
+  async solve(sheetName: string) {
     this.table = new Table(this.themeColors, this.workbook.getWorksheet(sheetName));
     const problem = this.getRoster();
     const authority = process.env.REACT_APP_AUTHORITY;
@@ -46,9 +47,11 @@ export class Document {
     });
     const text = await response.text();
     const body = JSON.parse(text, Document.reviver);
-    const solution = new Roster(body.employeeList, body.taskList);  // Ugly!
-    this.setRoster(solution);
+    this.solution = new Roster(body.employeeList, body.taskList);  // Ugly!
+    this.setRoster(this.solution);
+  }
 
+  async write(): Promise<File> {
     const buffer = await this.workbook.xlsx.writeBuffer();
     return new File([buffer], this.file!.name, {type: this.file!.type});
   }

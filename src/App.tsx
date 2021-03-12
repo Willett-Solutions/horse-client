@@ -1,20 +1,23 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React from "react";
+import FileSaver from "file-saver";
 import ControlPanel from "./components/ControlPanel";
 import InstructionPanel from "./components/InstructionPanel";
 import Container from "react-bootstrap/Container";
+import * as Rota from "./components/model/rota";
 import "./App.css";
 
 type AppState = {
-  hasFinished: boolean;
+  solvedRotaDocument: Rota.Document | null;
 };
 
 class App extends React.Component<{}, AppState> {
   constructor(props: {}) {
     super(props);
     this.state = {
-      hasFinished: false,
+      solvedRotaDocument: null,
     }
+    this.handleSaveFile = this.handleSaveFile.bind(this);
   }
 
   render() {
@@ -28,12 +31,13 @@ class App extends React.Component<{}, AppState> {
         <main>
           <section>
             <ControlPanel
-              hasFinished={this.state.hasFinished}
-              onFinished={() => this.setState({hasFinished: true})}
+              hasFinished={this.state.solvedRotaDocument !== null}
+              onFinished={solvedRotaDocument => this.setState({solvedRotaDocument: solvedRotaDocument})}
+              onSaveFile={this.handleSaveFile}
             />
           </section>
           <section>
-            <InstructionPanel hasFinished={this.state.hasFinished}/>
+            <InstructionPanel hasFinished={this.state.solvedRotaDocument !== null}/>
           </section>
         </main>
         <footer>
@@ -41,6 +45,12 @@ class App extends React.Component<{}, AppState> {
         </footer>
       </Container>
     );
+  }
+
+  private handleSaveFile() {
+    this.state.solvedRotaDocument!.write().then(file => {
+      FileSaver.saveAs(file);
+    });
   }
 }
 
