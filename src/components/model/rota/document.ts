@@ -8,6 +8,7 @@ export class Document {
   private themeColors: string[] = Array(2);
   private file: File | null = null;
   private table: Table | null = null;
+  private sheetName: string | null = null;
   solution: Roster | null = null;
 
   constructor() {
@@ -35,8 +36,10 @@ export class Document {
   }
 
   async solve(sheetName: string) {
+    this.sheetName = sheetName;
     this.table = new Table(this.themeColors, this.workbook.getWorksheet(sheetName));
     const problem = this.getRoster();
+    console.log(problem);
     const authority = process.env.REACT_APP_AUTHORITY;
     const response = await fetch("http://" + authority + "/solve", {
       method: "POST",
@@ -78,11 +81,12 @@ export class Document {
 
   private createEmployeeList(): Employee[] {
     const employeeList = this.table!.createEmployeeList();
-    this.table!.addPriorShiftsTo(employeeList);
+    const thisSheetDate = date.parse(this.sheetName!, "DD-MM-YYYY");
     this.workbook.eachSheet(sheet => {
-      const sheetName = sheet.name;
-      const sheetDate = date.parse(sheetName, "DD-MM-YYYY");
-      if (sheetDate < new Date()) {
+      const sheetDate = date.parse(sheet.name, "DD-MM-YYYY");
+      // Consider sheets dated up to 6 weeks (42 days) before this sheet
+      const dateDifference = date.subtract(thisSheetDate, sheetDate).toDays();
+      if (dateDifference > 0 && dateDifference <= 42) {
         const table = new Table(this.themeColors, sheet);
         table.addPriorShiftsTo(employeeList);
         table.addPriorTasksTo(employeeList);
