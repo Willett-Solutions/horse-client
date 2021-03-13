@@ -69,7 +69,7 @@ export class Record {
     // @ts-ignore
     for (const shift of Shift) {
       const status = this.shiftFields[shift.enumOrdinal].status;
-      if (status === Status.AT_WORK || status === Status.WORKING_FROM_HOME) {
+      if (status === Status.AVAILABLE || status === Status.UNAVAILABLE || status === Status.WORKING_FROM_HOME) {
         employee.incrementPriorShifts();
       }
     }
@@ -79,7 +79,7 @@ export class Record {
     // @ts-ignore
     for (const shift of Shift) {
       const status = this.shiftFields[shift.enumOrdinal].status;
-      if (status === Status.AT_WORK) {
+      if (status === Status.AVAILABLE) {
         const duty = this.shiftFields[shift.enumOrdinal].duty;
         if (duty) {
           employee.incrementPriorTasks();

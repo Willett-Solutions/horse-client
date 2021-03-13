@@ -5,7 +5,8 @@ import {Enumify} from "enumify";
 import {Duty} from "../domain";
 
 export enum Status {
-  AT_WORK,
+  AVAILABLE,
+  UNAVAILABLE,
   WORKING_FROM_HOME,
   ANNUAL_LEAVE,
   DOES_NOT_WORK
@@ -99,8 +100,10 @@ export class ShiftField extends Field {
         return Status.ANNUAL_LEAVE;
       case ColorCode.WORKING_FROM_HOME:
         return Status.WORKING_FROM_HOME;
+      case ColorCode.UNASSIGNED:
+        return Status.AVAILABLE
       default:
-        return Status.AT_WORK;
+        return Status.UNAVAILABLE;
     }
   }
 
