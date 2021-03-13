@@ -100,6 +100,10 @@ export class ShiftField extends Field {
         return Status.ANNUAL_LEAVE;
       case ColorCode.WORKING_FROM_HOME:
         return Status.WORKING_FROM_HOME;
+      case ColorCode.DUTY_FISH:
+      case ColorCode.DUTY_DS:
+      case ColorCode.DUTY_LATE_DS:
+      case ColorCode.DUTY_SS:
       case ColorCode.UNASSIGNED:
         return Status.AVAILABLE
       default:
