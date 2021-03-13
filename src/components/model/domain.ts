@@ -111,8 +111,8 @@ export class Duty extends Enumify {
   }
 
   static FISH = new Duty([1, 1, 1, 1, 2, 2, 1, 1, 1, 1]);
-  static DS = new Duty([1, 1, 1, 1, 1, 1, 1, 1, 1, 1]);
-  static LATE_DS = new Duty([0, 0, 0, 0, 0, 1, 0, 1, 0, 1]);
+  static DS = new Duty([1, 0, 1, 0, 1, 1, 1, 1, 1, 1]);
+  static LATE_DS = new Duty([0, 1, 0, 1, 0, 1, 0, 1, 0, 1]);
   static SS = new Duty([1, 1, 1, 1, 1, 1, 1, 1, 1, 1]);
   static _ = Duty.closeEnum();
 
