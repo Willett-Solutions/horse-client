@@ -105,7 +105,11 @@ export class ShiftField extends Field {
       case ColorCode.DUTY_LATE_DS:
       case ColorCode.DUTY_SS:
       case ColorCode.UNASSIGNED:
-        return Status.AVAILABLE
+        if (this.cell.text === "A/L") {
+          return Status.ANNUAL_LEAVE;
+        } else {
+          return Status.AVAILABLE;
+        }
       default:
         return Status.UNAVAILABLE;
     }
