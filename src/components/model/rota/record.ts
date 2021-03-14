@@ -81,7 +81,7 @@ export class Record {
       const status = this.shiftFields[shift.enumOrdinal].status;
       if (status === Status.AVAILABLE) {
         const duty = this.shiftFields[shift.enumOrdinal].duty;
-        if (duty) {
+        if (duty !== null) {
           employee.incrementPriorTasks();
         }
       }

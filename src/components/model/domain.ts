@@ -74,7 +74,7 @@ export class Team extends Enumify {
     return Team.fromTitle(title) !== undefined
   }
 
-  static fromTitle(title: string): Team | undefined{
+  static fromTitle(title: string): Team | undefined {
     // @ts-ignore
     const teams: Team[] = [...Team];
     return teams.find(team => team.title === title);
@@ -102,17 +102,23 @@ export class Availability {
 }
 
 export class Duty extends Enumify {
+  readonly color: string;
   private readonly tasksPerShift: number[];
 
-  constructor(tasksPerShift: number[]) {
+  constructor(color: string, tasksPerShift: number[]) {
     super();
+    this.color = color;
     this.tasksPerShift = tasksPerShift;
   }
 
-  static FISH = new Duty([1, 1, 1, 1, 2, 2, 1, 1, 1, 1]);
-  static DS = new Duty([1, 0, 1, 0, 1, 1, 1, 1, 1, 1]);
-  static LATE_DS = new Duty([0, 1, 0, 1, 0, 1, 0, 1, 0, 1]);
-  static SS = new Duty([1, 1, 1, 1, 1, 1, 1, 1, 1, 1]);
+  static FISH =
+    new Duty("#FF0000", [1, 1, 1, 1, 2, 2, 1, 1, 1, 1]);
+  static DS =
+    new Duty("#00B0F0", [1, 0, 1, 0, 1, 1, 1, 1, 1, 1]);
+  static LATE_DS =
+    new Duty("#0070C0", [0, 1, 0, 1, 0, 1, 0, 1, 0, 1]);
+  static SS =
+    new Duty("#FFC000", [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]);
   static _ = Duty.closeEnum();
 
   getNumTasks(shift: Shift): number {
@@ -121,6 +127,12 @@ export class Duty extends Enumify {
 
   toJSON() {
     return this.enumKey;
+  }
+
+  static fromColor(color: string): Duty | null {
+    // @ts-ignore
+    const duties: Duty[] = [...Duty];
+    return duties.find(duty => duty.color === color) ?? null;
   }
 }
 
@@ -142,10 +154,28 @@ export class Shift extends Enumify {
   }
 }
 
-export enum Status {
-  AVAILABLE,
-  UNAVAILABLE,
-  WORKING_FROM_HOME,
-  ANNUAL_LEAVE,
-  DOES_NOT_WORK
+export class Status extends Enumify {
+  readonly color: string | null;
+
+  constructor(color: string | null) {
+    super();
+    this.color = color;
+  }
+
+  static AVAILABLE = new Status("#FFFFFF");
+  static UNAVAILABLE = new Status(null);
+  static WORKING_FROM_HOME = new Status("#92D050");
+  static ANNUAL_LEAVE = new Status("#BFBFBF");
+  static DOES_NOT_WORK = new Status("#000000");
+  static _ = Status.closeEnum();
+
+  toJSON() {
+    return this.enumKey;
+  }
+
+  static fromColor(color: string): Status | null {
+    // @ts-ignore
+    const statuses: Status[] = [...Status];
+    return statuses.find(status => status.color === color) ?? null;
+  }
 }

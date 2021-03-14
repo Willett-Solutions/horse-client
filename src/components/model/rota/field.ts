@@ -1,7 +1,6 @@
 import assert from "assert";
 import convert from "color-convert";
 import Excel from "exceljs";
-import {Enumify} from "enumify";
 import {Duty, Status} from "../domain";
 
 
@@ -83,79 +82,26 @@ export class TextField extends Field {
 
 
 export class ShiftField extends Field {
-
-  get colorCode(): ColorCode | undefined {
-    const color = this.color;
-    if (color === null) return undefined;
-    let colorCode = ColorCode.fromColor(color);
-    if (colorCode !== undefined) return colorCode;
-    if (ShiftField.isShadeOfGray(color)) return ColorCode.ANNUAL_LEAVE;
-    return undefined;
+  get status(): Status {
+    if (this.color === null) return Status.UNAVAILABLE;
+    const status = Status.fromColor("#" + this.color.substring(2));
+    if (status !== null) return status;
+    if (ShiftField.isShadeOfGray(this.color) || this.content === "A/L") return Status.ANNUAL_LEAVE;
+    if (Duty.fromColor("#" + this.color.substring(2)) !== null) return Status.AVAILABLE;
+    return Status.UNAVAILABLE;
   }
 
-  set colorCode(value) {
-    this.color = value!.color;
+  get duty(): Duty | null {
+    return this.color === null ? null : Duty.fromColor("#" + this.color.substring(2));
+  }
+
+  set duty(value) {
+    assert(value !== null);
+    this.color = "FF" + value.color.substring(1);
   }
 
   private static isShadeOfGray(color: string) {
     return convert.hex.rgb(color).every((val, i, arr) => val === arr[0]);
-  }
-
-  get status(): Status {
-    switch (this.colorCode) {
-      case ColorCode.DOES_NOT_WORK:
-        return Status.DOES_NOT_WORK;
-      case ColorCode.ANNUAL_LEAVE:
-        return Status.ANNUAL_LEAVE;
-      case ColorCode.WORKING_FROM_HOME:
-        return Status.WORKING_FROM_HOME;
-      case ColorCode.DUTY_FISH:
-      case ColorCode.DUTY_DS:
-      case ColorCode.DUTY_LATE_DS:
-      case ColorCode.DUTY_SS:
-      case ColorCode.UNASSIGNED:
-        if (this.content === "A/L") {
-          return Status.ANNUAL_LEAVE;
-        } else {
-          return Status.AVAILABLE;
-        }
-      default:
-        return Status.UNAVAILABLE;
-    }
-  }
-
-  get duty(): Duty | null {
-    switch (this.colorCode) {
-      case ColorCode.DUTY_FISH:
-        return Duty.FISH;
-      case ColorCode.DUTY_DS:
-        return Duty.DS;
-      case ColorCode.DUTY_LATE_DS:
-        return Duty.LATE_DS;
-      case ColorCode.DUTY_SS:
-        return Duty.SS;
-      default:
-        return null;
-    }
-  }
-
-  set duty(value) {
-    switch (value) {
-      case Duty.FISH:
-        this.colorCode = ColorCode.DUTY_FISH;
-        break;
-      case Duty.DS:
-        this.colorCode = ColorCode.DUTY_DS;
-        break;
-      case Duty.LATE_DS:
-        this.colorCode = ColorCode.DUTY_LATE_DS;
-        break;
-      case Duty.SS:
-        this.colorCode = ColorCode.DUTY_SS;
-        break;
-      default:
-        this.colorCode = ColorCode.UNASSIGNED;
-    }
   }
 }
 
@@ -163,31 +109,5 @@ export class ShiftField extends Field {
 export class AvailabilityField extends Field {
   get available(): boolean {
     return this.content === "Y";
-  }
-}
-
-
-class ColorCode extends Enumify {
-  readonly color: string;
-
-  constructor(color: string) {
-    super();
-    this.color = color;
-  }
-
-  static UNASSIGNED = new ColorCode("FFFFFFFF");
-  static WORKING_FROM_HOME = new ColorCode("FF92D050");
-  static ANNUAL_LEAVE = new ColorCode("FFBFBFBF");
-  static DOES_NOT_WORK = new ColorCode("FF000000");
-  static DUTY_FISH = new ColorCode("FFFF0000");
-  static DUTY_DS = new ColorCode("FF00B0F0");
-  static DUTY_LATE_DS = new ColorCode("FF0070C0");
-  static DUTY_SS = new ColorCode("FFFFC000");
-  static _ = ColorCode.closeEnum();
-
-  static fromColor(color: string) {
-    // @ts-ignore
-    const colorCodes: ColorCode[] = [...ColorCode];
-    return colorCodes.find(colorCode => colorCode.color === color);
   }
 }
