@@ -2,7 +2,7 @@ import assert from "assert";
 import convert from "color-convert";
 import Excel from "exceljs";
 import {Enumify} from "enumify";
-import {Duty} from "../domain";
+import {Duty, Status} from "../domain";
 
 
 abstract class Field {
@@ -79,15 +79,6 @@ abstract class Field {
 
 export class TextField extends Field {
 
-}
-
-
-export enum Status {
-  AVAILABLE,
-  UNAVAILABLE,
-  WORKING_FROM_HOME,
-  ANNUAL_LEAVE,
-  DOES_NOT_WORK
 }
 
 

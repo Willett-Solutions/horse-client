@@ -1,6 +1,6 @@
 import Excel from "exceljs";
-import {Availability, Duty, Employee, Shift, Task, Team} from "../domain";
-import {AvailabilityField, ShiftField, Status, TextField} from "./field";
+import {Availability, Duty, Employee, Shift, Status, Task, Team} from "../domain";
+import {AvailabilityField, ShiftField, TextField} from "./field";
 import {Columns} from "./columns";
 
 export class Record {

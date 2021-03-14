@@ -1,5 +1,4 @@
 import {Enumify} from "enumify";
-import {Status} from "./rota/field";
 
 export class Roster {
   readonly employeeList: Employee[];
@@ -141,4 +140,12 @@ export class Shift extends Enumify {
   toJSON() {
     return this.enumKey;
   }
+}
+
+export enum Status {
+  AVAILABLE,
+  UNAVAILABLE,
+  WORKING_FROM_HOME,
+  ANNUAL_LEAVE,
+  DOES_NOT_WORK
 }
