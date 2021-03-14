@@ -33,7 +33,7 @@ abstract class Field {
       fill: {
         type: "pattern",
         pattern: "solid",
-        fgColor: {argb: value},
+        fgColor: {argb: "FF" + value.substring(1)},
       }
     }
     this._color = value;
@@ -46,14 +46,16 @@ abstract class Field {
       case "solid":
         return this.getSolidColor(fill.fgColor);
       case "none":
-        return "FFFFFFFF";
+        return "#FFFFFF";
       default:
         return null;
     }
   }
 
-  private getSolidColor(fgColor: Partial<Excel.Color>) {
-    if (fgColor.hasOwnProperty("argb")) return fgColor.argb ?? null;
+  private getSolidColor(fgColor: Partial<Excel.Color>): string | null {
+    if (fgColor.hasOwnProperty("argb")) {
+      return "#" + fgColor.argb!.substring(2);
+    }
     if (fgColor.hasOwnProperty("theme")) {
       assert (fgColor.theme === 0 || fgColor.theme === 1);
       const color = this.themeColors[fgColor.theme];
@@ -66,9 +68,9 @@ abstract class Field {
         } else if (tint > 0) {
           hsl[2] = hsl[2] * (1 - tint) + (255 - 255 * (1 - tint));
         }
-        return "FF" + convert.hsl.hex(hsl);
+        return "#" + convert.hsl.hex(hsl);
       } else {
-        return "FF" + color;
+        return "#" + color;
       }
     }
     return null;
@@ -84,24 +86,24 @@ export class TextField extends Field {
 export class ShiftField extends Field {
   get status(): Status {
     if (this.color === null) return Status.UNAVAILABLE;
-    const status = Status.fromColor("#" + this.color.substring(2));
+    const status = Status.fromColor(this.color);
     if (status !== null) return status;
     if (ShiftField.isShadeOfGray(this.color) || this.content === "A/L") return Status.ANNUAL_LEAVE;
-    if (Duty.fromColor("#" + this.color.substring(2)) !== null) return Status.AVAILABLE;
+    if (Duty.fromColor(this.color) !== null) return Status.AVAILABLE;
     return Status.UNAVAILABLE;
   }
 
   get duty(): Duty | null {
-    return this.color === null ? null : Duty.fromColor("#" + this.color.substring(2));
+    return this.color === null ? null : Duty.fromColor(this.color);
   }
 
   set duty(value) {
     assert(value !== null);
-    this.color = "FF" + value.color.substring(1);
+    this.color = value.color;
   }
 
   private static isShadeOfGray(color: string) {
-    return convert.hex.rgb(color).every((val, i, arr) => val === arr[0]);
+    return convert.hex.rgb(color.substring(1)).every((val, i, arr) => val === arr[0]);
   }
 }
 
