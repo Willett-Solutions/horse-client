@@ -39,7 +39,6 @@ export class Document {
     this.sheetName = sheetName;
     this.table = new Table(this.themeColors, this.workbook.getWorksheet(sheetName));
     const problem = this.getRoster();
-    console.log(problem);
     const authority = process.env.REACT_APP_AUTHORITY;
     const response = await fetch("http://" + authority + "/solve", {
       method: "POST",
@@ -51,6 +50,7 @@ export class Document {
     const text = await response.text();
     const body = JSON.parse(text, Document.reviver);
     this.solution = new Roster(body.employeeList, body.taskList);  // Ugly!
+    this.workbook.eachSheet(worksheet => worksheet.removeConditionalFormatting(true))
     this.setRoster(this.solution);
   }
 
