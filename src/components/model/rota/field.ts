@@ -1,7 +1,7 @@
 import assert from "assert";
-import convert from "color-convert";
 import Excel from "exceljs";
 import {Duty, Status} from "../domain";
+import Color from "color";
 
 
 abstract class Field {
@@ -17,9 +17,9 @@ abstract class Field {
     return this.cell.text
   }
 
-  private _color: string | null | undefined;
+  private _color: Color | null | undefined;
 
-  protected get color(): string | null {
+  protected get color(): Color | null {
     if (this._color === undefined) {
       this._color = this.getColor();
     }
@@ -33,47 +33,39 @@ abstract class Field {
       fill: {
         type: "pattern",
         pattern: "solid",
-        fgColor: {argb: "FF" + value.substring(1)},
+        fgColor: {argb: "FF" + value.hex().substring(1)},
       }
     }
     this._color = value;
   }
 
-  private getColor(): string | null {
+  private getColor(): Color | null {
     const fill = this.cell.fill;
     if (fill.type !== "pattern") return null;
     switch (fill.pattern) {
       case "solid":
         return this.getSolidColor(fill.fgColor);
       case "none":
-        return "#FFFFFF";
+        return Color("#FFFFFF");
       default:
         return null;
     }
   }
 
-  private getSolidColor(fgColor: Partial<Excel.Color>): string | null {
+  private getSolidColor(fgColor: Partial<Excel.Color>): Color {
     if (fgColor.hasOwnProperty("argb")) {
-      return "#" + fgColor.argb!.substring(2);
+      return Color("#" + fgColor.argb!.substring(2));
     }
     if (fgColor.hasOwnProperty("theme")) {
-      assert (fgColor.theme === 0 || fgColor.theme === 1);
-      const color = this.themeColors[fgColor.theme];
+      assert(fgColor.theme === 0 || fgColor.theme === 1);
+      const color = Color("#" + this.themeColors[fgColor.theme]);
       if (fgColor.hasOwnProperty("tint")) {
         // @ts-ignore
-        const tint = fgColor.tint;
-        const hsl = convert.hex.hsl(color);
-        if (tint < 0) {
-          hsl[2] = hsl[2] * (1 + tint);
-        } else if (tint > 0) {
-          hsl[2] = hsl[2] * (1 - tint) + (255 - 255 * (1 - tint));
-        }
-        return "#" + convert.hsl.hex(hsl);
-      } else {
-        return "#" + color;
+        return color.lighten(fgColor.tint);
       }
+      return color;
     }
-    return null;
+    assert(false, "fgColor must have either argb or theme property");
   }
 }
 
@@ -94,7 +86,7 @@ export class ShiftField extends Field {
   }
 
   get duty(): Duty | null {
-    return this.color === null ? null : Duty.fromColor(this.color);
+    return this.color === null ? null : Duty.fromColor(Color(this.color));
   }
 
   set duty(value) {
@@ -102,8 +94,8 @@ export class ShiftField extends Field {
     this.color = value.color;
   }
 
-  private static isShadeOfGray(color: string) {
-    return convert.hex.rgb(color.substring(1)).every((val, i, arr) => val === arr[0]);
+  private static isShadeOfGray(color: Color) {
+    return color.array().every((val, i, arr) => val === arr[0]);
   }
 }
 

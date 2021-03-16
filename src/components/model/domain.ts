@@ -1,4 +1,5 @@
 import {Enumify} from "enumify";
+import Color from "color";
 
 export class Roster {
   readonly employeeList: Employee[];
@@ -102,23 +103,23 @@ export class Availability {
 }
 
 export class Duty extends Enumify {
-  readonly color: string;
+  readonly color: Color;
   private readonly tasksPerShift: number[];
 
-  constructor(color: string, tasksPerShift: number[]) {
+  constructor(color: Color, tasksPerShift: number[]) {
     super();
     this.color = color;
     this.tasksPerShift = tasksPerShift;
   }
 
   static FISH =
-    new Duty("#FF0000", [1, 1, 1, 1, 2, 2, 1, 1, 1, 1]);
+    new Duty(Color("#FF0000"), [1, 1, 1, 1, 2, 2, 1, 1, 1, 1]);
   static DS =
-    new Duty("#00B0F0", [1, 0, 1, 0, 1, 1, 1, 1, 1, 1]);
+    new Duty(Color("#00B0F0"), [1, 0, 1, 0, 1, 1, 1, 1, 1, 1]);
   static LATE_DS =
-    new Duty("#0070C0", [0, 1, 0, 1, 0, 1, 0, 1, 0, 1]);
+    new Duty(Color("#0070C0"), [0, 1, 0, 1, 0, 1, 0, 1, 0, 1]);
   static SS =
-    new Duty("#FFC000", [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]);
+    new Duty(Color("#FFC000"), [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]);
   static _ = Duty.closeEnum();
 
   getNumTasks(shift: Shift): number {
@@ -129,10 +130,10 @@ export class Duty extends Enumify {
     return this.enumKey;
   }
 
-  static fromColor(color: string): Duty | null {
+  static fromColor(color: Color): Duty | null {
     // @ts-ignore
     const duties: Duty[] = [...Duty];
-    return duties.find(duty => duty.color === color) ?? null;
+    return duties.find(duty => duty.color.rgbNumber() === color.rgbNumber()) ?? null;
   }
 }
 
@@ -155,27 +156,27 @@ export class Shift extends Enumify {
 }
 
 export class Status extends Enumify {
-  readonly color: string | null;
+  readonly color: Color | null;
 
-  constructor(color: string | null) {
+  constructor(color: Color | null) {
     super();
     this.color = color;
   }
 
-  static AVAILABLE = new Status("#FFFFFF");
+  static AVAILABLE = new Status(Color("#FFFFFF"));
   static UNAVAILABLE = new Status(null);
-  static WORKING_FROM_HOME = new Status("#92D050");
-  static ANNUAL_LEAVE = new Status("#BFBFBF");
-  static DOES_NOT_WORK = new Status("#000000");
+  static WORKING_FROM_HOME = new Status(Color("#92D050"));
+  static ANNUAL_LEAVE = new Status(Color("#BFBFBF"));
+  static DOES_NOT_WORK = new Status(Color("#000000"));
   static _ = Status.closeEnum();
 
   toJSON() {
     return this.enumKey;
   }
 
-  static fromColor(color: string): Status | null {
+  static fromColor(color: Color): Status | null {
     // @ts-ignore
     const statuses: Status[] = [...Status];
-    return statuses.find(status => status.color === color) ?? null;
+    return statuses.find(status => status.color?.rgbNumber() === color.rgbNumber()) ?? null;
   }
 }
