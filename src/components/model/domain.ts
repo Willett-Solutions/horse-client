@@ -87,7 +87,7 @@ export class Team extends Enumify {
 }
 
 export class Availability {
-  entries: boolean[][];
+  private readonly entries: boolean[][];
 
   constructor() {
     this.entries = Array(Shift.enumValues.length);
@@ -100,6 +100,11 @@ export class Availability {
       }
     }
   }
+
+  set(shift: Shift, duty: Duty, value: boolean) {
+    this.entries[shift.enumOrdinal][duty.enumOrdinal] = value;
+  }
+
 }
 
 export class Duty extends Enumify {

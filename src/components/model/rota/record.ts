@@ -53,14 +53,10 @@ export class Record {
     const availability = new Availability();
     // @ts-ignore
     for (const shift of Shift) {
-      availability.entries[shift.enumOrdinal][Duty.FISH.enumOrdinal] =
-        this.fishField.available;
-      availability.entries[shift.enumOrdinal][Duty.DS.enumOrdinal] =
-        this.dsFields[shift.enumOrdinal].available;
-      availability.entries[shift.enumOrdinal][Duty.LATE_DS.enumOrdinal] =
-        this.lateDSFields[Math.trunc(shift.enumOrdinal / 2)].available;
-      availability.entries[shift.enumOrdinal][Duty.SS.enumOrdinal] =
-        this.ssField.available;
+      availability.set(shift, Duty.FISH, this.fishField.available);
+      availability.set(shift, Duty.DS, this.dsFields[shift.enumOrdinal].available);
+      availability.set(shift, Duty.LATE_DS, this.lateDSFields[Math.trunc(shift.enumOrdinal / 2)].available);
+      availability.set(shift, Duty.SS, this.ssField.available);
     }
     return new Employee(name, team, statuses, availability);
   }
