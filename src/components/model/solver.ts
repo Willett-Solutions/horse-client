@@ -10,6 +10,7 @@ class Solver {
 
   async solve(sheetName: string): Promise<Roster> {
     const problem = this.document.getRoster(sheetName);
+    problem.addUnassignedTasks();
     const authority = process.env.REACT_APP_AUTHORITY;
     const response = await fetch("http://" + authority + "/solve", {
       method: "POST",

@@ -1,6 +1,6 @@
 import Excel from "exceljs";
 import date from 'date-and-time';
-import {Duty, Employee, Roster, Shift, Task} from "../domain";
+import {Employee, Roster} from "../domain";
 import {Table} from "./table";
 
 export class Document {
@@ -37,7 +37,6 @@ export class Document {
     this.table = new Table(this.themeColors, this.workbook.getWorksheet(sheetName));
     const employeeList = this.createEmployeeList(sheetName);
     const taskList = this.table!.createTaskList(employeeList);
-    Document.addUnassignedTasks(taskList);
     return new Roster(employeeList, taskList);
   }
 
@@ -62,19 +61,5 @@ export class Document {
       }
     });
     return employeeList;
-  }
-
-  private static addUnassignedTasks(taskList: Task[]) {
-    // @ts-ignore
-    for (const duty of Duty) {
-      // @ts-ignore
-      for (const shift of Shift) {
-        const tasksRequired: number = duty.getNumTasks(shift);
-        const tasksPresent = taskList.filter(task => task.duty === duty && task.shift === shift).length;
-        for (let i = 0; i < tasksRequired - tasksPresent; i++) {
-          taskList.push(new Task(duty, shift));
-        }
-      }
-    }
   }
 }

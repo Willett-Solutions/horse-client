@@ -10,6 +10,20 @@ export class Roster {
     this.taskList = taskList;
   }
 
+  addUnassignedTasks() {
+    // @ts-ignore
+    for (const duty of Duty) {
+      // @ts-ignore
+      for (const shift of Shift) {
+        const tasksRequired: number = duty.getNumTasks(shift);
+        const tasksPresent = this.taskList.filter(task => task.duty === duty && task.shift === shift).length;
+        for (let i = 0; i < tasksRequired - tasksPresent; i++) {
+          this.taskList.push(new Task(duty, shift));
+        }
+      }
+    }
+  }
+
   summary(): { [name: string]: number[] } {
     const items = Object.assign({}, ...this.employeeList.map(employee => ({
       [employee.name]: new Array(4).fill(0)
