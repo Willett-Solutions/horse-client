@@ -16,23 +16,19 @@ export class Table {
     });
   }
 
-  createEmployeeList(): Employee[] {
+  createEmployees(): Employee[] {
     return this.recordList.map(record => record.createEmployee());
   }
 
-  addPriorShiftsTo(employeeList: Employee[]) {
-    employeeList.forEach(employee => {
-      this.findRecord(employee.name)?.addPriorShiftsTo(employee);
+  addShiftsAndTasksTo(employees: Employee[]): void {
+    employees.forEach(employee => {
+      const record = this.findRecord(employee.name);
+      record?.addPriorShiftsTo(employee);
+      record?.addPriorTasksTo(employee);
     });
   }
 
-  addPriorTasksTo(employeeList:Employee[]) {
-    employeeList.forEach(employee => {
-      this.findRecord(employee.name)?.addPriorTasksTo(employee);
-    });
-  }
-
-  createTaskList(employeeList: Employee[]): Task[] {
+  createTasks(employeeList: Employee[]): Task[] {
     const taskList: Task[][] = [];
     for (const employee of employeeList) {
       const record = this.findRecord(employee.name);

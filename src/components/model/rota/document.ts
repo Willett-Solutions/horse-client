@@ -35,9 +35,10 @@ export class Document {
 
   getRoster(sheetName: string): Roster {
     this.table = new Table(this.themeColors, this.workbook.getWorksheet(sheetName));
-    const employeeList = this.createEmployeeList(sheetName);
-    const taskList = this.table!.createTaskList(employeeList);
-    return new Roster(employeeList, taskList);
+    const employees = this.table.createEmployees();
+    this.addShiftsAndTasksPriorTo(sheetName, employees);
+    const tasks = this.table.createTasks(employees);
+    return new Roster(employees, tasks);
   }
 
   async setRoster(solution: Roster): Promise<File> {
@@ -47,8 +48,7 @@ export class Document {
     return new File([buffer], this.file!.name, {type: this.file!.type});
   }
 
-  private createEmployeeList(sheetName: string): Employee[] {
-    const employeeList = this.table!.createEmployeeList();
+  private addShiftsAndTasksPriorTo(sheetName: string, employees: Employee[]) {
     const thisSheetDate = date.parse(sheetName, "DD-MM-YYYY");
     this.workbook.eachSheet(sheet => {
       const sheetDate = date.parse(sheet.name, "DD-MM-YYYY");
@@ -56,10 +56,8 @@ export class Document {
       const dateDifference = date.subtract(thisSheetDate, sheetDate).toDays();
       if (dateDifference > 0 && dateDifference <= 42) {
         const table = new Table(this.themeColors, sheet);
-        table.addPriorShiftsTo(employeeList);
-        table.addPriorTasksTo(employeeList);
+        table.addShiftsAndTasksTo(employees);
       }
     });
-    return employeeList;
   }
 }
