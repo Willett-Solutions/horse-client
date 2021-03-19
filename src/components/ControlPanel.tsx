@@ -4,10 +4,12 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import SelectionForm from "./SelectionForm";
-import * as Rota from "./model/rota";
+//import * as Rota from "./model/rota";
 import horse_start from "./horse-start.gif";
 import horse_animation from "./horse-animation.gif";
 import horse_end from "./horse-end.gif";
+import {Roster} from "./model/domain";
+import Solver from "./model/solver";
 
 enum Phase {
   INITIAL,
@@ -16,8 +18,9 @@ enum Phase {
 }
 
 type ControlPanelProps = {
+  solver: Solver,
   hasFinished: boolean,
-  onFinished: (solvedRotaDocument: Rota.Document) => void,
+  onFinished: (roster: Roster) => void,
   onSaveFile: () => void,
 };
 
@@ -50,6 +53,7 @@ class ControlPanel extends React.Component<ControlPanelProps, ControlPanelState>
           <Col>
             {(!this.props.hasFinished)
               ? <SelectionForm
+                solver={this.props.solver}
                 onPlanRotaSheet={this.handlePlanRotaSheet}
                 disabled={this.state.hasStartedSolving}/>
               : <SolvedNotice
@@ -65,9 +69,9 @@ class ControlPanel extends React.Component<ControlPanelProps, ControlPanelState>
     );
   }
 
-  private handlePlanRotaSheet(rotaDocument: Rota.Document, sheetName: string) {
+  private handlePlanRotaSheet(sheetName: string) {
     this.setState({hasStartedSolving: true});
-    rotaDocument.solve(sheetName).then(() => {this.props.onFinished(rotaDocument)});
+    this.props.solver.solve(sheetName).then(roster => {this.props.onFinished(roster)});
   }
 }
 

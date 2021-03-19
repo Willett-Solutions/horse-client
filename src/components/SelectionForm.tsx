@@ -2,10 +2,11 @@ import React from "react";
 import Select from "react-select";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import * as Rota from "./model/rota";
+import Solver from "./model/solver";
 
 type SelectionFormProps = {
-  onPlanRotaSheet: (rotaDocument: Rota.Document, sheetName: string) => void,
+  solver: Solver,
+  onPlanRotaSheet: (sheetName: string) => void,
   disabled: boolean,
 }
 
@@ -16,7 +17,6 @@ type SelectionFormState = {
 
 class SelectionForm extends React.Component<SelectionFormProps, SelectionFormState> {
   private readonly fileInput: React.RefObject<HTMLInputElement>;
-  private readonly rotaDocument: Rota.Document;
 
   constructor(props: SelectionFormProps) {
     super(props);
@@ -25,7 +25,6 @@ class SelectionForm extends React.Component<SelectionFormProps, SelectionFormSta
       selectedOption: null,
     }
     this.fileInput = React.createRef();
-    this.rotaDocument = new Rota.Document();
     this.handleFileInputChange = this.handleFileInputChange.bind(this);
     this.handleSheetChange = this.handleSheetChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -59,7 +58,7 @@ class SelectionForm extends React.Component<SelectionFormProps, SelectionFormSta
   private handleFileInputChange(event: React.FormEvent<HTMLInputElement>) {
     const file = event.currentTarget.files?.[0];
     if (file) {
-      this.rotaDocument.load(file).then(sheetNames =>
+      this.props.solver.setFile(file).then(sheetNames =>
         this.setState({
           sheetOptions: sheetNames.map(sheetName =>
             ({value: sheetName, label: sheetName})),
@@ -75,7 +74,7 @@ class SelectionForm extends React.Component<SelectionFormProps, SelectionFormSta
 
   private handleSubmit(event: React.FormEvent) {
     event.preventDefault();
-    this.props.onPlanRotaSheet(this.rotaDocument, this.state.selectedOption!.value);
+    this.props.onPlanRotaSheet(this.state.selectedOption!.value);
   }
 }
 

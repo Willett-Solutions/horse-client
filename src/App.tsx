@@ -4,20 +4,24 @@ import FileSaver from "file-saver";
 import ControlPanel from "./components/ControlPanel";
 import InstructionPanel from "./components/InstructionPanel";
 import Container from "react-bootstrap/Container";
-import * as Rota from "./components/model/rota";
 import "./App.css";
 import SummaryTable from "./components/SummaryTable";
+import {Roster} from "./components/model/domain";
+import Solver from "./components/model/solver";
 
 type AppState = {
-  solvedRotaDocument: Rota.Document | null;
+  roster: Roster | null;
 };
 
 class App extends React.Component<{}, AppState> {
+  solver: Solver;
+
   constructor(props: {}) {
     super(props);
     this.state = {
-      solvedRotaDocument: null,
+      roster: null,
     }
+    this.solver = new Solver();
     this.handleSaveFile = this.handleSaveFile.bind(this);
   }
 
@@ -32,15 +36,15 @@ class App extends React.Component<{}, AppState> {
         <main>
           <section>
             <ControlPanel
-              hasFinished={this.state.solvedRotaDocument !== null}
-              onFinished={solvedRotaDocument => this.setState({solvedRotaDocument: solvedRotaDocument})}
+              solver={this.solver}
+              hasFinished={this.state.roster !== null}
+              onFinished={roster => this.setState({roster: roster})}
               onSaveFile={this.handleSaveFile}
             />
           </section>
-          {this.state.solvedRotaDocument !== null
-          && <SummaryTable summary={this.state.solvedRotaDocument.solution!.summary()}/>}
+          {this.state.roster !== null && <SummaryTable summary={this.state.roster.summary()}/>}
           <section>
-            <InstructionPanel hasFinished={this.state.solvedRotaDocument !== null}/>
+            <InstructionPanel hasFinished={this.state.roster !== null}/>
           </section>
         </main>
         <footer>
@@ -51,7 +55,7 @@ class App extends React.Component<{}, AppState> {
   }
 
   private handleSaveFile() {
-    this.state.solvedRotaDocument!.write().then(file => {
+    this.solver.getFile(this.state.roster!).then(file => {
       FileSaver.saveAs(file);
     });
   }

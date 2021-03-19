@@ -1,6 +1,6 @@
 import Excel from "exceljs";
 import date from 'date-and-time';
-import {Duty, Employee, Roster, Shift, Task, Team} from "../domain";
+import {Duty, Employee, Roster, Shift, Task} from "../domain";
 import {Table} from "./table";
 
 export class Document {
@@ -8,8 +8,6 @@ export class Document {
   private themeColors: string[] = Array(2);
   private file: File | null = null;
   private table: Table | null = null;
-  private sheetName: string | null = null;
-  solution: Roster | null = null;
 
   constructor() {
     this.workbook = new Excel.Workbook();
@@ -35,53 +33,24 @@ export class Document {
     this.themeColors[1] = dk1.getElementsByTagName("a:sysClr")[0].getAttribute("lastClr")!;
   }
 
-  async solve(sheetName: string) {
-    this.sheetName = sheetName;
+  getRoster(sheetName: string): Roster {
     this.table = new Table(this.themeColors, this.workbook.getWorksheet(sheetName));
-    const problem = this.getRoster();
-    const authority = process.env.REACT_APP_AUTHORITY;
-    const response = await fetch("http://" + authority + "/solve", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(problem),
-    });
-    const text = await response.text();
-    const body = JSON.parse(text, Document.reviver);
-    this.solution = new Roster(body.employeeList, body.taskList);  // Ugly!
-    this.workbook.eachSheet(worksheet => worksheet.removeConditionalFormatting(true))
-    this.setRoster(this.solution);
-  }
-
-  async write(): Promise<File> {
-    const buffer = await this.workbook.xlsx.writeBuffer();
-    return new File([buffer], this.file!.name, {type: this.file!.type});
-  }
-
-  private static reviver(key: string, value: string) {
-    switch (key) {
-      case "team":
-        return Team.enumValueOf(value);
-      case "duty":
-        return Duty.enumValueOf(value);
-      case "shift":
-        return Shift.enumValueOf(value);
-      default:
-        return value;
-    }
-  }
-
-  private getRoster(): Roster {
-    const employeeList = this.createEmployeeList();
+    const employeeList = this.createEmployeeList(sheetName);
     const taskList = this.table!.createTaskList(employeeList);
     Document.addUnassignedTasks(taskList);
     return new Roster(employeeList, taskList);
   }
 
-  private createEmployeeList(): Employee[] {
+  async setRoster(solution: Roster): Promise<File> {
+    this.workbook.eachSheet(worksheet => worksheet.removeConditionalFormatting(true));
+    solution.taskList.forEach(task => this.table!.enterTask(task));
+    const buffer = await this.workbook.xlsx.writeBuffer();
+    return new File([buffer], this.file!.name, {type: this.file!.type});
+  }
+
+  private createEmployeeList(sheetName: string): Employee[] {
     const employeeList = this.table!.createEmployeeList();
-    const thisSheetDate = date.parse(this.sheetName!, "DD-MM-YYYY");
+    const thisSheetDate = date.parse(sheetName, "DD-MM-YYYY");
     this.workbook.eachSheet(sheet => {
       const sheetDate = date.parse(sheet.name, "DD-MM-YYYY");
       // Consider sheets dated up to 6 weeks (42 days) before this sheet
@@ -107,9 +76,5 @@ export class Document {
         }
       }
     }
-  }
-
-  private setRoster(roster: Roster) {
-    roster.taskList.forEach(task => this.table!.enterTask(task));
   }
 }
