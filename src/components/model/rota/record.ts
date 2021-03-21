@@ -66,7 +66,7 @@ export class Record {
     for (const shift of Shift) {
       const status = this.shiftFields[shift.enumOrdinal].status;
       if (status === Status.AVAILABLE || status === Status.UNAVAILABLE || status === Status.WORKING_FROM_HOME) {
-        employee.incrementPriorShifts();
+        employee.priorShiftCount++;
       }
     }
   }
@@ -78,24 +78,24 @@ export class Record {
       if (status === Status.AVAILABLE) {
         const duty = this.shiftFields[shift.enumOrdinal].duty;
         if (duty !== null) {
-          employee.incrementPriorTasks();
+          employee.priorTaskCount++;
         }
       }
     }
   }
 
-  createTaskList(employee: Employee): Task[] {
-    const taskList: Task[] = [];
+  createTasks(employee: Employee): Task[] {
+    const tasks: Task[] = [];
     // @ts-ignore
     for (const shift of Shift) {
       const duty = this.shiftFields[shift.enumOrdinal].duty;
       if (duty !== null) {
         const task = new Task(duty, shift);
         task.employee = employee;
-        taskList.push(task);
+        tasks.push(task);
       }
     }
-    return taskList;
+    return tasks;
   }
 
   enterTask(task: Task) {

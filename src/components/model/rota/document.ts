@@ -43,7 +43,7 @@ export class Document {
 
   async setRoster(solution: Roster): Promise<File> {
     this.workbook.eachSheet(worksheet => worksheet.removeConditionalFormatting(true));
-    solution.taskList.forEach(task => this.table!.enterTask(task));
+    solution.tasks.forEach(task => this.table!.enterTask(task));
     const buffer = await this.workbook.xlsx.writeBuffer();
     return new File([buffer], this.file!.name, {type: this.file!.type});
   }

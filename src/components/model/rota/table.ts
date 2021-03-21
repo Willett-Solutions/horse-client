@@ -4,20 +4,20 @@ import {Record} from "./record";
 import {Columns} from "./columns";
 
 export class Table {
-  private recordList: Record[] = [];
+  private records: Record[] = [];
 
   constructor(themeColors: string[], sheet: Excel.Worksheet) {
     const columns = new Columns(sheet);
     sheet.eachRow(row => {
       const teamName = row.getCell(columns.team).text;
       if (Team.exists(teamName)) {
-        this.recordList.push(new Record(themeColors, columns, row));
+        this.records.push(new Record(themeColors, columns, row));
       }
     });
   }
 
   createEmployees(): Employee[] {
-    return this.recordList.map(record => record.createEmployee());
+    return this.records.map(record => record.createEmployee());
   }
 
   addShiftsAndTasksTo(employees: Employee[]): void {
@@ -28,15 +28,15 @@ export class Table {
     });
   }
 
-  createTasks(employeeList: Employee[]): Task[] {
-    const taskList: Task[][] = [];
-    for (const employee of employeeList) {
+  createTasks(employees: Employee[]): Task[] {
+    const tasks: Task[][] = [];
+    for (const employee of employees) {
       const record = this.findRecord(employee.name);
       if (record !== undefined) {
-        taskList.push(record.createTaskList(employee));
+        tasks.push(record.createTasks(employee));
       }
     }
-    return taskList.flat();
+    return tasks.flat();
   }
 
   enterTask(task: Task) {
@@ -45,6 +45,6 @@ export class Table {
   }
 
   private findRecord(name: string): Record | undefined {
-    return this.recordList.find(record => record.name === name);
+    return this.records.find(record => record.name === name);
   }
 }

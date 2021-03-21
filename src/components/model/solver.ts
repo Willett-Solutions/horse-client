@@ -19,7 +19,7 @@ class Solver {
     });
     const text = await response.text();
     const body = JSON.parse(text, Solver.reviver);
-    return new Roster(body.employeeList, body.taskList);  // Ugly!
+    return new Roster(body.employees, body.tasks);  // Ugly!
   }
 
   async getFile(roster: Roster): Promise<File> {

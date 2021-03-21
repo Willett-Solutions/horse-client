@@ -2,12 +2,12 @@ import {Enumify} from "enumify";
 import Color from "color";
 
 export class Roster {
-  readonly employeeList: Employee[];
-  readonly taskList: Task[];
+  readonly employees: Employee[];
+  readonly tasks: Task[];
 
-  constructor(employeeList: Employee[], taskList: Task[]) {
-    this.employeeList = employeeList;
-    this.taskList = taskList;
+  constructor(employees: Employee[], tasks: Task[]) {
+    this.employees = employees;
+    this.tasks = tasks;
   }
 
   addUnassignedTasks() {
@@ -15,20 +15,20 @@ export class Roster {
     for (const duty of Duty) {
       // @ts-ignore
       for (const shift of Shift) {
-        const tasksRequired: number = duty.getNumTasks(shift);
-        const tasksPresent = this.taskList.filter(task => task.duty === duty && task.shift === shift).length;
+        const tasksRequired: number = duty.getTaskCount(shift);
+        const tasksPresent = this.tasks.filter(task => task.duty === duty && task.shift === shift).length;
         for (let i = 0; i < tasksRequired - tasksPresent; i++) {
-          this.taskList.push(new Task(duty, shift));
+          this.tasks.push(new Task(duty, shift));
         }
       }
     }
   }
 
   summary(): { [name: string]: number[] } {
-    const items = Object.assign({}, ...this.employeeList.map(employee => ({
+    const items = Object.assign({}, ...this.employees.map(employee => ({
       [employee.name]: new Array(4).fill(0)
     })));
-    for (const task of this.taskList) {
+    for (const task of this.tasks) {
       items[task.employee!.name][task.duty.enumOrdinal]++;
     }
     return items;
@@ -52,22 +52,14 @@ export class Employee {
   private readonly team: Team;
   private readonly statuses: Status[];
   private readonly preferences: Preferences;
-  priorShifts = 0;
-  priorTasks = 0;
+  priorShiftCount = 0;
+  priorTaskCount = 0;
 
   constructor(name: string, team: Team, statuses: Status[], preferences: Preferences) {
     this.name = name;
     this.team = team;
     this.statuses = statuses;
     this.preferences = preferences;
-  }
-
-  incrementPriorShifts() {
-    this.priorShifts++;
-  }
-
-  incrementPriorTasks() {
-    this.priorTasks++;
   }
 }
 
@@ -141,7 +133,7 @@ export class Duty extends Enumify {
     new Duty(Color("#FFC000"), [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]);
   static _ = Duty.closeEnum();
 
-  getNumTasks(shift: Shift): number {
+  getTaskCount(shift: Shift): number {
     return this.tasksPerShift[shift.enumOrdinal];
   }
 
