@@ -100,8 +100,8 @@ export class ShiftField extends Field {
 }
 
 
-export class AvailabilityField extends Field {
-  get available(): boolean {
+export class PreferenceField extends Field {
+  get canDo(): boolean {
     return this.content === "Y";
   }
 }

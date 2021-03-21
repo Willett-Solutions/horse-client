@@ -51,15 +51,15 @@ export class Employee {
   readonly name: string;
   private readonly team: Team;
   private readonly statuses: Status[];
-  private readonly availability: Availability;
+  private readonly preferences: Preferences;
   priorShifts = 0;
   priorTasks = 0;
 
-  constructor(name: string, team: Team, statuses: Status[], availability: Availability) {
+  constructor(name: string, team: Team, statuses: Status[], preferences: Preferences) {
     this.name = name;
     this.team = team;
     this.statuses = statuses;
-    this.availability = availability;
+    this.preferences = preferences;
   }
 
   incrementPriorShifts() {
@@ -100,7 +100,7 @@ export class Team extends Enumify {
   }
 }
 
-export class Availability {
+export class Preferences {
   private readonly entries: boolean[][];
 
   constructor() {
