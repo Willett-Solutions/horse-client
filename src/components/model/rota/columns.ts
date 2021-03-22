@@ -14,17 +14,21 @@ export class ShiftColumns {
 export class PrefsColumns {
   team = 1;
   name = 2;
-  fish: number;
-  ss: number;
 
+  private readonly firstFISHColumn: number;
   private readonly firstDSColumn: number;
   private readonly firstLateDSColumn: number;
+  private readonly firstSSColumn: number;
 
   constructor(sheet: Excel.Worksheet) {
-    this.fish = PrefsColumns.findColumn(sheet, "FISH");
-    this.ss = PrefsColumns.findColumn(sheet, "SS");
+    this.firstFISHColumn = PrefsColumns.findColumn(sheet, "FISH");
     this.firstDSColumn = PrefsColumns.findColumn(sheet, "DS");
     this.firstLateDSColumn = PrefsColumns.findColumn(sheet, "Late DS");
+    this.firstSSColumn = PrefsColumns.findColumn(sheet, "SS");
+  }
+
+  fish(shift: Shift): number {
+    return this.firstFISHColumn + shift.enumOrdinal;
   }
 
   ds(shift: Shift): number {
@@ -33,6 +37,10 @@ export class PrefsColumns {
 
   lateDS(shift: Shift): number {
     return this.firstLateDSColumn + Math.trunc(shift.enumOrdinal / 2);
+  }
+
+  ss(shift: Shift): number {
+    return this.firstSSColumn + shift.enumOrdinal;
   }
 
   private static findColumn(sheet: Excel.Worksheet, label: string): number {

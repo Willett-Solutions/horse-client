@@ -79,16 +79,20 @@ export class ShiftRecord {
 export class PrefsRecord {
   private readonly teamField: TextField;
   private readonly nameField: TextField;
-  private readonly fishField: PreferenceField;
+  private readonly fishFields: PreferenceField[];
   private readonly dsFields: PreferenceField[];
   private readonly lateDSFields: PreferenceField[];
-  private readonly ssField: PreferenceField;
+  private readonly ssFields: PreferenceField[];
 
   constructor(columns: PrefsColumns, row: Excel.Row) {
     this.teamField = new TextField([], row.getCell(columns.team));
     this.nameField = new TextField([], row.getCell(columns.name));
 
-    this.fishField = new PreferenceField(row.getCell(columns.fish));
+    this.fishFields = Array(Shift.enumValues.length);
+    // @ts-ignore
+    for (const shift of Shift) {
+      this.fishFields[shift.enumOrdinal] = new PreferenceField(row.getCell(columns.fish(shift)));
+    }
 
     this.dsFields = Array(Shift.enumValues.length);
     // @ts-ignore
@@ -104,7 +108,11 @@ export class PrefsRecord {
         = new PreferenceField(row.getCell(columns.lateDS(shift)));
     }
 
-    this.ssField = new PreferenceField(row.getCell(columns.ss));
+    this.ssFields = Array(Shift.enumValues.length);
+    // @ts-ignore
+    for (const shift of Shift) {
+      this.ssFields[shift.enumOrdinal] = new PreferenceField(row.getCell(columns.ss(shift)));
+    }
   }
 
   get name() {
@@ -115,10 +123,10 @@ export class PrefsRecord {
     const preferences = new Preferences();
     // @ts-ignore
     for (const shift of Shift) {
-      preferences.set(shift, Duty.FISH, this.fishField.canDo);
+      preferences.set(shift, Duty.FISH, this.fishFields[shift.enumOrdinal].canDo);
       preferences.set(shift, Duty.DS, this.dsFields[shift.enumOrdinal].canDo);
       preferences.set(shift, Duty.LATE_DS, this.lateDSFields[Math.trunc(shift.enumOrdinal / 2)].canDo);
-      preferences.set(shift, Duty.SS, this.ssField.canDo);
+      preferences.set(shift, Duty.SS, this.ssFields[shift.enumOrdinal].canDo);
     }
     return preferences;
   }
