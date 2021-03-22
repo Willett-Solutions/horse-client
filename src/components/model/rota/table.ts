@@ -1,23 +1,24 @@
 import Excel from "exceljs";
-import {Employee, Task, Team} from "../domain";
-import {Record} from "./record";
-import {Columns} from "./columns";
+import {Employee, Preferences, Task, Team} from "../domain";
+import {PrefsRecord, ShiftRecord} from "./record";
+import {PrefsColumns, ShiftColumns} from "./columns";
+import assert from "assert";
 
-export class Table {
-  private records: Record[] = [];
+export class ShiftTable {
+  private records: ShiftRecord[] = [];
 
   constructor(themeColors: string[], sheet: Excel.Worksheet) {
-    const columns = new Columns(sheet);
+    const columns = new ShiftColumns();
     sheet.eachRow(row => {
       const teamName = row.getCell(columns.team).text;
       if (Team.exists(teamName)) {
-        this.records.push(new Record(themeColors, columns, row));
+        this.records.push(new ShiftRecord(themeColors, columns, row));
       }
     });
   }
 
-  createEmployees(): Employee[] {
-    return this.records.map(record => record.createEmployee());
+  createEmployees(prefsTable: PrefsTable): Employee[] {
+    return this.records.map(record => record.createEmployee(prefsTable));
   }
 
   addShiftsAndTasksTo(employees: Employee[]): void {
@@ -44,7 +45,28 @@ export class Table {
     record?.enterTask(task);
   }
 
-  private findRecord(name: string): Record | undefined {
+  private findRecord(name: string): ShiftRecord | undefined {
     return this.records.find(record => record.name === name);
+  }
+}
+
+
+export class PrefsTable {
+  private records: PrefsRecord[] = [];
+
+  constructor(sheet: Excel.Worksheet) {
+    const columns = new PrefsColumns(sheet);
+    sheet.eachRow(row => {
+      const teamName = row.getCell(columns.team).text;
+      if (Team.exists(teamName)) {
+        this.records.push(new PrefsRecord(columns, row));
+      }
+    });
+  }
+
+  getPreferences(employeeName: string): Preferences {
+    const record = this.records.find(record => record.name === employeeName);
+    assert(record !== undefined);
+    return record.getPreferences();
   }
 }

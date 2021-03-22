@@ -1,13 +1,13 @@
 import Excel from "exceljs";
 import date from 'date-and-time';
 import {Employee, Roster} from "../domain";
-import {Table} from "./table";
+import {PrefsTable, ShiftTable} from "./table";
 
 export class Document {
   private readonly workbook: Excel.Workbook;
   private themeColors: string[] = Array(2);
   private file: File | null = null;
-  private table: Table | null = null;
+  private shiftTable: ShiftTable | null = null;
 
   constructor() {
     this.workbook = new Excel.Workbook();
@@ -34,16 +34,17 @@ export class Document {
   }
 
   getRoster(sheetName: string): Roster {
-    this.table = new Table(this.themeColors, this.workbook.getWorksheet(sheetName));
-    const employees = this.table.createEmployees();
+    const prefsTable = new PrefsTable(this.workbook.getWorksheet("Preferences"));
+    this.shiftTable = new ShiftTable(this.themeColors, this.workbook.getWorksheet(sheetName));
+    const employees = this.shiftTable.createEmployees(prefsTable);
     this.addShiftsAndTasksPriorTo(sheetName, employees);
-    const tasks = this.table.createTasks(employees);
+    const tasks = this.shiftTable.createTasks(employees);
     return new Roster(employees, tasks);
   }
 
   async setRoster(solution: Roster): Promise<File> {
     this.workbook.eachSheet(worksheet => worksheet.removeConditionalFormatting(true));
-    solution.tasks.forEach(task => this.table!.enterTask(task));
+    solution.tasks.forEach(task => this.shiftTable!.enterTask(task));
     const buffer = await this.workbook.xlsx.writeBuffer();
     return new File([buffer], this.file!.name, {type: this.file!.type});
   }
@@ -55,7 +56,7 @@ export class Document {
       // Consider sheets dated up to 6 weeks (42 days) before this sheet
       const dateDifference = date.subtract(thisSheetDate, sheetDate).toDays();
       if (dateDifference > 0 && dateDifference <= 42) {
-        const table = new Table(this.themeColors, sheet);
+        const table = new ShiftTable(this.themeColors, sheet);
         table.addShiftsAndTasksTo(employees);
       }
     });

@@ -1,7 +1,17 @@
 import Excel from "exceljs";
 import {Shift} from "../domain";
 
-export class Columns {
+export class ShiftColumns {
+  team = 1;
+  name = 2;
+
+  shift(shift: Shift): number {
+    return 3 + shift.enumOrdinal;
+  }
+}
+
+
+export class PrefsColumns {
   team = 1;
   name = 2;
   fish: number;
@@ -11,14 +21,10 @@ export class Columns {
   private readonly firstLateDSColumn: number;
 
   constructor(sheet: Excel.Worksheet) {
-    this.fish = Columns.findColumn(sheet, "FISH");
-    this.ss = Columns.findColumn(sheet, "SS");
-    this.firstDSColumn = Columns.findColumn(sheet, "DS");
-    this.firstLateDSColumn = Columns.findColumn(sheet, "Late DS");
-  }
-
-  shift(shift: Shift): number {
-    return 3 + shift.enumOrdinal;
+    this.fish = PrefsColumns.findColumn(sheet, "FISH");
+    this.ss = PrefsColumns.findColumn(sheet, "SS");
+    this.firstDSColumn = PrefsColumns.findColumn(sheet, "DS");
+    this.firstLateDSColumn = PrefsColumns.findColumn(sheet, "Late DS");
   }
 
   ds(shift: Shift): number {

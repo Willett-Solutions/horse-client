@@ -100,7 +100,17 @@ export class ShiftField extends Field {
 }
 
 
-export class PreferenceField extends Field {
+export class PreferenceField {
+  private readonly cell: Excel.Cell;
+
+  constructor(cell: Excel.Cell) {
+    this.cell = cell;
+  }
+
+  get content() {
+    return this.cell.text
+  }
+
   get canDo(): boolean {
     return this.content === "Y";
   }
