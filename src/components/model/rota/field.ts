@@ -5,16 +5,34 @@ import Color from "color";
 
 
 abstract class Field {
-  private readonly themeColors: string[]
-  private readonly cell: Excel.Cell;
+  protected readonly cell: Excel.Cell;
 
-  constructor(themeColors: string[], cell: Excel.Cell) {
-    this.themeColors = themeColors;
+  constructor(cell: Excel.Cell) {
     this.cell = cell;
   }
+}
 
-  get content() {
-    return this.cell.text
+
+export class TextField extends Field {
+  get text() {
+    return this.cell.text;
+  }
+}
+
+
+export class PreferenceField extends Field {
+  get canDo(): boolean {
+    return this.cell.text === "Y";
+  }
+}
+
+
+abstract class ColoredField extends Field {
+  private readonly themeColors: string[]
+
+  constructor(themeColors: string[], cell: Excel.Cell) {
+    super(cell);
+    this.themeColors = themeColors;
   }
 
   private _color: Color | null | undefined;
@@ -70,17 +88,12 @@ abstract class Field {
 }
 
 
-export class TextField extends Field {
-
-}
-
-
-export class ShiftField extends Field {
+export class ShiftField extends ColoredField {
   get status(): Status {
     if (this.color === null) return Status.UNAVAILABLE;
     const status = Status.fromColor(this.color);
     if (status !== null) return status;
-    if (ShiftField.isShadeOfGray(this.color) || this.content === "A/L") return Status.ANNUAL_LEAVE;
+    if (ShiftField.isShadeOfGray(this.color) || this.cell.text === "A/L") return Status.ANNUAL_LEAVE;
     if (Duty.fromColor(this.color) !== null) return Status.AVAILABLE;
     return Status.UNAVAILABLE;
   }
@@ -96,22 +109,5 @@ export class ShiftField extends Field {
 
   private static isShadeOfGray(color: Color) {
     return color.array().every((val, i, arr) => val === arr[0]);
-  }
-}
-
-
-export class PreferenceField {
-  private readonly cell: Excel.Cell;
-
-  constructor(cell: Excel.Cell) {
-    this.cell = cell;
-  }
-
-  get content() {
-    return this.cell.text
-  }
-
-  get canDo(): boolean {
-    return this.content === "Y";
   }
 }

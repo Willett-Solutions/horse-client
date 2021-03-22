@@ -10,8 +10,8 @@ export class ShiftRecord {
   private readonly shiftFields: ShiftField[];
 
   constructor(themeColors: string[], columns: ShiftColumns, row: Excel.Row) {
-    this.teamField = new TextField(themeColors, row.getCell(columns.team));
-    this.nameField = new TextField(themeColors, row.getCell(columns.name));
+    this.teamField = new TextField(row.getCell(columns.team));
+    this.nameField = new TextField(row.getCell(columns.name));
 
     this.shiftFields = Array(Shift.enumValues.length);
     // @ts-ignore
@@ -21,12 +21,12 @@ export class ShiftRecord {
   }
 
   get name() {
-    return this.nameField.content;
+    return this.nameField.text;
   }
 
   createEmployee(prefsTable: PrefsTable): Employee {
-    const name: string = this.nameField.content;
-    const team: Team = Team.fromTitle(this.teamField.content)!;
+    const name: string = this.nameField.text;
+    const team: Team = Team.fromTitle(this.teamField.text)!;
     const statuses = this.shiftFields.map(field => field.status);
 
     const preferences = prefsTable.getPreferences(name);
@@ -85,8 +85,8 @@ export class PrefsRecord {
   private readonly ssFields: PreferenceField[];
 
   constructor(columns: PrefsColumns, row: Excel.Row) {
-    this.teamField = new TextField([], row.getCell(columns.team));
-    this.nameField = new TextField([], row.getCell(columns.name));
+    this.teamField = new TextField(row.getCell(columns.team));
+    this.nameField = new TextField(row.getCell(columns.name));
 
     this.fishFields = Array(Shift.enumValues.length);
     // @ts-ignore
@@ -116,7 +116,7 @@ export class PrefsRecord {
   }
 
   get name() {
-    return this.nameField.content;
+    return this.nameField.text;
   }
 
   getPreferences(): Preferences {
