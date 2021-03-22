@@ -18,7 +18,11 @@ export class Document {
     const buffer = await file.arrayBuffer();
     await this.workbook.xlsx.load(buffer);
     this.setThemeColors();
-    return this.workbook.worksheets.map(sheet => sheet.name);
+    return this.workbook.worksheets.map(sheet => sheet.name)
+      .filter(sheetName => {
+        const sheetDate = date.parse(sheetName, "DD-MM-YYYY");
+        return !isNaN(sheetDate.getDate());
+      });
   }
 
   private setThemeColors() {
