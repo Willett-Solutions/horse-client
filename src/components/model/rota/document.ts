@@ -57,9 +57,9 @@ export class Document {
     const thisSheetDate = date.parse(sheetName, "DD-MM-YYYY");
     this.workbook.eachSheet(sheet => {
       const sheetDate = date.parse(sheet.name, "DD-MM-YYYY");
-      // Consider sheets dated up to 6 weeks (42 days) before this sheet
+      // Consider sheets dated up to 12 weeks (84 days) before this sheet
       const dateDifference = date.subtract(thisSheetDate, sheetDate).toDays();
-      if (dateDifference > 0 && dateDifference <= 42) {
+      if (dateDifference > 0 && dateDifference <= 84) {
         const table = new ShiftTable(this.themeColors, sheet);
         table.addShiftsAndTasksTo(employees);
       }
