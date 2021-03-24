@@ -41,7 +41,8 @@ export class ShiftTable {
   }
 
   enterTask(task: Task) {
-    const record = this.findRecord(task.employee!.name);
+    if (task.employee === null) return
+    const record = this.findRecord(task.employee.name);
     record?.enterTask(task);
   }
 

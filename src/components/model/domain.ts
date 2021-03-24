@@ -29,7 +29,9 @@ export class Roster {
       [employee.name]: new Array(4).fill(0)
     })));
     for (const task of this.tasks) {
-      items[task.employee!.name][task.duty.enumOrdinal]++;
+      if (task.employee !== null) {
+        items[task.employee.name][task.duty.enumOrdinal]++;
+      }
     }
     return items;
   }
