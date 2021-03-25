@@ -5,7 +5,7 @@ import ControlPanel from "./components/ControlPanel";
 import InstructionPanel from "./components/InstructionPanel";
 import Container from "react-bootstrap/Container";
 import "./App.css";
-import SummaryTable from "./components/SummaryTable";
+import RosterPreview from "./components/RosterPreview";
 import {Roster} from "./components/model/domain";
 import Solver from "./components/model/solver";
 
@@ -42,7 +42,7 @@ class App extends React.Component<{}, AppState> {
               onSaveFile={this.handleSaveFile}
             />
           </section>
-          {this.state.roster !== null && <SummaryTable summary={this.state.roster.summary()}/>}
+          {this.state.roster !== null && <RosterPreview roster={this.state.roster}/>}
           <section>
             <InstructionPanel hasFinished={this.state.roster !== null}/>
           </section>

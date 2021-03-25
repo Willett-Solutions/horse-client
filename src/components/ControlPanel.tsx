@@ -4,7 +4,6 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import SelectionForm from "./SelectionForm";
-//import * as Rota from "./model/rota";
 import horse_start from "./horse-start.gif";
 import horse_animation from "./horse-animation.gif";
 import horse_end from "./horse-end.gif";
@@ -79,7 +78,7 @@ function SolvedNotice(props: { onSaveRotaFile: () => void }) {
   return (
     <div>
       <p>All done! HORSE has successfully completed the rota sheet for the specified week. If you are happy with
-        the assignments listed in the table, click the "Save rota file" button to save the file containing the
+        the assignments shown in the preview, click the "Save rota file" button to save the file containing the
         completed rota, then follow the instructions below.</p>
       <Button onClick={props.onSaveRotaFile}>Save rota file</Button>
     </div>
