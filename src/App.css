@@ -12,7 +12,7 @@ header span::first-letter {
   font-style: italic;
 }
 
-section {
+section, aside {
   margin: 1rem 0;
   border: 1px solid lightgray;
   border-radius: 0.25rem;
@@ -24,6 +24,6 @@ footer {
 }
 
 #content {
-  max-width: 800px;
-  min-width: 500px;
+  max-width: 1200px;
+  min-width: 840px;
 }

@@ -8,7 +8,7 @@ function InstructionPanel(props: { hasFinished: boolean }) {
       {!props.hasFinished ? (
         <ul className="horseshoe">
           <li>
-            Start by clicking the "Choose file" button above. A file selection window will open.
+            Start by clicking the "Choose file" button. A file selection window will open.
           </li>
           <li>
             Browse to the folder containing the shift rota file (e.g. "Shifts.xlsx") and select that file. Click

@@ -48,6 +48,11 @@ class ControlPanel extends React.Component<ControlPanelProps, ControlPanelState>
 
     return (
       <Container fluid className="p-0">
+        <Row>
+          <Col className="text-center pb-3">
+            <HorseAnimation phase={phase}/>
+          </Col>
+        </Row>
         <Row noGutters>
           <Col>
             {(!this.props.hasFinished)
@@ -59,9 +64,6 @@ class ControlPanel extends React.Component<ControlPanelProps, ControlPanelState>
                 onSaveRotaFile={() => this.props.onSaveFile()}
                 />
             }
-          </Col>
-          <Col xs="auto" className="pl-3 align-self-end">
-            <HorseAnimation phase={phase}/>
           </Col>
         </Row>
       </Container>
@@ -79,7 +81,7 @@ function SolvedNotice(props: { onSaveRotaFile: () => void }) {
     <div>
       <p>All done! HORSE has successfully completed the rota sheet for the specified week. If you are happy with
         the assignments shown in the preview, click the "Save rota file" button to save the file containing the
-        completed rota, then follow the instructions below.</p>
+        completed rota, then follow the instructions.</p>
       <Button onClick={props.onSaveRotaFile}>Save rota file</Button>
     </div>
   );
