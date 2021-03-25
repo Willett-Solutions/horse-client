@@ -1,5 +1,6 @@
 import React from "react";
 import {Duty, Roster, Shift} from "./model/domain";
+import {Table} from "react-bootstrap";
 
 function RosterPreview(props: { roster: Roster }) {
   const nameToDutiesMap: Map<string, Array<Duty>> = new Map();
@@ -19,7 +20,7 @@ function RosterPreview(props: { roster: Roster }) {
 
   return (
     <React.Fragment>
-      <table className="table table-bordered table-sm">
+      <Table bordered size="sm">
         <thead>
           <tr>
             <th colSpan={11}>Rota Preview</th>
@@ -68,10 +69,35 @@ function RosterPreview(props: { roster: Roster }) {
               )
           }
         </tbody>
-      </table>
-      <h2>
+      </Table>
+      <h2 className="pb-5">
         Unassigned tasks: {unassignedTaskCount}
       </h2>
+      <Table bordered striped size="sm">
+        <thead>
+          <tr>
+            <th colSpan={4}>Statistics</th>
+          </tr>
+          <tr>
+            <th>Name</th>
+            <th>Duties Performed</th>
+            <th>Shifts Worked</th>
+            <th>Duties / Shift</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            props.roster.employees.map(employee =>
+            <tr>
+              <td>{employee.name}</td>
+              <td>{employee.priorTaskCount}</td>
+              <td>{employee.priorShiftCount}</td>
+              <td>{Math.round(100 * employee.priorTaskCount / employee.priorShiftCount) + "%"}</td>
+            </tr>
+            )
+          }
+        </tbody>
+      </Table>
     </React.Fragment>
   );
 }
