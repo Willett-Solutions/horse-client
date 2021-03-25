@@ -3,6 +3,7 @@ import {Duty, Roster, Shift} from "./model/domain";
 
 function RosterPreview(props: { roster: Roster }) {
   const nameToDutiesMap: Map<string, Array<Duty>> = new Map();
+  let unassignedTaskCount = 0;
   props.roster.employees.forEach(employee =>
     nameToDutiesMap.set(employee.name, new Array(Shift.enumValues.length).fill(undefined))
   );
@@ -11,6 +12,8 @@ function RosterPreview(props: { roster: Roster }) {
     if (employee !== null) {
       const duties = nameToDutiesMap.get(employee.name);
       duties![task.shift.enumOrdinal] = task.duty;
+    } else {
+      unassignedTaskCount++;
     }
   });
 
@@ -18,6 +21,9 @@ function RosterPreview(props: { roster: Roster }) {
     <React.Fragment>
       <table className="table table-bordered table-sm">
         <thead>
+          <tr>
+            <th colSpan={11}>Rota Preview</th>
+          </tr>
           <tr>
             <th>Name</th>
             <th colSpan={2}>Monday</th>
@@ -63,6 +69,9 @@ function RosterPreview(props: { roster: Roster }) {
           }
         </tbody>
       </table>
+      <h2>
+        Unassigned tasks: {unassignedTaskCount}
+      </h2>
     </React.Fragment>
   );
 }
