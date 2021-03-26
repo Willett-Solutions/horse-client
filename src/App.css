@@ -1,5 +1,6 @@
 header {
-  margin: 1rem 0;
+  background-color: antiquewhite;
+  padding: 1rem 0;
   text-align: center;
 }
 
@@ -11,18 +12,24 @@ header span::first-letter {
   color: blue;
 }
 
+main {
+  background-color: ivory;
+}
+
 section, aside {
+  background-color: white;
+  min-height: 30rem;
   margin: 1rem 0;
   border: 1px solid lightgray;
-  border-radius: 0.25rem;
+  border-radius: 0.5rem;
   padding: 1rem;
 }
 
 footer {
-  text-align: right;
+  background-color: antiquewhite;
+  padding: 1rem 0;
 }
 
 #content {
-  max-width: 1200px;
-  min-width: 840px;
+  min-width: 1150px;
 }

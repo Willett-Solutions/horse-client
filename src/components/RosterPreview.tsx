@@ -2,7 +2,42 @@ import React from "react";
 import {Duty, Roster, Shift} from "./model/domain";
 import {Table} from "react-bootstrap";
 
-function RosterPreview(props: { roster: Roster }) {
+function RosterPreview(props: { roster: Roster | null }) {
+  if (props.roster === null) {
+    return (
+      <Table bordered size="sm">
+        <thead>
+          <tr>
+            <th colSpan={11}>Rota Preview</th>
+          </tr>
+          <tr>
+            <th>Name</th>
+            <th colSpan={2}>Monday</th>
+            <th colSpan={2}>Tuesday</th>
+            <th colSpan={2}>Wednesday</th>
+            <th colSpan={2}>Thursday</th>
+            <th colSpan={2}>Friday</th>
+          </tr>
+          <tr>
+            <th style={{width: "10%"}}/>
+            <th style={{width: "9%"}}>AM</th>
+            <th style={{width: "9%"}}>PM</th>
+            <th style={{width: "9%"}}>AM</th>
+            <th style={{width: "9%"}}>PM</th>
+            <th style={{width: "9%"}}>AM</th>
+            <th style={{width: "9%"}}>PM</th>
+            <th style={{width: "9%"}}>AM</th>
+            <th style={{width: "9%"}}>PM</th>
+            <th style={{width: "9%"}}>AM</th>
+            <th style={{width: "9%"}}>PM</th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </Table>
+    );
+  }
+
   const nameToDutiesMap: Map<string, Array<Duty>> = new Map();
   let unassignedTaskCount = 0;
   props.roster.employees.forEach(employee =>

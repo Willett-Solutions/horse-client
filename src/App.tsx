@@ -27,36 +27,41 @@ class App extends React.Component<{}, AppState> {
 
   render() {
     return (
-      <Container fluid id="content">
-        <Row className="justify-content-center">
-          <header>
-            <h1>
-              <span>Haemato-</span><span>Oncology</span> <span>Rota</span> <span>Shift</span> <span>Evaluator</span>
-            </h1>
-            <p>Version {process.env.REACT_APP_VERSION}</p>
-          </header>
-        </Row>
-        <Row>
-          <Col xs={4}>
-            <main>
-              <section>
-                <ControlPanel
-                  solver={this.solver}
-                  hasFinished={this.state.roster !== null}
-                  onFinished={roster => this.setState({roster: roster})}
-                  onSaveFile={this.handleSaveFile}
-                />
-              </section>
-            </main>
-          </Col>
-          <Col xs={8}>
-            <aside>
-              <InstructionPanel hasFinished={this.state.roster !== null}/>
-            </aside>
-            {this.state.roster !== null && <RosterPreview roster={this.state.roster}/>}
-          </Col>
-        </Row>
-      </Container>
+      <React.Fragment>
+        <header>
+          <h1>
+            <span>Haemato-</span><span>Oncology</span> <span>Rota</span> <span>Shift</span> <span>Evaluator</span>
+          </h1>
+          <p>Version {process.env.REACT_APP_VERSION}</p>
+        </header>
+        <main>
+          <Container fluid id="content">
+            <Row className="p-3">
+              <Col xs={3}>
+                <aside>
+                  <InstructionPanel hasFinished={this.state.roster !== null}/>
+                </aside>
+              </Col>
+              <Col xs={3}>
+                <section>
+                  <ControlPanel
+                    solver={this.solver}
+                    hasFinished={this.state.roster !== null}
+                    onFinished={roster => this.setState({roster: roster})}
+                    onSaveFile={this.handleSaveFile}
+                  />
+                </section>
+              </Col>
+              <Col xs={6}>
+                <section>
+                  <RosterPreview roster={this.state.roster}/>
+                </section>
+              </Col>
+            </Row>
+          </Container>
+        </main>
+        <footer></footer>
+      </React.Fragment>
     );
   }
 
