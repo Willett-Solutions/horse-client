@@ -126,7 +126,7 @@ export class Duty extends Enumify {
   }
 
   static FISH =
-    new Duty(Color("#FF0000"), [1, 1, 1, 1, 2, 2, 1, 1, 1, 1]);
+    new Duty(Color("#FF0000"), [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]);
   static DS =
     new Duty(Color("#00B0F0"), [1, 0, 1, 0, 1, 1, 1, 1, 1, 1]);
   static LATE_DS =
