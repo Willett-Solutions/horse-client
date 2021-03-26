@@ -9,7 +9,6 @@ header span {
 
 header span::first-letter {
   color: blue;
-  font-style: italic;
 }
 
 section, aside {
