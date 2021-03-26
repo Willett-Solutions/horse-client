@@ -37,12 +37,12 @@ class App extends React.Component<{}, AppState> {
         <main>
           <Container fluid id="content">
             <Row className="p-3">
-              <Col xs={3}>
+              <Col xl={3} md={6}>
                 <aside>
                   <InstructionPanel hasFinished={this.state.roster !== null}/>
                 </aside>
               </Col>
-              <Col xs={3}>
+              <Col xl={3} md={6}>
                 <section>
                   <ControlPanel
                     solver={this.solver}
@@ -52,7 +52,7 @@ class App extends React.Component<{}, AppState> {
                   />
                 </section>
               </Col>
-              <Col xs={6}>
+              <Col xl={6}>
                 <section>
                   <RosterPreview roster={this.state.roster}/>
                 </section>

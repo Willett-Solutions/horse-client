@@ -108,7 +108,7 @@ function RosterPreview(props: { roster: Roster | null }) {
       <h2 className="pb-5">
         Unassigned duties: {unassignedTaskCount}
       </h2>
-      <Table bordered striped size="sm">
+      <Table bordered striped size="sm" className="m-0">
         <thead>
           <tr>
             <th colSpan={4}>Statistics</th>
