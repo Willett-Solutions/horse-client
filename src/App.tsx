@@ -30,7 +30,7 @@ class App extends React.Component<{}, AppState> {
       <React.Fragment>
         <header>
           <h1>
-            <span>Haemato-</span><span>Oncology</span> <span>Rota</span> <span>Shift</span> <span>Evaluator</span>
+            <span>Haemato-</span><span>Oncology</span> <span>Rota</span> <span>Sheet</span> <span>Evaluator</span>
           </h1>
           <p>Version {process.env.REACT_APP_VERSION}</p>
         </header>
@@ -60,7 +60,9 @@ class App extends React.Component<{}, AppState> {
             </Row>
           </Container>
         </main>
-        <footer></footer>
+        <footer>
+          <p>Released from the stable by David Willett (<a href="mailto:david.m.willett@gmail.com">david.m.willett@gmail.com</a>)</p>
+        </footer>
       </React.Fragment>
     );
   }

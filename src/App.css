@@ -1,7 +1,11 @@
 header {
-  background-color: antiquewhite;
+  background-color: lightblue;
   padding: 1rem 0;
   text-align: center;
+}
+
+header p {
+  margin: 0;
 }
 
 header span {
@@ -13,7 +17,7 @@ header span::first-letter {
 }
 
 main {
-  background-color: ivory;
+  background-color: azure;
 }
 
 section, aside {
@@ -26,8 +30,13 @@ section, aside {
 }
 
 footer {
-  background-color: antiquewhite;
+  background-color: lightblue;
   padding: 1rem 0;
+  text-align: center;
+}
+
+footer p {
+  margin: 0;
 }
 
 #content {
