@@ -5,6 +5,7 @@ import ControlPanel from "./components/ControlPanel";
 import InstructionPanel from "./components/InstructionPanel";
 import "./App.css";
 import RosterPreview from "./components/RosterPreview";
+import StatisticsView from "./components/StatisticsView";
 import {Roster} from "./components/model/domain";
 import Solver from "./components/model/solver";
 import {Col, Container, Row} from "react-bootstrap";
@@ -36,7 +37,7 @@ class App extends React.Component<{}, AppState> {
         </header>
         <main>
           <Container fluid id="content">
-            <Row className="p-3">
+            <Row noGutters className="p-3">
               <Col xl={3} md={6}>
                 <aside>
                   <InstructionPanel hasFinished={this.state.roster !== null}/>
@@ -56,6 +57,12 @@ class App extends React.Component<{}, AppState> {
                 <section>
                   <RosterPreview roster={this.state.roster}/>
                 </section>
+                {
+                  this.state.roster !== null &&
+                    <section>
+                      <StatisticsView roster={this.state.roster}/>
+                    </section>
+                }
               </Col>
             </Row>
           </Container>

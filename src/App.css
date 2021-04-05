@@ -23,7 +23,7 @@ main {
 section, aside {
   background-color: white;
   min-height: 30rem;
-  margin: 1rem 0;
+  margin: 1rem;
   border: 1px solid lightgray;
   border-radius: 0.5rem;
   padding: 1rem;

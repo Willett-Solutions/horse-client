@@ -105,34 +105,9 @@ function RosterPreview(props: { roster: Roster | null }) {
           }
         </tbody>
       </Table>
-      <h2 className="pb-5">
+      <h2>
         Unassigned duties: {unassignedTaskCount}
       </h2>
-      <Table bordered striped size="sm" className="m-0">
-        <thead>
-          <tr>
-            <th colSpan={4}>Statistics</th>
-          </tr>
-          <tr>
-            <th>Name</th>
-            <th>Duties Performed</th>
-            <th>Duties as % of Working Time</th>
-          </tr>
-        </thead>
-        <tbody>
-          {
-            props.roster.employees
-              .filter(employee => employee.priorTaskCount > 0)
-              .map(employee =>
-                <tr>
-                  <td>{employee.name}</td>
-                  <td>{employee.priorTaskCount}</td>
-                  <td>{Math.round(100 * employee.priorTaskCount / employee.priorShiftCount) + "%"}</td>
-                </tr>
-              )
-          }
-        </tbody>
-      </Table>
     </React.Fragment>
   );
 }
