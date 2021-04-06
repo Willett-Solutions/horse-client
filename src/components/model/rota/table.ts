@@ -5,9 +5,11 @@ import {PrefsColumns, ShiftColumns} from "./columns";
 import assert from "assert";
 
 export class ShiftTable {
+  sheetName: string;
   private records: ShiftRecord[] = [];
 
   constructor(themeColors: string[], sheet: Excel.Worksheet) {
+    this.sheetName = sheet.name;
     const columns = new ShiftColumns();
     sheet.eachRow(row => {
       const teamName = row.getCell(columns.team).text;
