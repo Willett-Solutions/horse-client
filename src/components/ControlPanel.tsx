@@ -17,10 +17,9 @@ enum Phase {
 }
 
 type ControlPanelProps = {
-  solver: Solver,
   hasFinished: boolean,
   onFinished: (roster: Roster) => void,
-  onSaveFile: () => void,
+  onSaveFile: (solver: Solver) => void,
 };
 
 type ControlPanelState = {
@@ -28,12 +27,14 @@ type ControlPanelState = {
 };
 
 class ControlPanel extends React.Component<ControlPanelProps, ControlPanelState> {
+  private readonly solver = new Solver();
+
   constructor(props: ControlPanelProps) {
     super(props);
+    this.handlePlanRotaSheet = this.handlePlanRotaSheet.bind(this);
     this.state = {
       hasStartedSolving: false,
     };
-    this.handlePlanRotaSheet = this.handlePlanRotaSheet.bind(this);
   }
 
   render() {
@@ -57,11 +58,11 @@ class ControlPanel extends React.Component<ControlPanelProps, ControlPanelState>
           <Col>
             {(!this.props.hasFinished)
               ? <SelectionForm
-                solver={this.props.solver}
+                solver={this.solver}
                 onPlanRotaSheet={this.handlePlanRotaSheet}
                 disabled={this.state.hasStartedSolving}/>
               : <SolvedNotice
-                onSaveRotaFile={() => this.props.onSaveFile()}
+                onSaveRotaFile={() => this.props.onSaveFile(this.solver)}
                 />
             }
           </Col>
@@ -72,7 +73,7 @@ class ControlPanel extends React.Component<ControlPanelProps, ControlPanelState>
 
   private handlePlanRotaSheet(sheetName: string) {
     this.setState({hasStartedSolving: true});
-    this.props.solver.solve(sheetName).then(roster => {this.props.onFinished(roster)});
+    this.solver.solve(sheetName).then(roster => {this.props.onFinished(roster)});
   }
 }
 

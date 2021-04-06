@@ -15,14 +15,11 @@ type AppState = {
 };
 
 class App extends React.Component<{}, AppState> {
-  solver: Solver;
-
   constructor(props: {}) {
     super(props);
     this.state = {
       roster: null,
     }
-    this.solver = new Solver();
     this.handleSaveFile = this.handleSaveFile.bind(this);
   }
 
@@ -46,7 +43,6 @@ class App extends React.Component<{}, AppState> {
               <Col xl={3} md={6}>
                 <section>
                   <ControlPanel
-                    solver={this.solver}
                     hasFinished={this.state.roster !== null}
                     onFinished={roster => this.setState({roster: roster})}
                     onSaveFile={this.handleSaveFile}
@@ -74,8 +70,8 @@ class App extends React.Component<{}, AppState> {
     );
   }
 
-  private handleSaveFile() {
-    this.solver.getFile(this.state.roster!).then(file => {
+  private handleSaveFile(solver: Solver) {
+    solver.getFile(this.state.roster!).then(file => {
       FileSaver.saveAs(file);
     });
   }
