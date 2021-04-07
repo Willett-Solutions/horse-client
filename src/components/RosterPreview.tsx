@@ -1,17 +1,19 @@
 import React from "react";
 import {Table} from "react-bootstrap";
-import {Duty, Roster, Shift} from "./model/domain";
+import {Duty, Shift} from "./model/domain";
+import * as Rota from "./model/rota";
 
-function RosterPreview(props: { roster: Roster | null }) {
+function RosterPreview(props: { document: Rota.Document | null }) {
   let tbody: JSX.Element | undefined;
   let unassignedTaskCount = 0;
 
-  if (props.roster !== null) {
+  if (props.document !== null) {
+    const roster = props.document.getRoster();
     const nameToDutiesMap: Map<string, Array<Duty>> = new Map();
-    props.roster.employees.forEach(employee =>
+    roster.employees.forEach(employee =>
       nameToDutiesMap.set(employee.name, new Array(Shift.enumValues.length).fill(undefined))
     );
-    props.roster.tasks.forEach(task => {
+    roster.tasks.forEach(task => {
       const employee = task.employee;
       if (employee !== null) {
         const duties = nameToDutiesMap.get(employee.name);
@@ -71,7 +73,7 @@ function RosterPreview(props: { roster: Roster | null }) {
         </tbody>
       </Table>
       {
-        props.roster !== null &&
+        props.document !== null &&
         <h2>
           Unassigned duties: {unassignedTaskCount}
         </h2>

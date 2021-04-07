@@ -1,8 +1,8 @@
 import React from "react";
 import {Table} from "react-bootstrap";
-import {Roster} from "./model/domain/roster";
+import * as Rota from "./model/rota";
 
-function StatisticsView(props: { roster: Roster }) {
+function StatisticsView(props: { document: Rota.Document }) {
   return (
     <Table bordered striped size="sm" className="m-0">
       <thead>
@@ -17,7 +17,7 @@ function StatisticsView(props: { roster: Roster }) {
       </thead>
       <tbody>
         {
-          props.roster.employees
+          props.document.getRoster().employees
             .filter(employee => employee.priorTaskCount > 0)
             .map(employee =>
               <tr>

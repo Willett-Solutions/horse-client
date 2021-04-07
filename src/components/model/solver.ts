@@ -2,15 +2,8 @@ import * as Rota from "./rota";
 import {Roster, Duty, Shift, Team} from "./domain";
 
 class Solver {
-  private document = new Rota.Document();
-
-  async setFile(file: File): Promise<string[]> {
-    return await this.document.load(file);
-  }
-
-  async solve(sheetName: string): Promise<Roster> {
-    this.document.setSheet(sheetName);
-    const problem = this.document.getRoster();
+  async solve(document: Rota.Document) {
+    const problem = document.getRoster();
     problem.addUnassignedTasks();
     const authority = process.env.REACT_APP_AUTHORITY;
     const response = await fetch("http://" + authority + "/solve", {
@@ -20,11 +13,8 @@ class Solver {
     });
     const text = await response.text();
     const body = JSON.parse(text, Solver.reviver);
-    return new Roster(body.employees, body.tasks);  // Ugly!
-  }
-
-  async getFile(roster: Roster): Promise<File> {
-    return await this.document.setRoster(roster);
+    const solution = new Roster(body.employees, body.tasks);  // Ugly!
+    await document.setRoster(solution);
   }
 
   private static reviver(key: string, value: string) {

@@ -1,26 +1,25 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React from "react";
-import FileSaver from "file-saver";
 import ControlPanel from "./components/ControlPanel";
 import InstructionPanel from "./components/InstructionPanel";
 import "./App.css";
 import RosterPreview from "./components/RosterPreview";
 import StatisticsView from "./components/StatisticsView";
-import {Roster} from "./components/model/domain";
-import Solver from "./components/model/solver";
 import {Col, Container, Row} from "react-bootstrap";
+import * as Rota from "./components/model/rota";
 
 type AppState = {
-  roster: Roster | null;
+  document: Rota.Document | null,
+  isSolved: boolean,
 };
 
 class App extends React.Component<{}, AppState> {
   constructor(props: {}) {
     super(props);
     this.state = {
-      roster: null,
+      document: null,
+      isSolved: false,
     }
-    this.handleSaveFile = this.handleSaveFile.bind(this);
   }
 
   render() {
@@ -37,26 +36,26 @@ class App extends React.Component<{}, AppState> {
             <Row noGutters className="p-3">
               <Col xl={3} md={6}>
                 <aside>
-                  <InstructionPanel hasFinished={this.state.roster !== null}/>
+                  <InstructionPanel hasFinished={this.state.isSolved}/>
                 </aside>
               </Col>
               <Col xl={3} md={6}>
                 <section>
                   <ControlPanel
-                    hasFinished={this.state.roster !== null}
-                    onFinished={roster => this.setState({roster: roster})}
-                    onSaveFile={this.handleSaveFile}
+                    hasFinished={this.state.isSolved}
+                    onSheetSelected={document => this.setState({document: document})}
+                    onFinished={document => this.setState({document: document, isSolved: true})}
                   />
                 </section>
               </Col>
               <Col xl={6}>
                 <section>
-                  <RosterPreview roster={this.state.roster}/>
+                  <RosterPreview document={this.state.document}/>
                 </section>
                 {
-                  this.state.roster !== null &&
+                  this.state.isSolved &&
                     <section>
-                      <StatisticsView roster={this.state.roster}/>
+                      <StatisticsView document={this.state.document!}/>
                     </section>
                 }
               </Col>
@@ -68,12 +67,6 @@ class App extends React.Component<{}, AppState> {
         </footer>
       </React.Fragment>
     );
-  }
-
-  private handleSaveFile(solver: Solver) {
-    solver.getFile(this.state.roster!).then(file => {
-      FileSaver.saveAs(file);
-    });
   }
 }
 

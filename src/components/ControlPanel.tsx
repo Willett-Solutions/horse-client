@@ -7,8 +7,9 @@ import SelectionForm from "./SelectionForm";
 import horse_start from "./horse-start.gif";
 import horse_animation from "./horse-animation.gif";
 import horse_end from "./horse-end.gif";
-import {Roster} from "./model/domain";
 import Solver from "./model/solver";
+import * as Rota from "./model/rota";
+import FileSaver from "file-saver";
 
 enum Phase {
   INITIAL,
@@ -18,8 +19,8 @@ enum Phase {
 
 type ControlPanelProps = {
   hasFinished: boolean,
-  onFinished: (roster: Roster) => void,
-  onSaveFile: (solver: Solver) => void,
+  onSheetSelected: (document: Rota.Document) => void,
+  onFinished: (document: Rota.Document) => void,
 };
 
 type ControlPanelState = {
@@ -28,10 +29,13 @@ type ControlPanelState = {
 
 class ControlPanel extends React.Component<ControlPanelProps, ControlPanelState> {
   private readonly solver = new Solver();
+  private document: Rota.Document | null = null;
 
   constructor(props: ControlPanelProps) {
     super(props);
+    this.handleSheetSelected = this.handleSheetSelected.bind(this);
     this.handlePlanRotaSheet = this.handlePlanRotaSheet.bind(this);
+    this.handleSaveFile = this.handleSaveFile.bind(this);
     this.state = {
       hasStartedSolving: false,
     };
@@ -58,11 +62,11 @@ class ControlPanel extends React.Component<ControlPanelProps, ControlPanelState>
           <Col>
             {(!this.props.hasFinished)
               ? <SelectionForm
-                solver={this.solver}
+                onSheetSelected={this.handleSheetSelected}
                 onPlanRotaSheet={this.handlePlanRotaSheet}
                 disabled={this.state.hasStartedSolving}/>
               : <SolvedNotice
-                onSaveRotaFile={() => this.props.onSaveFile(this.solver)}
+                onSaveRotaFile={this.handleSaveFile}
                 />
             }
           </Col>
@@ -71,11 +75,21 @@ class ControlPanel extends React.Component<ControlPanelProps, ControlPanelState>
     );
   }
 
-  private handlePlanRotaSheet(sheetName: string) {
+  private handleSheetSelected(document: Rota.Document) {
+    this.document = document;
+    this.props.onSheetSelected(document);
+  }
+
+  private handlePlanRotaSheet() {
     this.setState({hasStartedSolving: true});
-    this.solver.solve(sheetName).then(roster => {this.props.onFinished(roster)});
+    this.solver.solve(this.document!).then(() => this.props.onFinished(this.document!));
+  }
+
+  private handleSaveFile() {
+    this.document!.getFile().then(file => FileSaver.saveAs(file));
   }
 }
+
 
 function SolvedNotice(props: { onSaveRotaFile: () => void }) {
   return (

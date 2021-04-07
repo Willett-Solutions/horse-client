@@ -45,12 +45,17 @@ export class Document {
     const employees = this.shiftTable.createEmployees(this.prefsTable!);
     this.addShiftsAndTasksPriorTo(this.shiftTable.sheetName, employees);
     const tasks = this.shiftTable.createTasks(employees);
-    return new Roster(employees, tasks);
+    const roster = new Roster(employees, tasks);
+    roster.addUnassignedTasks();
+    return roster;
   }
 
-  async setRoster(solution: Roster): Promise<File> {
+  async setRoster(solution: Roster) {
     this.workbook.eachSheet(worksheet => worksheet.removeConditionalFormatting(true));
     solution.tasks.forEach(task => this.shiftTable!.enterTask(task));
+  }
+
+  async getFile(): Promise<File> {
     const buffer = await this.workbook.xlsx.writeBuffer();
     return new File([buffer], this.file!.name, {type: this.file!.type});
   }
