@@ -44,9 +44,6 @@ function RosterPreview(props: { document: Rota.Document | null }) {
       <Table bordered size="sm">
         <thead>
           <tr>
-            <th colSpan={11}>Rota Preview</th>
-          </tr>
-          <tr>
             <th>Name</th>
             <th colSpan={2}>Monday</th>
             <th colSpan={2}>Tuesday</th>

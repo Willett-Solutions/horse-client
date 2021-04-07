@@ -7,9 +7,6 @@ function StatisticsView(props: { document: Rota.Document }) {
     <Table bordered striped size="sm" className="m-0">
       <thead>
         <tr>
-          <th colSpan={4}>Statistics</th>
-        </tr>
-        <tr>
           <th>Name</th>
           <th>Duties Performed</th>
           <th>Duties as % of Working Time</th>

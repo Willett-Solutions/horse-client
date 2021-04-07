@@ -5,7 +5,7 @@ import InstructionPanel from "./components/InstructionPanel";
 import "./App.css";
 import RosterPreview from "./components/RosterPreview";
 import StatisticsView from "./components/StatisticsView";
-import {Col, Container, Row} from "react-bootstrap";
+import {Col, Container, Row, Tab, Tabs} from "react-bootstrap";
 import * as Rota from "./components/model/rota";
 
 type AppState = {
@@ -50,20 +50,25 @@ class App extends React.Component<{}, AppState> {
               </Col>
               <Col xl={6}>
                 <section>
-                  <RosterPreview document={this.state.document}/>
+                  <Tabs defaultActiveKey="rota">
+                    <Tab eventKey="rota" title="Rota">
+                      <RosterPreview document={this.state.document}/>
+                    </Tab>
+                    <Tab eventKey="statistics" title="Statistics">
+                      {
+                        this.state.isSolved &&
+                        <StatisticsView document={this.state.document!}/>
+                      }
+                    </Tab>
+                  </Tabs>
                 </section>
-                {
-                  this.state.isSolved &&
-                    <section>
-                      <StatisticsView document={this.state.document!}/>
-                    </section>
-                }
               </Col>
             </Row>
           </Container>
         </main>
         <footer>
-          <p>Released from the stable by David Willett (<a href="mailto:david.m.willett@gmail.com">david.m.willett@gmail.com</a>)</p>
+          <p>Released from the stable by David Willett (<a
+            href="mailto:david.m.willett@gmail.com">david.m.willett@gmail.com</a>)</p>
         </footer>
       </React.Fragment>
     );
