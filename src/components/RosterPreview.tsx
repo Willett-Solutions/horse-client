@@ -26,7 +26,7 @@ function RosterPreview(props: { document: Rota.Document | null }) {
       <React.Fragment>
         {
           Array.from(nameToDutiesMap)
-            .filter(([, duties]) => duties.some(duty => duty !== undefined))
+            // .filter(([, duties]) => duties.some(duty => duty !== undefined))
             .map(([name, duties]) =>
               <tr>
                 <td>{name}</td>
@@ -74,9 +74,9 @@ function RosterPreview(props: { document: Rota.Document | null }) {
       </Table>
       {
         props.document !== null &&
-        <h2>
+        <h5>
           Unassigned duties: {unassignedTaskCount}
-        </h2>
+        </h5>
       }
     </React.Fragment>
   );

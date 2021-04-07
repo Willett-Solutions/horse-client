@@ -29,6 +29,12 @@ section, aside {
   padding: 1rem;
 }
 
+.table-sm td, .table-sm th {
+  padding: 0;
+  font-size: smaller;
+  text-align: center;
+}
+
 footer {
   background-color: lightblue;
   padding: 1rem 0;
