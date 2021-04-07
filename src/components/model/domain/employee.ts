@@ -2,6 +2,7 @@ import {Enumify} from "enumify";
 import Color from "color";
 import {Duty, Shift} from "./task";
 
+
 export class Employee {
   readonly name: string;
   private readonly team: Team;
@@ -16,7 +17,12 @@ export class Employee {
     this.statuses = statuses;
     this.preferences = preferences;
   }
+
+  canDoTasks(): boolean {
+    return !this.preferences.areAllNo();
+  }
 }
+
 
 export class Team extends Enumify {
   readonly title: string;
@@ -47,6 +53,7 @@ export class Team extends Enumify {
   }
 }
 
+
 export class Preferences {
   private readonly entries: boolean[][];
 
@@ -66,7 +73,11 @@ export class Preferences {
     this.entries[shift.enumOrdinal][duty.enumOrdinal] = value;
   }
 
+  areAllNo(): boolean {
+    return this.entries.flat().every(value => value === false);
+  }
 }
+
 
 export class Status extends Enumify {
   readonly color: Color | null;

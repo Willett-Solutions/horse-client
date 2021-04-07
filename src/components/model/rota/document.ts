@@ -41,8 +41,9 @@ export class Document {
   }
 
   getRoster(): Roster {
-    assert(this.shiftTable !== null);
-    const employees = this.shiftTable.createEmployees(this.prefsTable!);
+    assert(this.shiftTable !== null && this.prefsTable !== null);
+    const employees = this.shiftTable.createEmployees(this.prefsTable)
+      .filter(employee => employee.canDoTasks());
     this.addShiftsAndTasksPriorTo(this.shiftTable.sheetName, employees);
     const tasks = this.shiftTable.createTasks(employees);
     const roster = new Roster(employees, tasks);
