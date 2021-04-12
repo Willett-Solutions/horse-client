@@ -1,28 +1,30 @@
+import assert from "assert";
+import date from "date-and-time";
 import Excel from "exceljs";
-import date from 'date-and-time';
 import {Employee, Roster} from "../domain";
 import {PrefsTable, ShiftTable} from "./table";
 import {ShiftRecord} from "./record";
-import assert from "assert";
 
 export class Document {
-  private readonly workbook = new Excel.Workbook();
-  private themeColors: string[] = Array(2);
-  private file: File | null = null;
-  private prefsTable: PrefsTable | null = null;
-  shiftTable: ShiftTable | null = null;
+  private readonly file: File;
+  private readonly workbook: Excel.Workbook;
+  private readonly themeColors: string[] = Array(2);
+  private readonly prefsTable: PrefsTable;
 
-  async load(file: File): Promise<string[]> {
-    this.file = file;
+  private activeTable: ShiftTable | null = null;
+
+  static async build(file: File): Promise<Document> {
+    const workbook = new Excel.Workbook();
     const buffer = await file.arrayBuffer();
-    await this.workbook.xlsx.load(buffer);
+    await workbook.xlsx.load(buffer);
+    return new Document(file, workbook);
+  }
+
+  private constructor(file: File, workbook: Excel.Workbook) {
+    this.file = file;
+    this.workbook = workbook;
     this.setThemeColors();
     this.prefsTable = new PrefsTable(this.workbook.getWorksheet("Preferences"));
-    return this.workbook.worksheets.map(sheet => sheet.name)
-      .filter(sheetName => {
-        const sheetDate = date.parse(sheetName, "DD-MM-YYYY");
-        return !isNaN(sheetDate.getDate());
-      });
   }
 
   private setThemeColors() {
@@ -37,33 +39,41 @@ export class Document {
     this.themeColors[1] = dk1.getElementsByTagName("a:sysClr")[0].getAttribute("lastClr")!;
   }
 
+  get sheetNames(): string[] {
+    return this.workbook.worksheets.map(sheet => sheet.name)
+      .filter(sheetName => {
+        const sheetDate = date.parse(sheetName, "DD-MM-YYYY");
+        return !isNaN(sheetDate.getDate());
+      });
+  }
+
   setSheet(name: string) {
-    this.shiftTable = new ShiftTable(this.themeColors, this.workbook.getWorksheet(name));
+    this.activeTable = new ShiftTable(this.themeColors, this.workbook.getWorksheet(name));
   }
 
   getRoster(): Roster {
-    assert(this.shiftTable !== null && this.prefsTable !== null);
-    const employees = this.shiftTable.createEmployees(this.prefsTable)
+    assert(this.activeTable !== null);
+    const employees = this.activeTable.createEmployees(this.prefsTable)
       .filter(employee => employee.canDoTasks());
-    this.addShiftsAndTasksPriorTo(this.shiftTable.sheetName, employees);
-    const tasks = this.shiftTable.createTasks(employees);
+    this.addShiftsAndTasksPriorTo(this.activeTable.sheetName, employees);
+    const tasks = this.activeTable.createTasks(employees);
     const roster = new Roster(employees, tasks);
     roster.addUnassignedTasks();
     return roster;
   }
 
   getRecord(employee: Employee): ShiftRecord | undefined {
-    return this.shiftTable!.getRecord(employee);
+    return this.activeTable!.getRecord(employee);
   }
 
   async setRoster(solution: Roster) {
     this.workbook.eachSheet(worksheet => worksheet.removeConditionalFormatting(true));
-    solution.tasks.forEach(task => this.shiftTable!.enterTask(task));
+    solution.tasks.forEach(task => this.activeTable!.enterTask(task));
   }
 
   async getFile(): Promise<File> {
     const buffer = await this.workbook.xlsx.writeBuffer();
-    return new File([buffer], this.file!.name, {type: this.file!.type});
+    return new File([buffer], this.file.name, {type: this.file.type});
   }
 
   private addShiftsAndTasksPriorTo(sheetName: string, employees: Employee[]) {

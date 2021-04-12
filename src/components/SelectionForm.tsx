@@ -59,14 +59,14 @@ class SelectionForm extends React.Component<SelectionFormProps, SelectionFormSta
   private handleFileInputChange(event: React.FormEvent<HTMLInputElement>) {
     const file = event.currentTarget.files?.[0];
     if (file) {
-      this.document = new Rota.Document();
-      this.document.load(file).then(sheetNames =>
+      Rota.Document.build(file).then(document => {
+        this.document = document;
         this.setState({
-          sheetOptions: sheetNames.map(sheetName =>
+          sheetOptions: document.sheetNames.map(sheetName =>
             ({value: sheetName, label: sheetName})),
           selectedOption: null,
         })
-      );
+      });
     }
   }
 
