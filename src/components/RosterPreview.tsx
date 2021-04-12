@@ -1,42 +1,45 @@
 import React from "react";
 import {Table} from "react-bootstrap";
-import {Duty, Shift} from "./model/domain";
 import * as Rota from "./model/rota";
+import {ShiftField} from "./model/rota/field";
+import Color from "color";
 
 function RosterPreview(props: { document: Rota.Document | null }) {
   let tbody: JSX.Element | undefined;
   let unassignedTaskCount = 0;
 
+  function getColor(field: ShiftField): Color {
+    const duty = field.duty;
+    if (duty !== null) {
+      return duty.color;
+    }
+    const status = field.status;
+    if (status !== null) {
+      return status.color ?? Color("white");
+    }
+    return Color("white");
+  }
+
   if (props.document !== null) {
     const roster = props.document.getRoster();
-    const nameToDutiesMap: Map<string, Array<Duty>> = new Map();
-    roster.employees.forEach(employee =>
-      nameToDutiesMap.set(employee.name, new Array(Shift.enumValues.length).fill(undefined))
-    );
-    roster.tasks.forEach(task => {
-      const employee = task.employee;
-      if (employee !== null) {
-        const duties = nameToDutiesMap.get(employee.name);
-        duties![task.shift.enumOrdinal] = task.duty;
-      } else {
-        unassignedTaskCount++;
-      }
-    });
+    const employees = roster.employees;
+
     tbody =
       <React.Fragment>
         {
-          Array.from(nameToDutiesMap)
-            // .filter(([, duties]) => duties.some(duty => duty !== undefined))
-            .map(([name, duties]) =>
-              <tr>
-                <td>{name}</td>
-                {
-                  duties.map(duty => <td {...(duty && {style: {backgroundColor: duty.color.hex()}})}/>)
-                }
-              </tr>
-            )
+          employees.map(employee =>
+            <tr>
+              <td>{employee.name}</td>
+              {
+                props.document!.getRecord(employee)!.shiftFields.map(field =>
+                  <td {...({style: {backgroundColor: getColor(field).hex()}})} />
+                )
+              }
+            </tr>
+          )
         }
       </React.Fragment>
+    unassignedTaskCount = roster.getUnassignedTaskCount();
   }
 
   return (

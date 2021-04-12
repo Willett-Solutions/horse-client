@@ -2,6 +2,7 @@ import Excel from "exceljs";
 import date from 'date-and-time';
 import {Employee, Roster} from "../domain";
 import {PrefsTable, ShiftTable} from "./table";
+import {ShiftRecord} from "./record";
 import assert from "assert";
 
 export class Document {
@@ -9,7 +10,7 @@ export class Document {
   private themeColors: string[] = Array(2);
   private file: File | null = null;
   private prefsTable: PrefsTable | null = null;
-  private shiftTable: ShiftTable | null = null;
+  shiftTable: ShiftTable | null = null;
 
   async load(file: File): Promise<string[]> {
     this.file = file;
@@ -49,6 +50,10 @@ export class Document {
     const roster = new Roster(employees, tasks);
     roster.addUnassignedTasks();
     return roster;
+  }
+
+  getRecord(employee: Employee): ShiftRecord | undefined {
+    return this.shiftTable!.getRecord(employee);
   }
 
   async setRoster(solution: Roster) {

@@ -7,7 +7,7 @@ import {PrefsTable} from "./table";
 export class ShiftRecord {
   private readonly teamField: TextField;
   private readonly nameField: TextField;
-  private readonly shiftFields: ShiftField[];
+  readonly shiftFields: ShiftField[];
 
   constructor(themeColors: string[], columns: ShiftColumns, row: Excel.Row) {
     this.teamField = new TextField(row.getCell(columns.team));

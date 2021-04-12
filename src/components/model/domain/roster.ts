@@ -10,6 +10,10 @@ export class Roster {
     this.tasks = tasks;
   }
 
+  getUnassignedTaskCount(): number {
+    return this.tasks.filter(task => task.employee === null).length;
+  }
+
   addUnassignedTasks() {
     // @ts-ignore
     for (const duty of Duty) {

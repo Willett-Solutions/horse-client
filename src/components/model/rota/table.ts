@@ -6,7 +6,7 @@ import assert from "assert";
 
 export class ShiftTable {
   sheetName: string;
-  private records: ShiftRecord[] = [];
+  records: ShiftRecord[] = [];
 
   constructor(themeColors: string[], sheet: Excel.Worksheet) {
     this.sheetName = sheet.name;
@@ -46,6 +46,10 @@ export class ShiftTable {
     if (task.employee === null) return
     const record = this.findRecord(task.employee.name);
     record?.enterTask(task);
+  }
+
+  getRecord(employee: Employee): ShiftRecord | undefined {
+    return this.findRecord(employee.name);
   }
 
   private findRecord(name: string): ShiftRecord | undefined {
