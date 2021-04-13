@@ -1,8 +1,8 @@
 import React from "react";
 import {Table} from "react-bootstrap";
+import Color from "color";
 import * as Rota from "./model/rota";
 import {ShiftField} from "./model/rota/field";
-import Color from "color";
 
 function RosterPreview(props: { table: Rota.ShiftTable | null }) {
   let tbody: JSX.Element | undefined;
@@ -25,7 +25,7 @@ function RosterPreview(props: { table: Rota.ShiftTable | null }) {
     const employees = roster.employees;
 
     tbody =
-      <React.Fragment>
+      <tbody>
         {
           employees.map(employee =>
             <tr>
@@ -38,7 +38,7 @@ function RosterPreview(props: { table: Rota.ShiftTable | null }) {
             </tr>
           )
         }
-      </React.Fragment>
+      </tbody>
     unassignedTaskCount = roster.getUnassignedTaskCount();
   }
 
@@ -68,9 +68,7 @@ function RosterPreview(props: { table: Rota.ShiftTable | null }) {
             <th style={{width: "9%"}}>PM</th>
           </tr>
         </thead>
-        <tbody>
-          {tbody !== undefined && tbody}
-        </tbody>
+        {tbody}
       </Table>
       {
         props.table !== null &&

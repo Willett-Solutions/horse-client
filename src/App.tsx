@@ -1,11 +1,11 @@
 import "bootstrap/dist/css/bootstrap.min.css";
+import "./App.css";
 import React from "react";
+import {Col, Container, Row, Tab, Tabs} from "react-bootstrap";
 import ControlPanel from "./components/ControlPanel";
 import InstructionPanel from "./components/InstructionPanel";
-import "./App.css";
 import RosterPreview from "./components/RosterPreview";
 import StatisticsView from "./components/StatisticsView";
-import {Col, Container, Row, Tab, Tabs} from "react-bootstrap";
 import * as Rota from "./components/model/rota";
 
 type AppState = {
@@ -55,10 +55,7 @@ class App extends React.Component<{}, AppState> {
                       <RosterPreview table={this.state.table}/>
                     </Tab>
                     <Tab eventKey="statistics" title="Statistics">
-                      {
-                        this.state.isSolved &&
-                        <StatisticsView table={this.state.table!}/>
-                      }
+                      <StatisticsView table={this.state.table}/>
                     </Tab>
                   </Tabs>
                 </section>
