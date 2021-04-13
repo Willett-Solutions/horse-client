@@ -63,12 +63,13 @@ class SelectionForm extends React.Component<SelectionFormProps, SelectionFormSta
           sheetOptions: document.tables.map(table =>
             ({value: table, label: table.sheetName})),
           selectedOption: null,
-        })
+        });
+        this.props.onSheetSelected(null);
       });
     } else {
       this.setState({sheetOptions: [], selectedOption: null,});
+      this.props.onSheetSelected(null);
     }
-    this.props.onSheetSelected(null);
   }
 
   private handleSheetChange(option: { value: Rota.ShiftTable, label: string } | null) {
