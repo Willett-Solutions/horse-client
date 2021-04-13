@@ -5,7 +5,7 @@ import Button from "react-bootstrap/Button";
 import * as Rota from "./model/rota";
 
 type SelectionFormProps = {
-  onSheetSelected: (table: Rota.ShiftTable) => void,
+  onSheetSelected: (table: Rota.ShiftTable | null) => void,
   onPlanRotaSheet: () => void,
   disabled: boolean,
 }
@@ -65,7 +65,10 @@ class SelectionForm extends React.Component<SelectionFormProps, SelectionFormSta
           selectedOption: null,
         })
       });
+    } else {
+      this.setState({sheetOptions: [], selectedOption: null,});
     }
+    this.props.onSheetSelected(null);
   }
 
   private handleSheetChange(option: { value: Rota.ShiftTable, label: string } | null) {

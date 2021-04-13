@@ -19,7 +19,7 @@ enum Phase {
 
 type ControlPanelProps = {
   hasFinished: boolean,
-  onSheetSelected: (table: Rota.ShiftTable) => void,
+  onSheetSelected: (table: Rota.ShiftTable | null) => void,
   onFinished: () => void,
 };
 
@@ -75,7 +75,7 @@ class ControlPanel extends React.Component<ControlPanelProps, ControlPanelState>
     );
   }
 
-  private handleSheetSelected(table: Rota.ShiftTable) {
+  private handleSheetSelected(table: Rota.ShiftTable | null) {
     this.table = table;
     this.props.onSheetSelected(table);
   }
