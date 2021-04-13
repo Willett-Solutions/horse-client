@@ -44,7 +44,7 @@ class App extends React.Component<{}, AppState> {
                   <ControlPanel
                     hasFinished={this.state.isSolved}
                     onSheetSelected={table => this.setState({table: table})}
-                    onFinished={table => this.setState({table: table, isSolved: true})}
+                    onFinished={() => this.setState({isSolved: true})}
                   />
                 </section>
               </Col>

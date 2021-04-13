@@ -20,7 +20,7 @@ enum Phase {
 type ControlPanelProps = {
   hasFinished: boolean,
   onSheetSelected: (table: Rota.ShiftTable) => void,
-  onFinished: (table: Rota.ShiftTable) => void,
+  onFinished: () => void,
 };
 
 type ControlPanelState = {
@@ -82,7 +82,7 @@ class ControlPanel extends React.Component<ControlPanelProps, ControlPanelState>
 
   private handlePlanRotaSheet() {
     this.setState({hasStartedSolving: true});
-    this.solver.solve(this.table!).then(() => this.props.onFinished(this.table!));
+    this.solver.solve(this.table!).then(() => this.props.onFinished());
   }
 
   private handleSaveFile() {
