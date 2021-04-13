@@ -2,7 +2,7 @@ import React from "react";
 import {Table} from "react-bootstrap";
 import * as Rota from "./model/rota";
 
-function StatisticsView(props: { document: Rota.Document }) {
+function StatisticsView(props: { table: Rota.ShiftTable }) {
   return (
     <Table bordered striped size="sm" className="m-0">
       <thead>
@@ -14,7 +14,7 @@ function StatisticsView(props: { document: Rota.Document }) {
       </thead>
       <tbody>
         {
-          props.document.getRoster().employees
+          props.table.getRoster().employees
             .filter(employee => employee.priorTaskCount > 0)
             .map(employee =>
               <tr>

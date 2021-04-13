@@ -1,20 +1,23 @@
+import assert from "assert";
 import Excel from "exceljs";
-import {Employee, Preferences, Task, Team} from "../domain";
+import {Employee, Preferences, Roster, Task, Team} from "../domain";
+import {Document} from "./document";
 import {PrefsRecord, ShiftRecord} from "./record";
 import {PrefsColumns, ShiftColumns} from "./columns";
-import assert from "assert";
 
 export class ShiftTable {
+  document: Document;
   sheetName: string;
   records: ShiftRecord[] = [];
 
-  constructor(themeColors: string[], sheet: Excel.Worksheet) {
+  constructor(document: Document, sheet: Excel.Worksheet) {
+    this.document = document;
     this.sheetName = sheet.name;
     const columns = new ShiftColumns();
     sheet.eachRow(row => {
       const teamName = row.getCell(columns.team).text;
       if (Team.exists(teamName)) {
-        this.records.push(new ShiftRecord(themeColors, columns, row));
+        this.records.push(new ShiftRecord(document.themeColors, columns, row));
       }
     });
   }
@@ -46,6 +49,20 @@ export class ShiftTable {
     if (task.employee === null) return
     const record = this.findRecord(task.employee.name);
     record?.enterTask(task);
+  }
+
+  getRoster(): Roster {
+    const employees = this.createEmployees(this.document.prefsTable)
+      .filter(employee => employee.canDoTasks());
+    this.document.addShiftsAndTasksPriorTo(this.sheetName, employees);
+    const tasks = this.createTasks(employees);
+    const roster = new Roster(employees, tasks);
+    roster.addUnassignedTasks();
+    return roster;
+  }
+
+  async setRoster(roster: Roster) {
+    roster.tasks.forEach(task => this.enterTask(task));
   }
 
   getRecord(employee: Employee): ShiftRecord | undefined {

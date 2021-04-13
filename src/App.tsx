@@ -9,7 +9,7 @@ import {Col, Container, Row, Tab, Tabs} from "react-bootstrap";
 import * as Rota from "./components/model/rota";
 
 type AppState = {
-  document: Rota.Document | null,
+  table: Rota.ShiftTable | null,
   isSolved: boolean,
 };
 
@@ -17,7 +17,7 @@ class App extends React.Component<{}, AppState> {
   constructor(props: {}) {
     super(props);
     this.state = {
-      document: null,
+      table: null,
       isSolved: false,
     }
   }
@@ -43,8 +43,8 @@ class App extends React.Component<{}, AppState> {
                 <section>
                   <ControlPanel
                     hasFinished={this.state.isSolved}
-                    onSheetSelected={document => this.setState({document: document})}
-                    onFinished={document => this.setState({document: document, isSolved: true})}
+                    onSheetSelected={table => this.setState({table: table})}
+                    onFinished={table => this.setState({table: table, isSolved: true})}
                   />
                 </section>
               </Col>
@@ -52,12 +52,12 @@ class App extends React.Component<{}, AppState> {
                 <section>
                   <Tabs defaultActiveKey="rota">
                     <Tab eventKey="rota" title="Rota">
-                      <RosterPreview document={this.state.document}/>
+                      <RosterPreview table={this.state.table}/>
                     </Tab>
                     <Tab eventKey="statistics" title="Statistics">
                       {
                         this.state.isSolved &&
-                        <StatisticsView document={this.state.document!}/>
+                        <StatisticsView table={this.state.table!}/>
                       }
                     </Tab>
                   </Tabs>

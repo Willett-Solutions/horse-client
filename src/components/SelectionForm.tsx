@@ -5,19 +5,18 @@ import Button from "react-bootstrap/Button";
 import * as Rota from "./model/rota";
 
 type SelectionFormProps = {
-  onSheetSelected: (document: Rota.Document) => void,
+  onSheetSelected: (table: Rota.ShiftTable) => void,
   onPlanRotaSheet: () => void,
   disabled: boolean,
 }
 
 type SelectionFormState = {
-  sheetOptions: { value: string, label: string }[],
-  selectedOption: { value: string, label: string } | null,
+  sheetOptions: { value: Rota.ShiftTable, label: string }[],
+  selectedOption: { value: Rota.ShiftTable, label: string } | null,
 }
 
 class SelectionForm extends React.Component<SelectionFormProps, SelectionFormState> {
   private readonly fileInput: React.RefObject<HTMLInputElement>;
-  private document: Rota.Document | null = null;
 
   constructor(props: SelectionFormProps) {
     super(props);
@@ -60,20 +59,18 @@ class SelectionForm extends React.Component<SelectionFormProps, SelectionFormSta
     const file = event.currentTarget.files?.[0];
     if (file) {
       Rota.Document.build(file).then(document => {
-        this.document = document;
         this.setState({
-          sheetOptions: document.sheetNames.map(sheetName =>
-            ({value: sheetName, label: sheetName})),
+          sheetOptions: document.tables.map(table =>
+            ({value: table, label: table.sheetName})),
           selectedOption: null,
         })
       });
     }
   }
 
-  private handleSheetChange(option: { value: string, label: string } | null) {
+  private handleSheetChange(option: { value: Rota.ShiftTable, label: string } | null) {
     this.setState({selectedOption: option});
-    this.document!.setSheet(option!.value);
-    this.props.onSheetSelected(this.document!);
+    this.props.onSheetSelected(option!.value);
   }
 
   private handleSubmit(event: React.FormEvent) {

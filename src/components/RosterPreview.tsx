@@ -4,7 +4,7 @@ import * as Rota from "./model/rota";
 import {ShiftField} from "./model/rota/field";
 import Color from "color";
 
-function RosterPreview(props: { document: Rota.Document | null }) {
+function RosterPreview(props: { table: Rota.ShiftTable | null }) {
   let tbody: JSX.Element | undefined;
   let unassignedTaskCount = 0;
 
@@ -20,8 +20,8 @@ function RosterPreview(props: { document: Rota.Document | null }) {
     return Color("white");
   }
 
-  if (props.document !== null) {
-    const roster = props.document.getRoster();
+  if (props.table !== null) {
+    const roster = props.table.getRoster();
     const employees = roster.employees;
 
     tbody =
@@ -31,7 +31,7 @@ function RosterPreview(props: { document: Rota.Document | null }) {
             <tr>
               <td>{employee.name}</td>
               {
-                props.document!.getRecord(employee)!.shiftFields.map(field =>
+                props.table!.getRecord(employee)!.shiftFields.map(field =>
                   <td {...({style: {backgroundColor: getColor(field).hex()}})} />
                 )
               }
@@ -73,7 +73,7 @@ function RosterPreview(props: { document: Rota.Document | null }) {
         </tbody>
       </Table>
       {
-        props.document !== null &&
+        props.table !== null &&
         <h5>
           Unassigned duties: {unassignedTaskCount}
         </h5>

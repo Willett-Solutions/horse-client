@@ -2,8 +2,8 @@ import * as Rota from "./rota";
 import {Roster, Duty, Shift, Team} from "./domain";
 
 class Solver {
-  async solve(document: Rota.Document) {
-    const problem = document.getRoster();
+  async solve(table: Rota.ShiftTable) {
+    const problem = table.getRoster();
     problem.addUnassignedTasks();
     const authority = process.env.REACT_APP_AUTHORITY;
     const response = await fetch("http://" + authority + "/solve", {
@@ -14,7 +14,7 @@ class Solver {
     const text = await response.text();
     const body = JSON.parse(text, Solver.reviver);
     const solution = new Roster(body.employees, body.tasks);  // Ugly!
-    await document.setRoster(solution);
+    await table.setRoster(solution);
   }
 
   private static reviver(key: string, value: string) {
