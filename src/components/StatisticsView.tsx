@@ -3,25 +3,6 @@ import {Table} from "react-bootstrap";
 import * as Rota from "./model/rota";
 
 function StatisticsView(props: { table: Rota.ShiftTable | null }) {
-  let tbody: JSX.Element | undefined;
-
-  if (props.table !== null) {
-    tbody =
-      <tbody>
-        {
-          props.table.getRoster().employees
-            .filter(employee => employee.priorTaskCount > 0)
-            .map(employee =>
-              <tr>
-                <td>{employee.name}</td>
-                <td>{employee.priorTaskCount}</td>
-                <td>{Math.round(100 * employee.priorTaskCount / employee.priorShiftCount) + "%"}</td>
-              </tr>
-            )
-        }
-      </tbody>
-  }
-
   return (
     <Table bordered striped size="sm" className="m-0">
       <thead>
@@ -31,7 +12,20 @@ function StatisticsView(props: { table: Rota.ShiftTable | null }) {
           <th>Duties as % of Working Time</th>
         </tr>
       </thead>
-      {tbody}
+      <tbody>
+        {
+          props.table?.getRoster().employees
+            .filter(employee => employee.priorShiftCount > 0)
+            .sort(((e1, e2) => e2.taskLoad - e1.taskLoad))
+            .map(employee =>
+              <tr>
+                <td>{employee.name}</td>
+                <td>{employee.priorTaskCount}</td>
+                <td>{Math.round(100 * employee.taskLoad) + "%"}</td>
+              </tr>
+            )
+        }
+      </tbody>
     </Table>
   )
 }

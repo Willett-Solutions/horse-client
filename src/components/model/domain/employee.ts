@@ -21,6 +21,10 @@ export class Employee {
   canDoTasks(): boolean {
     return !this.preferences.areAllNo();
   }
+
+  get taskLoad(): number {
+    return this.priorTaskCount / this.priorShiftCount;
+  }
 }
 
 
