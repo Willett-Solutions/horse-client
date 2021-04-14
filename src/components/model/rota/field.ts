@@ -27,6 +27,13 @@ export class PreferenceField extends Field {
 }
 
 
+/**
+ * A generic colored field.
+ *
+ * A field referencing a cell that is not of type pattern and of pattern solid is regarded as white, otherwise the
+ * foreground color of the cell defines the color of the field.
+ */
+
 abstract class ColoredField extends Field {
   private readonly themeColors: string[]
 
@@ -35,9 +42,9 @@ abstract class ColoredField extends Field {
     this.themeColors = themeColors;
   }
 
-  private _color: Color | null | undefined;
+  private _color: Color | undefined;
 
-  get color(): Color | null {
+  get color(): Color {
     if (this._color === undefined) {
       this._color = this.getColor();
     }
@@ -45,7 +52,6 @@ abstract class ColoredField extends Field {
   }
 
   set color(value) {
-    assert(value !== null);
     this.cell.style = {
       ...this.cell.style,
       fill: {
@@ -57,17 +63,11 @@ abstract class ColoredField extends Field {
     this._color = value;
   }
 
-  private getColor(): Color | null {
+  private getColor(): Color {
     const fill = this.cell.fill;
-    if (fill.type !== "pattern") return null;
-    switch (fill.pattern) {
-      case "solid":
-        return this.getSolidColor(fill.fgColor);
-      case "none":
-        return Color("#FFFFFF");
-      default:
-        return null;
-    }
+    return fill.type === "pattern" && fill.pattern === "solid"
+      ? this.getSolidColor(fill.fgColor)
+      : Color("#FFFFFF");
   }
 
   private getSolidColor(fgColor: Partial<Excel.Color>): Color {
@@ -88,9 +88,14 @@ abstract class ColoredField extends Field {
 }
 
 
+/**
+ * A field representing an employee's shift.
+ *
+ * Provides methods for determining the status and/or duty from the color of the field.
+ */
+
 export class ShiftField extends ColoredField {
   get status(): Status {
-    if (this.color === null) return Status.UNAVAILABLE;
     const status = Status.fromColor(this.color);
     if (status !== null) return status;
     if (ShiftField.isShadeOfGray(this.color) || this.cell.text === "A/L") return Status.ANNUAL_LEAVE;
@@ -99,7 +104,7 @@ export class ShiftField extends ColoredField {
   }
 
   get duty(): Duty | null {
-    return this.color === null ? null : Duty.fromColor(Color(this.color));
+    return Duty.fromColor(Color(this.color));
   }
 
   set duty(value) {

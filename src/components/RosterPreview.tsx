@@ -19,7 +19,7 @@ function RosterPreview(props: { table: Rota.ShiftTable | null }) {
               <td>{employee.name}</td>
               {
                 props.table!.getRecord(employee)!.shiftFields.map(field =>
-                  <td {...({style: {backgroundColor: field.color?.hex()}})} />
+                  <td {...({style: {backgroundColor: field.color.hex()}})} />
                 )
               }
             </tr>
