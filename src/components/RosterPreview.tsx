@@ -1,25 +1,11 @@
 import React from "react";
 import {Table} from "react-bootstrap";
-import Color from "color";
 import * as Rota from "./model/rota";
-import {ShiftField} from "./model/rota/field";
 import {Roster} from "./model/domain/roster";
 
 function RosterPreview(props: { table: Rota.ShiftTable | null }) {
   let tbody: JSX.Element | undefined;
   let unassignedTaskCount = 0;
-
-  function getColor(field: ShiftField): Color {
-    const duty = field.duty;
-    if (duty !== null) {
-      return duty.color;
-    }
-    const status = field.status;
-    if (status !== null) {
-      return status.color ?? Color("white");
-    }
-    return Color("white");
-  }
 
   if (props.table !== null) {
     const roster = Roster.fromTable(props.table);
@@ -33,7 +19,7 @@ function RosterPreview(props: { table: Rota.ShiftTable | null }) {
               <td>{employee.name}</td>
               {
                 props.table!.getRecord(employee)!.shiftFields.map(field =>
-                  <td {...({style: {backgroundColor: getColor(field).hex()}})} />
+                  <td {...({style: {backgroundColor: field.color?.hex()}})} />
                 )
               }
             </tr>

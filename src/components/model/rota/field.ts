@@ -37,14 +37,14 @@ abstract class ColoredField extends Field {
 
   private _color: Color | null | undefined;
 
-  protected get color(): Color | null {
+  get color(): Color | null {
     if (this._color === undefined) {
       this._color = this.getColor();
     }
     return this._color;
   }
 
-  protected set color(value) {
+  set color(value) {
     assert(value !== null);
     this.cell.style = {
       ...this.cell.style,
