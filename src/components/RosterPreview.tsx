@@ -3,6 +3,7 @@ import {Table} from "react-bootstrap";
 import Color from "color";
 import * as Rota from "./model/rota";
 import {ShiftField} from "./model/rota/field";
+import {Roster} from "./model/domain/roster";
 
 function RosterPreview(props: { table: Rota.ShiftTable | null }) {
   let tbody: JSX.Element | undefined;
@@ -21,7 +22,7 @@ function RosterPreview(props: { table: Rota.ShiftTable | null }) {
   }
 
   if (props.table !== null) {
-    const roster = props.table.getRoster();
+    const roster = Roster.fromTable(props.table);
     const employees = roster.employees;
 
     tbody =

@@ -45,24 +45,12 @@ export class ShiftTable {
     return tasks.flat();
   }
 
-  enterTask(task: Task) {
-    if (task.employee === null) return
-    const record = this.findRecord(task.employee.name);
-    record?.enterTask(task);
-  }
-
-  getRoster(): Roster {
-    const employees = this.createEmployees(this.document.prefsTable)
-      .filter(employee => employee.canDoTasks());
-    this.document.addShiftsAndTasksPriorTo(this.sheetName, employees);
-    const tasks = this.createTasks(employees);
-    const roster = new Roster(employees, tasks);
-    roster.addUnassignedTasks();
-    return roster;
-  }
-
-  async setRoster(roster: Roster) {
-    roster.tasks.forEach(task => this.enterTask(task));
+  applyRoster(roster: Roster) {
+    roster.tasks.forEach(task => {
+      if (task.employee !== null) {
+        this.findRecord(task.employee.name)?.enterTask(task);
+      }
+    });
   }
 
   getRecord(employee: Employee): ShiftRecord | undefined {
