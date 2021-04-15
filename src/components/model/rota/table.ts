@@ -22,8 +22,8 @@ export class ShiftTable {
     });
   }
 
-  createEmployees(prefsTable: PrefsTable): Employee[] {
-    return this.records.map(record => record.createEmployee(prefsTable));
+  createEmployees(): Employee[] {
+    return this.records.map(record => record.createEmployee());
   }
 
   addShiftsAndTasksTo(employees: Employee[]): void {

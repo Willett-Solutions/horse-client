@@ -1,14 +1,14 @@
 import date from "date-and-time";
 import Excel from "exceljs";
-import {Employee} from "../domain";
+import {Employee, Preferences} from "../domain";
 import {PrefsTable, ShiftTable} from "./table";
 
 export class Document {
   private readonly file: File;
   private readonly workbook: Excel.Workbook;
+  private readonly prefsTable: PrefsTable;
 
   readonly themeColors: string[] = Array(2);
-  readonly prefsTable: PrefsTable;
   readonly tables: ShiftTable[];
 
   static async build(file: File): Promise<Document> {
@@ -50,6 +50,10 @@ export class Document {
         table.addShiftsAndTasksTo(employees);
       }
     });
+  }
+
+  preferences(employee: Employee): Preferences {
+    return this.prefsTable.getPreferences(employee.name);
   }
 
   async getFile(): Promise<File> {

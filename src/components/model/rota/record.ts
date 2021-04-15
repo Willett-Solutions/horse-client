@@ -24,13 +24,11 @@ export class ShiftRecord {
     return this.nameField.text;
   }
 
-  createEmployee(prefsTable: PrefsTable): Employee {
+  createEmployee(): Employee {
     const name: string = this.nameField.text;
     const team: Team = Team.fromTitle(this.teamField.text)!;
     const statuses = this.shiftFields.map(field => field.status);
-
-    const preferences = prefsTable.getPreferences(name);
-    return new Employee(name, team, statuses, preferences);
+    return new Employee(name, team, statuses);
   }
 
   addPriorShiftsTo(employee: Employee) {

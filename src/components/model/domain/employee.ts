@@ -7,19 +7,18 @@ export class Employee {
   readonly name: string;
   private readonly team: Team;
   private readonly statuses: Status[];
-  private readonly preferences: Preferences;
+  preferences: Preferences | undefined;
   priorShiftCount = 0;
   priorTaskCount = 0;
 
-  constructor(name: string, team: Team, statuses: Status[], preferences: Preferences) {
+  constructor(name: string, team: Team, statuses: Status[]) {
     this.name = name;
     this.team = team;
     this.statuses = statuses;
-    this.preferences = preferences;
   }
 
   canDoTasks(): boolean {
-    return !this.preferences.areAllNo();
+    return this.preferences !== undefined && !this.preferences.areAllNo();
   }
 
   get taskLoad(): number {
