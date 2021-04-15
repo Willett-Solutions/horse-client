@@ -1,7 +1,6 @@
 import React from "react";
 import {Table} from "react-bootstrap";
 import * as Rota from "./model/rota";
-import {Roster} from "./model/domain/roster";
 
 function StatisticsView(props: { table: Rota.ShiftTable | null }) {
   return (
@@ -15,7 +14,7 @@ function StatisticsView(props: { table: Rota.ShiftTable | null }) {
       </thead>
       <tbody>
         {
-          props.table ? Roster.fromTable(props.table).employees
+          props.table?.employees
             .filter(employee => employee.priorShiftCount > 0)
             .sort(((e1, e2) => e2.taskLoad - e1.taskLoad))
             .map(employee =>
@@ -24,7 +23,7 @@ function StatisticsView(props: { table: Rota.ShiftTable | null }) {
                 <td>{employee.priorTaskCount}</td>
                 <td>{Math.round(100 * employee.taskLoad) + "%"}</td>
               </tr>
-            ) : undefined
+            )
         }
       </tbody>
     </Table>

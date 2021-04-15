@@ -89,6 +89,10 @@ export class ShiftTable {
     }
   }
 
+  get unassignedTaskCount(): number {
+    return this.tasks.filter(task => task.employee === null).length;
+  }
+
   applyRoster(roster: Roster) {
     this.tasks = roster.tasks;
   }

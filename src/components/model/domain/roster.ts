@@ -38,8 +38,4 @@ export class Roster {
         return value;
     }
   }
-
-  getUnassignedTaskCount(): number {
-    return this.tasks.filter(task => task.employee === null).length;
-  }
 }

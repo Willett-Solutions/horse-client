@@ -4,7 +4,7 @@ import React from "react";
 import {Col, Container, Row, Tab, Tabs} from "react-bootstrap";
 import ControlPanel from "./components/ControlPanel";
 import InstructionPanel from "./components/InstructionPanel";
-import RosterPreview from "./components/RosterPreview";
+import RotaView from "./components/RotaView";
 import StatisticsView from "./components/StatisticsView";
 import * as Rota from "./components/model/rota";
 
@@ -52,7 +52,7 @@ class App extends React.Component<{}, AppState> {
                 <section>
                   <Tabs defaultActiveKey="rota">
                     <Tab eventKey="rota" title="Rota">
-                      <RosterPreview table={this.state.table}/>
+                      <RotaView table={this.state.table}/>
                     </Tab>
                     <Tab eventKey="statistics" title="Statistics">
                       <StatisticsView table={this.state.table}/>
