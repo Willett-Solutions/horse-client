@@ -10,6 +10,8 @@ export class ShiftTable {
   sheetName: string;
   records: ShiftRecord[] = [];
 
+  private _employees: Employee[] | undefined;
+
   constructor(document: Document, sheet: Excel.Worksheet) {
     this.document = document;
     this.sheetName = sheet.name;
@@ -22,8 +24,18 @@ export class ShiftTable {
     });
   }
 
-  createEmployees(): Employee[] {
-    return this.records.map(record => record.createEmployee());
+  get employees(): Employee[] {
+    if (this._employees === undefined) {
+      this._employees = this.records
+        .map(record => record.createEmployee())
+        .map(employee => {
+          employee.preferences = this.document.preferences(employee);
+          return employee;
+        })
+        .filter(employee => employee.canDoTasks());
+      this.document.addShiftsAndTasksPriorTo(this.sheetName, this._employees);
+    }
+    return this._employees;
   }
 
   addShiftsAndTasksTo(employees: Employee[]): void {

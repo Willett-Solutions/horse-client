@@ -16,13 +16,7 @@ export class Roster {
   }
 
   static fromTable(table: ShiftTable): Roster {
-    const employees = table.createEmployees()
-      .map(employee => {
-        employee.preferences = table.document.preferences(employee);
-        return employee;
-      })
-      .filter(employee => employee.canDoTasks());
-    table.document.addShiftsAndTasksPriorTo(table.sheetName, employees);
+    const employees = table.employees;
     const tasks = table.createTasks(employees);
     const roster = new Roster(employees, tasks);
     roster.addUnassignedTasks();
