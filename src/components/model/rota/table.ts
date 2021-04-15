@@ -1,4 +1,3 @@
-import assert from "assert";
 import Excel from "exceljs";
 import {Duty, Employee, Preferences, Roster, Shift, Task, Team} from "../domain";
 import {Document} from "./document";
@@ -123,7 +122,6 @@ export class PrefsTable {
 
   getPreferences(employeeName: string): Preferences {
     const record = this.records.find(record => record.name === employeeName);
-    assert(record !== undefined);
-    return record.getPreferences();
+    return record === undefined ? new Preferences() : record.getPreferences();
   }
 }
