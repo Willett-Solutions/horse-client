@@ -1,6 +1,6 @@
 import assert from "assert";
 import Excel from "exceljs";
-import {Employee, Preferences, Roster, Task, Team} from "../domain";
+import {Duty, Employee, Preferences, Roster, Shift, Task, Team} from "../domain";
 import {Document} from "./document";
 import {PrefsRecord, ShiftRecord} from "./record";
 import {PrefsColumns, ShiftColumns} from "./columns";
@@ -11,6 +11,7 @@ export class ShiftTable {
   records: ShiftRecord[] = [];
 
   private _employees: Employee[] | undefined;
+  private _tasks: Task[] | undefined;
 
   constructor(document: Document, sheet: Excel.Worksheet) {
     this.document = document;
@@ -38,6 +39,23 @@ export class ShiftTable {
     return this._employees;
   }
 
+  get tasks(): Task[] {
+    if (this._tasks === undefined) {
+      this._tasks = this.createTasks(this.employees);
+      this.addUnassignedTasksTo(this._tasks);
+    }
+    return this._tasks;
+  }
+
+  set tasks(value) {
+    this._tasks = value;
+    this._tasks.forEach(task => {
+      if (task.employee !== null) {
+        this.findRecord(task.employee.name)?.enterTask(task);
+      }
+    });
+  }
+
   addShiftsAndTasksTo(employees: Employee[]): void {
     employees.forEach(employee => {
       const record = this.findRecord(employee.name);
@@ -46,7 +64,7 @@ export class ShiftTable {
     });
   }
 
-  createTasks(employees: Employee[]): Task[] {
+  private createTasks(employees: Employee[]): Task[] {
     const tasks: Task[][] = [];
     for (const employee of employees) {
       const record = this.findRecord(employee.name);
@@ -57,12 +75,22 @@ export class ShiftTable {
     return tasks.flat();
   }
 
-  applyRoster(roster: Roster) {
-    roster.tasks.forEach(task => {
-      if (task.employee !== null) {
-        this.findRecord(task.employee.name)?.enterTask(task);
+  private addUnassignedTasksTo(tasks: Task[]) {
+    // @ts-ignore
+    for (const duty of Duty) {
+      // @ts-ignore
+      for (const shift of Shift) {
+        const tasksRequired: number = duty.getTaskCount(shift);
+        const tasksPresent = tasks.filter(task => task.duty === duty && task.shift === shift).length;
+        for (let i = 0; i < tasksRequired - tasksPresent; i++) {
+          tasks.push(new Task(duty, shift));
+        }
       }
-    });
+    }
+  }
+
+  applyRoster(roster: Roster) {
+    this.tasks = roster.tasks;
   }
 
   getRecord(employee: Employee): ShiftRecord | undefined {

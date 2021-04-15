@@ -17,24 +17,8 @@ export class Roster {
 
   static fromTable(table: ShiftTable): Roster {
     const employees = table.employees;
-    const tasks = table.createTasks(employees);
-    const roster = new Roster(employees, tasks);
-    roster.addUnassignedTasks();
-    return roster;
-  }
-
-  private addUnassignedTasks() {
-    // @ts-ignore
-    for (const duty of Duty) {
-      // @ts-ignore
-      for (const shift of Shift) {
-        const tasksRequired: number = duty.getTaskCount(shift);
-        const tasksPresent = this.tasks.filter(task => task.duty === duty && task.shift === shift).length;
-        for (let i = 0; i < tasksRequired - tasksPresent; i++) {
-          this.tasks.push(new Task(duty, shift));
-        }
-      }
-    }
+    const tasks = table.tasks;
+    return new Roster(employees, tasks);
   }
 
   static fromJSON(text: string) {
