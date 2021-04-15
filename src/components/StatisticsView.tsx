@@ -9,14 +9,16 @@ function StatisticsView(props: { table: Rota.ShiftTable | null }) {
       <thead>
         <tr>
           <th rowSpan={2} style={{width: "15%"}}>Name</th>
-          <th colSpan={5}>Duties Performed</th>
+          <th colSpan={5}>
+            Duties performed {props.table ? "in the last " + props.table.priorTableCount + " weeks" : ""}
+          </th>
         </tr>
         <tr>
           <th style={{width: "12%"}}>FISH</th>
           <th style={{width: "12%"}}>DS</th>
           <th style={{width: "12%"}}>Late DS</th>
           <th style={{width: "12%"}}>SS</th>
-          <th>As % of Working Time</th>
+          <th>as % of working time</th>
         </tr>
       </thead>
       <tbody>

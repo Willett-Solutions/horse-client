@@ -9,6 +9,7 @@ export class ShiftTable {
   document: Document;
   sheetName: string;
   records: ShiftRecord[] = [];
+  priorTableCount = 0;
 
   private _employees: Employee[] | undefined;
   private _tasks: Task[] | undefined;
@@ -34,7 +35,7 @@ export class ShiftTable {
           return employee;
         })
         .filter(employee => employee.canDoTasks());
-      this.document.addShiftsAndTasksPriorTo(this.sheetName, this._employees);
+      this.priorTableCount = this.document.addShiftsAndTasksPriorTo(this.sheetName, this._employees);
     }
     return this._employees;
   }

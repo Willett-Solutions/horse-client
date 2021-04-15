@@ -40,16 +40,19 @@ export class Document {
     this.themeColors[1] = dk1.getElementsByTagName("a:sysClr")[0].getAttribute("lastClr")!;
   }
 
-  addShiftsAndTasksPriorTo(sheetName: string, employees: Employee[]) {
+  addShiftsAndTasksPriorTo(sheetName: string, employees: Employee[]): number {
     const thisSheetDate = date.parse(sheetName, "DD-MM-YYYY");
+    let priorTableCount = 0;
     this.tables.forEach(table => {
       const sheetDate = date.parse(table.sheetName, "DD-MM-YYYY");
       // Consider sheets dated up to 12 weeks (84 days) before this sheet
       const dateDifference = date.subtract(thisSheetDate, sheetDate).toDays();
       if (dateDifference > 0 && dateDifference <= 84) {
         table.addShiftsAndTasksTo(employees);
+        priorTableCount++;
       }
     });
+    return priorTableCount;
   }
 
   preferences(employee: Employee): Preferences {
