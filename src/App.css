@@ -39,10 +39,12 @@ section, aside {
   border-bottom: #dee2e6 solid 1px;
 }
 
-.table-sm td, .table-sm th {
+.table-sm td, .table-sm thead th {
   padding: 0;
   font-size: smaller;
   text-align: center;
+  vertical-align: middle;
+  border-bottom-width: 1px;
 }
 
 .table-sm td {

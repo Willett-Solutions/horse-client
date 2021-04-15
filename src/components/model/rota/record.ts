@@ -48,7 +48,7 @@ export class ShiftRecord {
       if (status === Status.AVAILABLE) {
         const duty = this.shiftFields[shift.enumOrdinal].duty;
         if (duty !== null) {
-          employee.priorTaskCount++;
+          employee.priorTaskCounts[duty.enumOrdinal]++;
         }
       }
     }

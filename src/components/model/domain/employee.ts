@@ -9,7 +9,7 @@ export class Employee {
   private readonly statuses: Status[];
   preferences: Preferences | undefined;
   priorShiftCount = 0;
-  priorTaskCount = 0;
+  priorTaskCounts = Array(Duty.enumValues.length).fill(0);
 
   constructor(name: string, team: Team, statuses: Status[]) {
     this.name = name;
@@ -22,7 +22,7 @@ export class Employee {
   }
 
   get taskLoad(): number {
-    return this.priorTaskCount / this.priorShiftCount;
+    return this.priorTaskCounts.reduce((acc, val) => acc + val, 0) / this.priorShiftCount;
   }
 }
 
