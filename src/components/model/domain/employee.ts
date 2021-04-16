@@ -38,10 +38,12 @@ export class Employee {
 export class TaskCounts {
   private counts = Array(Duty.enumValues.length).fill(0);
 
-  addAssign(other: TaskCounts) {
+  add(other: TaskCounts): TaskCounts {
+    const result = new TaskCounts();
     for (let i = 0; i < Duty.enumValues.length; i++) {
-      this.counts[i] += other.counts[i];
+      result.counts[i] = this.counts[i] + other.counts[i];
     }
+    return result;
   }
 
   increment(duty: Duty) {

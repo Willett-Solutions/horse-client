@@ -33,15 +33,14 @@ export class ShiftTable {
           const name = record.name;
           const preferences = this.document.preferences(name);
           if (preferences.areAllNo()) return [];
-          let priorShiftCount = 0;
-          let priorTaskCounts = new TaskCounts();
-          recentTables.forEach(table => {
+          const priorShiftCount = recentTables.reduce((count: number, table: ShiftTable) => {
             const record = table.findRecord(name);
-            if (record !== undefined) {
-              priorShiftCount += record.shiftsWorked;
-              priorTaskCounts.addAssign(record.tasksPerformed);
-            }
-          });
+            return count + (record?.shiftsWorked ?? 0);
+          }, 0);
+          const priorTaskCounts = recentTables.reduce((counts: TaskCounts, table: ShiftTable) => {
+            const record = table.findRecord(name);
+            return counts.add(record?.tasksPerformed ?? new TaskCounts());
+          }, new TaskCounts());
           return new Employee(
             name,
             record.team,
