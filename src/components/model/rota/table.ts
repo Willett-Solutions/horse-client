@@ -1,5 +1,5 @@
 import Excel from "exceljs";
-import {Duty, Employee, Preferences, Roster, Shift, Task, TaskCounts, Team} from "../domain";
+import {Duty, Employee, Preferences, Roster, Shift, Statistics, Task, Team} from "../domain";
 import {Document} from "./document";
 import {PrefsRecord, ShiftRecord} from "./record";
 import {PrefsColumns, ShiftColumns} from "./columns";
@@ -33,14 +33,13 @@ export class ShiftTable {
           const name = record.name;
           const preferences = this.document.preferences(name);
           if (preferences.areAllNo()) return [];
-          const counts = this.shiftAndTaskCounts(recentTables, name);
+          const statistics = this.statistics(recentTables, name);
           return new Employee(
             name,
             record.team,
             record.statuses,
             preferences,
-            counts.shiftCount,
-            counts.taskCounts
+            statistics
           );
         })
       this.priorTableCount = recentTables.length;
@@ -48,12 +47,14 @@ export class ShiftTable {
     return this._employees;
   }
 
-  private shiftAndTaskCounts(tables: ShiftTable[], name: string): { shiftCount: number, taskCounts: TaskCounts } {
-    return tables.reduce((counts: { shiftCount: number, taskCounts: TaskCounts }, table: ShiftTable) => {
+  private statistics(tables: ShiftTable[], name: string): Statistics {
+    return tables.reduce((statistics: Statistics, table: ShiftTable) => {
       const record = table.findRecord(name);
-      const {shiftCount, taskCounts} = record?.totals ?? {shiftCount: 0, taskCounts: new TaskCounts()};
-      return {shiftCount: counts.shiftCount + shiftCount, taskCounts: counts.taskCounts.add(taskCounts)};
-    }, {shiftCount: 0, taskCounts: new TaskCounts()});
+      if (record !== undefined) {
+        statistics.addAssign(record.statistics);
+      }
+      return statistics;
+    }, new Statistics());
   }
 
   get tasks(): Task[] {

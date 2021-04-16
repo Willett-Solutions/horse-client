@@ -1,6 +1,7 @@
 import {Enumify} from "enumify";
 import Color from "color";
 import {Duty, Shift} from "./task";
+import assert from "assert";
 
 
 export class Employee {
@@ -8,21 +9,18 @@ export class Employee {
   private readonly team: Team;
   private readonly statuses;
   readonly preferences: Preferences;
-  readonly priorShiftCount: number;
-  readonly priorTaskCounts: TaskCounts;
+  readonly statistics: Statistics;
 
   constructor(name: string,
               team: Team,
               statuses: Status[],
               preferences: Preferences,
-              priorShiftCount: number,
-              priorTaskCounts: TaskCounts) {
+              statistics: Statistics) {
     this.name = name;
     this.team = team;
     this.statuses = statuses;
     this.preferences = preferences;
-    this.priorShiftCount = priorShiftCount;
-    this.priorTaskCounts = priorTaskCounts;
+    this.statistics = statistics;
   }
 
   canDoTasks(): boolean {
@@ -30,32 +28,25 @@ export class Employee {
   }
 
   get taskLoad(): number {
-    return this.priorTaskCounts.sum / this.priorShiftCount;
+    return this.statistics.usage;
   }
 }
 
 
-export class TaskCounts {
-  private counts = Array(Duty.enumValues.length).fill(0);
+export class Statistics {
+  shiftCount = 0;
+  taskCounts = Array(Duty.enumValues.length).fill(0);
 
-  add(other: TaskCounts): TaskCounts {
-    const result = new TaskCounts();
+  get usage(): number {
+    assert(this.shiftCount > 0);
+    return this.taskCounts.reduce((acc, val) => acc + val, 0) / this.shiftCount;
+  }
+
+  addAssign(other: Statistics) {
+    this.shiftCount += other.shiftCount;
     for (let i = 0; i < Duty.enumValues.length; i++) {
-      result.counts[i] = this.counts[i] + other.counts[i];
+      this.taskCounts[i] += other.taskCounts[i];
     }
-    return result;
-  }
-
-  increment(duty: Duty) {
-    this.counts[duty.enumOrdinal]++
-  }
-
-  value(duty: Duty): number {
-    return this.counts[duty.enumOrdinal];
-  }
-
-  get sum(): number {
-    return this.counts.reduce((acc, val) => acc + val, 0);
   }
 }
 

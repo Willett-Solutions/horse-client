@@ -24,15 +24,15 @@ function StatisticsView(props: { table: Rota.ShiftTable | null }) {
       <tbody>
         {
           props.table?.employees
-            .filter(employee => employee.priorShiftCount > 0)
+            .filter(employee => employee.statistics.shiftCount > 0)
             .sort(((e1, e2) => e2.taskLoad - e1.taskLoad))
             .map(employee =>
               <tr>
                 <td>{employee.name}</td>
-                <td>{employee.priorTaskCounts.value(Duty.FISH)}</td>
-                <td>{employee.priorTaskCounts.value(Duty.DS)}</td>
-                <td>{employee.priorTaskCounts.value(Duty.LATE_DS)}</td>
-                <td>{employee.priorTaskCounts.value(Duty.SS)}</td>
+                <td>{employee.statistics.taskCounts[Duty.FISH.enumOrdinal]}</td>
+                <td>{employee.statistics.taskCounts[Duty.DS.enumOrdinal]}</td>
+                <td>{employee.statistics.taskCounts[Duty.LATE_DS.enumOrdinal]}</td>
+                <td>{employee.statistics.taskCounts[Duty.SS.enumOrdinal]}</td>
                 <td>{Math.round(100 * employee.taskLoad) + "%"}</td>
               </tr>
             )

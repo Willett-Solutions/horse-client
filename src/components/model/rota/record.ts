@@ -1,5 +1,5 @@
 import Excel from "exceljs";
-import {Preferences, Duty, Employee, Shift, Status, Task, Team, TaskCounts} from "../domain";
+import {Preferences, Duty, Employee, Shift, Status, Task, Team, Statistics} from "../domain";
 import {PreferenceField, ShiftField, TextField} from "./field";
 import {PrefsColumns, ShiftColumns} from "./columns";
 
@@ -31,16 +31,21 @@ export class ShiftRecord {
     return this.shiftFields.map(field => field.status);
   }
 
-  get totals(): {shiftCount: number, taskCounts: TaskCounts} {
-    return this.shiftFields.reduce((counts: {shiftCount: number, taskCounts: TaskCounts}, field: ShiftField) => {
-      if ([Status.AVAILABLE, Status.UNAVAILABLE, Status.WORKING_FROM_HOME].includes(field.status)) {
-        counts.shiftCount++;
+  get statistics(): Statistics {
+    return this.shiftFields.reduce((statistics: Statistics, field: ShiftField) => {
+      switch (field.status) {
+        case Status.AVAILABLE:
+          statistics.shiftCount++;
+          if (field.duty != null) {
+            statistics.taskCounts[field.duty.enumOrdinal]++;
+          }
+          break;
+        case Status.UNAVAILABLE:
+        case Status.WORKING_FROM_HOME:
+          statistics.shiftCount++;
       }
-      if (field.status === Status.AVAILABLE && field.duty != null) {
-        counts.taskCounts.increment(field.duty);
-      }
-      return counts;
-    }, {shiftCount: 0, taskCounts: new TaskCounts()});
+      return statistics;
+    }, new Statistics());
   }
 
   createTasks(employee: Employee): Task[] {
