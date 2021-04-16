@@ -29,10 +29,10 @@ function StatisticsView(props: { table: Rota.ShiftTable | null }) {
             .map(employee =>
               <tr>
                 <td>{employee.name}</td>
-                <td>{employee.priorTaskCounts[Duty.FISH.enumOrdinal]}</td>
-                <td>{employee.priorTaskCounts[Duty.DS.enumOrdinal]}</td>
-                <td>{employee.priorTaskCounts[Duty.LATE_DS.enumOrdinal]}</td>
-                <td>{employee.priorTaskCounts[Duty.SS.enumOrdinal]}</td>
+                <td>{employee.priorTaskCounts.value(Duty.FISH)}</td>
+                <td>{employee.priorTaskCounts.value(Duty.DS)}</td>
+                <td>{employee.priorTaskCounts.value(Duty.LATE_DS)}</td>
+                <td>{employee.priorTaskCounts.value(Duty.SS)}</td>
                 <td>{Math.round(100 * employee.taskLoad) + "%"}</td>
               </tr>
             )

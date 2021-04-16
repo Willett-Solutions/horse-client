@@ -9,7 +9,7 @@ export class Employee {
   private readonly statuses: Status[];
   preferences: Preferences | undefined;
   priorShiftCount = 0;
-  priorTaskCounts = Array(Duty.enumValues.length).fill(0);
+  priorTaskCounts = new TaskCounts();
 
   constructor(name: string, team: Team, statuses: Status[]) {
     this.name = name;
@@ -22,7 +22,30 @@ export class Employee {
   }
 
   get taskLoad(): number {
-    return this.priorTaskCounts.reduce((acc, val) => acc + val, 0) / this.priorShiftCount;
+    return this.priorTaskCounts.sum / this.priorShiftCount;
+  }
+}
+
+
+export class TaskCounts {
+  private counts = Array(Duty.enumValues.length).fill(0);
+
+  addAssign(other: TaskCounts) {
+    for (let i = 0; i < Duty.enumValues.length; i++) {
+      this.counts[i] += other.counts[i];
+    }
+  }
+
+  increment(duty: Duty) {
+    this.counts[duty.enumOrdinal]++
+  }
+
+  value(duty: Duty): number {
+    return this.counts[duty.enumOrdinal];
+  }
+
+  get sum(): number {
+    return this.counts.reduce((acc, val) => acc + val, 0);
   }
 }
 

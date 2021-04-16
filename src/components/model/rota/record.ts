@@ -1,8 +1,7 @@
 import Excel from "exceljs";
-import {Preferences, Duty, Employee, Shift, Status, Task, Team} from "../domain";
+import {Preferences, Duty, Employee, Shift, Status, Task, Team, TaskCounts} from "../domain";
 import {PreferenceField, ShiftField, TextField} from "./field";
 import {PrefsColumns, ShiftColumns} from "./columns";
-import {PrefsTable} from "./table";
 
 export class ShiftRecord {
   private readonly teamField: TextField;
@@ -31,27 +30,22 @@ export class ShiftRecord {
     return new Employee(name, team, statuses);
   }
 
-  addPriorShiftsTo(employee: Employee) {
-    // @ts-ignore
-    for (const shift of Shift) {
-      const status = this.shiftFields[shift.enumOrdinal].status;
-      if (status === Status.AVAILABLE || status === Status.UNAVAILABLE || status === Status.WORKING_FROM_HOME) {
-        employee.priorShiftCount++;
+  get shiftsWorked(): number {
+    return this.shiftFields.reduce((count: number, field: ShiftField) => {
+      if ([Status.AVAILABLE, Status.UNAVAILABLE, Status.WORKING_FROM_HOME].includes(field.status)) {
+        count++;
       }
-    }
+      return count;
+    }, 0);
   }
 
-  addPriorTasksTo(employee: Employee) {
-    // @ts-ignore
-    for (const shift of Shift) {
-      const status = this.shiftFields[shift.enumOrdinal].status;
-      if (status === Status.AVAILABLE) {
-        const duty = this.shiftFields[shift.enumOrdinal].duty;
-        if (duty !== null) {
-          employee.priorTaskCounts[duty.enumOrdinal]++;
-        }
+  get tasksPerformed(): TaskCounts {
+    return this.shiftFields.reduce((counts: TaskCounts, field: ShiftField) => {
+      if (field.status === Status.AVAILABLE && field.duty != null) {
+        counts.increment(field.duty);
       }
-    }
+      return counts;
+    }, new TaskCounts());
   }
 
   createTasks(employee: Employee): Task[] {

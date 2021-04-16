@@ -59,8 +59,10 @@ export class ShiftTable {
   addShiftsAndTasksTo(employees: Employee[]): void {
     employees.forEach(employee => {
       const record = this.findRecord(employee.name);
-      record?.addPriorShiftsTo(employee);
-      record?.addPriorTasksTo(employee);
+      if (record !== undefined) {
+        employee.priorShiftCount += record.shiftsWorked;
+        employee.priorTaskCounts.addAssign(record.tasksPerformed);
+      }
     });
   }
 
