@@ -5,9 +5,9 @@ import {PrefsRecord, ShiftRecord} from "./record";
 import {PrefsColumns, ShiftColumns} from "./columns";
 
 export class ShiftTable {
-  document: Document;
-  sheetName: string;
-  records: ShiftRecord[] = [];
+  readonly document: Document;
+  readonly sheetName: string;
+  readonly records: ShiftRecord[] = [];
   priorTableCount = 0;
 
   private _employees: Employee[] | undefined;
@@ -30,31 +30,14 @@ export class ShiftTable {
       const recentTables = this.document.tablesPreceding(this.sheetName);
       this._employees = this.records
         .flatMap(record => {
-          const name = record.name;
-          const preferences = this.document.preferences(name);
+          const preferences = this.document.preferences(record.name);
           if (preferences.areAllNo()) return [];
-          const statistics = this.statistics(recentTables, name);
-          return new Employee(
-            name,
-            record.team,
-            record.statuses,
-            preferences,
-            statistics
-          );
+          const statistics = this.document.statistics(recentTables, record.name);
+          return new Employee(record.name, record.team, record.statuses, preferences, statistics);
         })
       this.priorTableCount = recentTables.length;
     }
     return this._employees;
-  }
-
-  private statistics(tables: ShiftTable[], name: string): Statistics {
-    return tables.reduce((statistics: Statistics, table: ShiftTable) => {
-      const record = table.findRecord(name);
-      if (record !== undefined) {
-        statistics.addAssign(record.statistics);
-      }
-      return statistics;
-    }, new Statistics());
   }
 
   get tasks(): Task[] {

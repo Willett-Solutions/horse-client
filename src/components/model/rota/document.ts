@@ -1,6 +1,6 @@
 import date from "date-and-time";
 import Excel from "exceljs";
-import {Preferences} from "../domain";
+import {Preferences, Statistics} from "../domain";
 import {PrefsTable, ShiftTable} from "./table";
 
 export class Document {
@@ -40,6 +40,20 @@ export class Document {
     this.themeColors[1] = dk1.getElementsByTagName("a:sysClr")[0].getAttribute("lastClr")!;
   }
 
+  preferences(employeeName: string): Preferences {
+    return this.prefsTable.getPreferences(employeeName);
+  }
+
+  statistics(recentTables: ShiftTable[], employeeName: string): Statistics {
+    return recentTables.reduce((statistics: Statistics, table: ShiftTable) => {
+      const record = table.findRecord(employeeName);
+      if (record !== undefined) {
+        statistics.addAssign(record.statistics);
+      }
+      return statistics;
+    }, new Statistics());
+  }
+
   tablesPreceding(sheetName: string): ShiftTable[] {
     const thisSheetDate = date.parse(sheetName, "DD-MM-YYYY");
     return this.tables.filter(table => {
@@ -48,10 +62,6 @@ export class Document {
       // Consider sheets dated up to 12 weeks (84 days) before this sheet
       return dateDifference > 0 && dateDifference <= 84
     });
-  }
-
-  preferences(employeeName: string): Preferences {
-    return this.prefsTable.getPreferences(employeeName);
   }
 
   async getFile(): Promise<File> {
