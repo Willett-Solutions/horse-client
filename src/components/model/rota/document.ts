@@ -1,6 +1,6 @@
 import date from "date-and-time";
 import Excel from "exceljs";
-import {Employee, Preferences} from "../domain";
+import {Preferences} from "../domain";
 import {PrefsTable, ShiftTable} from "./table";
 
 export class Document {
