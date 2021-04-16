@@ -6,15 +6,23 @@ import {Duty, Shift} from "./task";
 export class Employee {
   readonly name: string;
   private readonly team: Team;
-  private readonly statuses: Status[];
-  preferences: Preferences | undefined;
-  priorShiftCount = 0;
-  priorTaskCounts = new TaskCounts();
+  private readonly statuses;
+  readonly preferences: Preferences;
+  readonly priorShiftCount: number;
+  readonly priorTaskCounts: TaskCounts;
 
-  constructor(name: string, team: Team, statuses: Status[]) {
+  constructor(name: string,
+              team: Team,
+              statuses: Status[],
+              preferences: Preferences,
+              priorShiftCount: number,
+              priorTaskCounts: TaskCounts) {
     this.name = name;
     this.team = team;
     this.statuses = statuses;
+    this.preferences = preferences;
+    this.priorShiftCount = priorShiftCount;
+    this.priorTaskCounts = priorTaskCounts;
   }
 
   canDoTasks(): boolean {

@@ -19,15 +19,16 @@ export class ShiftRecord {
     }
   }
 
-  get name() {
+  get name(): string {
     return this.nameField.text;
   }
 
-  createEmployee(): Employee {
-    const name: string = this.nameField.text;
-    const team: Team = Team.fromTitle(this.teamField.text)!;
-    const statuses = this.shiftFields.map(field => field.status);
-    return new Employee(name, team, statuses);
+  get team(): Team {
+    return Team.fromTitle(this.teamField.text)!;
+  }
+
+  get statuses(): Status[] {
+    return this.shiftFields.map(field => field.status);
   }
 
   get shiftsWorked(): number {

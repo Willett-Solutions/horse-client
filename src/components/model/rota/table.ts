@@ -1,5 +1,5 @@
 import Excel from "exceljs";
-import {Duty, Employee, Preferences, Roster, Shift, Task, Team} from "../domain";
+import {Duty, Employee, Preferences, Roster, Shift, Task, TaskCounts, Team} from "../domain";
 import {Document} from "./document";
 import {PrefsRecord, ShiftRecord} from "./record";
 import {PrefsColumns, ShiftColumns} from "./columns";
@@ -29,22 +29,28 @@ export class ShiftTable {
     if (this._employees === undefined) {
       const recentTables = this.document.tablesPreceding(this.sheetName);
       this._employees = this.records
-        .map(record => record.createEmployee())
-        .map(employee => {
-          employee.preferences = this.document.preferences(employee.name);
-          return employee;
-        })
-        .filter(employee => employee.canDoTasks())
-        .map(employee => {
+        .flatMap(record => {
+          const name = record.name;
+          const preferences = this.document.preferences(name);
+          if (preferences.areAllNo()) return [];
+          let priorShiftCount = 0;
+          let priorTaskCounts = new TaskCounts();
           recentTables.forEach(table => {
-            const record = table.findRecord(employee.name);
+            const record = table.findRecord(name);
             if (record !== undefined) {
-              employee.priorShiftCount += record.shiftsWorked;
-              employee.priorTaskCounts.addAssign(record.tasksPerformed);
+              priorShiftCount += record.shiftsWorked;
+              priorTaskCounts.addAssign(record.tasksPerformed);
             }
           });
-          return employee;
-        });
+          return new Employee(
+            name,
+            record.team,
+            record.statuses,
+            preferences,
+            priorShiftCount,
+            priorTaskCounts
+          );
+        })
       this.priorTableCount = recentTables.length;
     }
     return this._employees;
