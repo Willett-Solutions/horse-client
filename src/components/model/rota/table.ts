@@ -56,16 +56,6 @@ export class ShiftTable {
     });
   }
 
-  addShiftsAndTasksTo(employees: Employee[]): void {
-    employees.forEach(employee => {
-      const record = this.findRecord(employee.name);
-      if (record !== undefined) {
-        employee.priorShiftCount += record.shiftsWorked;
-        employee.priorTaskCounts.addAssign(record.tasksPerformed);
-      }
-    });
-  }
-
   private createTasks(employees: Employee[]): Task[] {
     const tasks: Task[][] = [];
     for (const employee of employees) {
@@ -103,7 +93,7 @@ export class ShiftTable {
     return this.findRecord(employee.name);
   }
 
-  private findRecord(name: string): ShiftRecord | undefined {
+  findRecord(name: string): ShiftRecord | undefined {
     return this.records.find(record => record.name === name);
   }
 }

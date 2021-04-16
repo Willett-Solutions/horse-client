@@ -42,17 +42,22 @@ export class Document {
 
   addShiftsAndTasksPriorTo(sheetName: string, employees: Employee[]): number {
     const thisSheetDate = date.parse(sheetName, "DD-MM-YYYY");
-    let priorTableCount = 0;
-    this.tables.forEach(table => {
+    // Consider sheets dated up to 12 weeks (84 days) before this sheet
+    const recentTables = this.tables.filter(table => {
       const sheetDate = date.parse(table.sheetName, "DD-MM-YYYY");
-      // Consider sheets dated up to 12 weeks (84 days) before this sheet
       const dateDifference = date.subtract(thisSheetDate, sheetDate).toDays();
-      if (dateDifference > 0 && dateDifference <= 84) {
-        table.addShiftsAndTasksTo(employees);
-        priorTableCount++;
-      }
+      return dateDifference > 0 && dateDifference <= 84
     });
-    return priorTableCount;
+    employees.forEach(employee => {
+      recentTables.forEach(table => {
+        const record = table.findRecord(employee.name);
+        if (record !== undefined) {
+          employee.priorShiftCount += record.shiftsWorked;
+          employee.priorTaskCounts.addAssign(record.tasksPerformed);
+        }
+      });
+    });
+    return recentTables.length;
   }
 
   preferences(employee: Employee): Preferences {
