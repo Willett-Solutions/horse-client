@@ -40,28 +40,18 @@ export class Document {
     this.themeColors[1] = dk1.getElementsByTagName("a:sysClr")[0].getAttribute("lastClr")!;
   }
 
-  addShiftsAndTasksPriorTo(sheetName: string, employees: Employee[]): number {
+  tablesPreceding(sheetName: string): ShiftTable[] {
     const thisSheetDate = date.parse(sheetName, "DD-MM-YYYY");
-    // Consider sheets dated up to 12 weeks (84 days) before this sheet
-    const recentTables = this.tables.filter(table => {
+    return this.tables.filter(table => {
       const sheetDate = date.parse(table.sheetName, "DD-MM-YYYY");
       const dateDifference = date.subtract(thisSheetDate, sheetDate).toDays();
+      // Consider sheets dated up to 12 weeks (84 days) before this sheet
       return dateDifference > 0 && dateDifference <= 84
     });
-    employees.forEach(employee => {
-      recentTables.forEach(table => {
-        const record = table.findRecord(employee.name);
-        if (record !== undefined) {
-          employee.priorShiftCount += record.shiftsWorked;
-          employee.priorTaskCounts.addAssign(record.tasksPerformed);
-        }
-      });
-    });
-    return recentTables.length;
   }
 
-  preferences(employee: Employee): Preferences {
-    return this.prefsTable.getPreferences(employee.name);
+  preferences(employeeName: string): Preferences {
+    return this.prefsTable.getPreferences(employeeName);
   }
 
   async getFile(): Promise<File> {

@@ -27,14 +27,25 @@ export class ShiftTable {
 
   get employees(): Employee[] {
     if (this._employees === undefined) {
+      const recentTables = this.document.tablesPreceding(this.sheetName);
       this._employees = this.records
         .map(record => record.createEmployee())
         .map(employee => {
-          employee.preferences = this.document.preferences(employee);
+          employee.preferences = this.document.preferences(employee.name);
           return employee;
         })
-        .filter(employee => employee.canDoTasks());
-      this.priorTableCount = this.document.addShiftsAndTasksPriorTo(this.sheetName, this._employees);
+        .filter(employee => employee.canDoTasks())
+        .map(employee => {
+          recentTables.forEach(table => {
+            const record = table.findRecord(employee.name);
+            if (record !== undefined) {
+              employee.priorShiftCount += record.shiftsWorked;
+              employee.priorTaskCounts.addAssign(record.tasksPerformed);
+            }
+          });
+          return employee;
+        });
+      this.priorTableCount = recentTables.length;
     }
     return this._employees;
   }
