@@ -48,14 +48,12 @@ export class ShiftTable {
     return this._employees;
   }
 
-  private shiftAndTaskCounts(tables: ShiftTable[], name: string): {shiftCount: number, taskCounts: TaskCounts} {
-    return tables
-      .reduce((counts: {shiftCount: number, taskCounts: TaskCounts}, table: ShiftTable) => {
-        const record = table.findRecord(name);
-        const shiftCount = record?.shiftsWorked ?? 0;
-        const taskCounts = record?.tasksPerformed ?? new TaskCounts();
-        return {shiftCount: counts.shiftCount + shiftCount, taskCounts: counts.taskCounts.add(taskCounts)};
-      }, {shiftCount: 0, taskCounts: new TaskCounts()});
+  private shiftAndTaskCounts(tables: ShiftTable[], name: string): { shiftCount: number, taskCounts: TaskCounts } {
+    return tables.reduce((counts: { shiftCount: number, taskCounts: TaskCounts }, table: ShiftTable) => {
+      const record = table.findRecord(name);
+      const {shiftCount, taskCounts} = record?.totals ?? {shiftCount: 0, taskCounts: new TaskCounts()};
+      return {shiftCount: counts.shiftCount + shiftCount, taskCounts: counts.taskCounts.add(taskCounts)};
+    }, {shiftCount: 0, taskCounts: new TaskCounts()});
   }
 
   get tasks(): Task[] {

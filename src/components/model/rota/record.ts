@@ -31,22 +31,16 @@ export class ShiftRecord {
     return this.shiftFields.map(field => field.status);
   }
 
-  get shiftsWorked(): number {
-    return this.shiftFields.reduce((count: number, field: ShiftField) => {
+  get totals(): {shiftCount: number, taskCounts: TaskCounts} {
+    return this.shiftFields.reduce((counts: {shiftCount: number, taskCounts: TaskCounts}, field: ShiftField) => {
       if ([Status.AVAILABLE, Status.UNAVAILABLE, Status.WORKING_FROM_HOME].includes(field.status)) {
-        count++;
+        counts.shiftCount++;
       }
-      return count;
-    }, 0);
-  }
-
-  get tasksPerformed(): TaskCounts {
-    return this.shiftFields.reduce((counts: TaskCounts, field: ShiftField) => {
       if (field.status === Status.AVAILABLE && field.duty != null) {
-        counts.increment(field.duty);
+        counts.taskCounts.increment(field.duty);
       }
       return counts;
-    }, new TaskCounts());
+    }, {shiftCount: 0, taskCounts: new TaskCounts()});
   }
 
   createTasks(employee: Employee): Task[] {
