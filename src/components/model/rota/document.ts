@@ -4,8 +4,6 @@ import {Preferences, Statistics} from "../domain";
 import {PrefsTable, ShiftTable} from "./table";
 
 export class Document {
-  private readonly file: File;
-  private readonly workbook: Excel.Workbook;
   private readonly prefsTable: PrefsTable;
 
   readonly themeColors: string[] = Array(2);
@@ -18,9 +16,7 @@ export class Document {
     return new Document(file, workbook);
   }
 
-  private constructor(file: File, workbook: Excel.Workbook) {
-    this.file = file;
-    this.workbook = workbook;
+  private constructor(readonly file: File, readonly workbook: Excel.Workbook) {
     this.setThemeColors();
     this.prefsTable = new PrefsTable(this.workbook.getWorksheet("Preferences"));
     this.tables = workbook.worksheets
@@ -54,10 +50,10 @@ export class Document {
     }, new Statistics());
   }
 
-  tablesPreceding(sheetName: string): ShiftTable[] {
-    const thisSheetDate = date.parse(sheetName, "DD-MM-YYYY");
+  tablesPreceding(sheet: Excel.Worksheet): ShiftTable[] {
+    const thisSheetDate = date.parse(sheet.name, "DD-MM-YYYY");
     return this.tables.filter(table => {
-      const sheetDate = date.parse(table.sheetName, "DD-MM-YYYY");
+      const sheetDate = date.parse(table.sheet.name, "DD-MM-YYYY");
       const dateDifference = date.subtract(thisSheetDate, sheetDate).toDays();
       // Consider sheets dated up to 12 weeks (84 days) before this sheet
       return dateDifference > 0 && dateDifference <= 84

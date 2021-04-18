@@ -7,13 +7,7 @@ import {ShiftTable} from "../rota/table";
  */
 
 export class Roster {
-  readonly employees: Employee[];
-  readonly tasks: Task[];
-
-  constructor(employees: Employee[], tasks: Task[]) {
-    this.employees = employees;
-    this.tasks = tasks;
-  }
+  constructor(readonly employees: Employee[], readonly tasks: Task[]) {}
 
   static fromTable(table: ShiftTable): Roster {
     const employees = table.employees;

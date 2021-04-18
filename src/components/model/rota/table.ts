@@ -1,21 +1,17 @@
 import Excel from "exceljs";
-import {Duty, Employee, Preferences, Roster, Shift, Statistics, Task, Team} from "../domain";
+import {Duty, Employee, Preferences, Roster, Shift, Task, Team} from "../domain";
 import {Document} from "./document";
 import {PrefsRecord, ShiftRecord} from "./record";
 import {PrefsColumns, ShiftColumns} from "./columns";
 
 export class ShiftTable {
-  readonly document: Document;
-  readonly sheetName: string;
   readonly records: ShiftRecord[] = [];
   priorTableCount = 0;
 
   private _employees: Employee[] | undefined;
   private _tasks: Task[] | undefined;
 
-  constructor(document: Document, sheet: Excel.Worksheet) {
-    this.document = document;
-    this.sheetName = sheet.name;
+  constructor(readonly document: Document, readonly sheet: Excel.Worksheet) {
     const columns = new ShiftColumns();
     sheet.eachRow(row => {
       const teamName = row.getCell(columns.team).text;
@@ -27,7 +23,7 @@ export class ShiftTable {
 
   get employees(): Employee[] {
     if (this._employees === undefined) {
-      const recentTables = this.document.tablesPreceding(this.sheetName);
+      const recentTables = this.document.tablesPreceding(this.sheet);
       this._employees = this.records
         .flatMap(record => {
           const preferences = this.document.preferences(record.name);

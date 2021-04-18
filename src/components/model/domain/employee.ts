@@ -5,23 +5,11 @@ import assert from "assert";
 
 
 export class Employee {
-  readonly name: string;
-  private readonly team: Team;
-  private readonly statuses;
-  readonly preferences: Preferences;
-  readonly statistics: Statistics;
-
-  constructor(name: string,
-              team: Team,
-              statuses: Status[],
-              preferences: Preferences,
-              statistics: Statistics) {
-    this.name = name;
-    this.team = team;
-    this.statuses = statuses;
-    this.preferences = preferences;
-    this.statistics = statistics;
-  }
+  constructor(readonly name: string,
+              private readonly team: Team,
+              private readonly statuses: Status[],
+              readonly preferences: Preferences,
+              readonly statistics: Statistics) {}
 
   canDoTasks(): boolean {
     return this.preferences !== undefined && !this.preferences.areAllNo();
@@ -52,11 +40,8 @@ export class Statistics {
 
 
 export class Team extends Enumify {
-  readonly title: string;
-
-  constructor(title: string) {
+  constructor(readonly title: string) {
     super();
-    this.title = title;
   }
 
   static PRINCIPALS = new Team("Principals");
@@ -107,11 +92,8 @@ export class Preferences {
 
 
 export class Status extends Enumify {
-  readonly color: Color | null;
-
-  constructor(color: Color | null) {
+  constructor(readonly color: Color | null) {
     super();
-    this.color = color;
   }
 
   static AVAILABLE = new Status(Color("#FFFFFF"));
@@ -131,4 +113,3 @@ export class Status extends Enumify {
     return statuses.find(status => status.color?.rgbNumber() === color.rgbNumber()) ?? null;
   }
 }
-

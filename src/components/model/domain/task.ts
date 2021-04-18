@@ -3,25 +3,14 @@ import Color from "color";
 import {Employee} from "./employee";
 
 export class Task {
-  readonly duty: Duty;
-  readonly shift: Shift;
-
   employee: Employee | null = null;
 
-  constructor(duty: Duty, shift: Shift) {
-    this.duty = duty;
-    this.shift = shift;
-  }
+  constructor(readonly duty: Duty, readonly shift: Shift) {}
 }
 
 export class Duty extends Enumify {
-  readonly color: Color;
-  private readonly tasksPerShift: number[];
-
-  constructor(color: Color, tasksPerShift: number[]) {
+  constructor(readonly color: Color, private readonly tasksPerShift: number[]) {
     super();
-    this.color = color;
-    this.tasksPerShift = tasksPerShift;
   }
 
   static FISH =

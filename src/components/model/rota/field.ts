@@ -5,11 +5,7 @@ import Color from "color";
 
 
 abstract class Field {
-  protected readonly cell: Excel.Cell;
-
-  constructor(cell: Excel.Cell) {
-    this.cell = cell;
-  }
+  constructor(protected readonly cell: Excel.Cell) {}
 }
 
 
@@ -35,11 +31,8 @@ export class PreferenceField extends Field {
  */
 
 abstract class ColoredField extends Field {
-  private readonly themeColors: string[]
-
-  constructor(themeColors: string[], cell: Excel.Cell) {
+  constructor(private readonly themeColors: string[], cell: Excel.Cell) {
     super(cell);
-    this.themeColors = themeColors;
   }
 
   private _color: Color | undefined;

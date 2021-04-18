@@ -61,7 +61,7 @@ class SelectionForm extends React.Component<SelectionFormProps, SelectionFormSta
       Rota.Document.build(file).then(document => {
         this.setState({
           sheetOptions: document.tables.map(table =>
-            ({value: table, label: table.sheetName})),
+            ({value: table, label: table.sheet.name})),
           selectedOption: null,
         });
         this.props.onSheetSelected(null);
