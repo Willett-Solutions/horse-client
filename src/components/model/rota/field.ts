@@ -68,7 +68,7 @@ abstract class ColoredField extends Field {
       return Color("#" + fgColor.argb!.substring(2));
     }
     if (fgColor.hasOwnProperty("theme")) {
-      assert(fgColor.theme === 0 || fgColor.theme === 1);
+      assert(fgColor.theme !== undefined && fgColor.theme >= 0 && fgColor.theme <= 9);
       const color = Color("#" + this.themeColors[fgColor.theme]);
       if (fgColor.hasOwnProperty("tint")) {
         // @ts-ignore
