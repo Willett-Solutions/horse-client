@@ -1,9 +1,10 @@
 import * as Rota from "./rota";
 import {Roster} from "./domain";
+import Settings from "./settings";
 
 class Solver {
-  async solve(table: Rota.ShiftTable) {
-    const problem = Roster.fromTable(table);
+  async solve(settings: Settings, table: Rota.ShiftTable) {
+    const problem = Roster.fromTable(settings, table);
     const authority = process.env.REACT_APP_AUTHORITY;
     const response = await fetch("http://" + authority + "/solve", {
       method: "POST",

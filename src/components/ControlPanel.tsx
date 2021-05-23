@@ -10,6 +10,7 @@ import horse_end from "./horse-end.gif";
 import Solver from "./model/solver";
 import * as Rota from "./model/rota";
 import FileSaver from "file-saver";
+import Settings from "./model/settings";
 
 enum Phase {
   INITIAL,
@@ -18,6 +19,7 @@ enum Phase {
 }
 
 type ControlPanelProps = {
+  settings: Settings,
   hasFinished: boolean,
   onSheetSelected: (table: Rota.ShiftTable | null) => void,
   onFinished: () => void,
@@ -82,7 +84,7 @@ class ControlPanel extends React.Component<ControlPanelProps, ControlPanelState>
 
   private handlePlanRotaSheet() {
     this.setState({hasStartedSolving: true});
-    this.solver.solve(this.table!).then(() => this.props.onFinished());
+    this.solver.solve(this.props.settings, this.table!).then(() => this.props.onFinished());
   }
 
   private handleSaveFile() {

@@ -1,7 +1,15 @@
 import {ShiftTable} from "./rota/table";
-import {Duty, Shift} from "./domain/task";
+import {Duty, Shift, Task} from "./domain/task";
 
 class Settings {
+
+  private tasksPerShift = new Map<Duty, Array<number>>([
+    [Duty.FISH, [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]],
+    [Duty.DS, [1, 0, 1, 0, 1, 1, 1, 1, 1, 1]],
+    [Duty.LATE_DS, [0, 1, 0, 1, 0, 1, 0, 1, 0, 1]],
+    [Duty.SS, [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]],
+  ]);
+
   getUnassignedTaskCount(table: ShiftTable): number {
     const taskCounts = Duty.enumValues.map(() => new Array(Shift.enumValues.length).fill(0));
     for (const task of table.tasks) {
@@ -11,10 +19,25 @@ class Settings {
     for (const duty of Duty.enumValues) {
       for (const shift of Shift.enumValues) {
         unassignedTaskCount += Math.max(0,
-          (duty as Duty).getTaskCount(shift as Shift) - taskCounts[duty.enumOrdinal][shift.enumOrdinal]);
+          this.tasksPerShift.get(duty as Duty)![shift.enumOrdinal] -
+          taskCounts[duty.enumOrdinal][shift.enumOrdinal]);
       }
     }
     return unassignedTaskCount;
+  }
+
+  addUnassignedTasksTo(tasks: Task[]) {
+    // @ts-ignore
+    for (const duty of Duty) {
+      // @ts-ignore
+      for (const shift of Shift) {
+        const tasksRequired = this.tasksPerShift.get(duty)![shift.enumOrdinal];
+        const tasksPresent = tasks.filter(task => task.duty === duty && task.shift === shift).length;
+        for (let i = 0; i < tasksRequired - tasksPresent; i++) {
+          tasks.push(new Task(duty, shift));
+        }
+      }
+    }
   }
 }
 

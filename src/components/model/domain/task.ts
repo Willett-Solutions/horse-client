@@ -9,23 +9,15 @@ export class Task {
 }
 
 export class Duty extends Enumify {
-  constructor(readonly color: Color, private readonly tasksPerShift: number[]) {
+  constructor(readonly color: Color) {
     super();
   }
 
-  static FISH =
-    new Duty(Color("#FF0000"), [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]);
-  static DS =
-    new Duty(Color("#00B0F0"), [1, 0, 1, 0, 1, 1, 1, 1, 1, 1]);
-  static LATE_DS =
-    new Duty(Color("#0070C0"), [0, 1, 0, 1, 0, 1, 0, 1, 0, 1]);
-  static SS =
-    new Duty(Color("#FFC000"), [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]);
+  static FISH = new Duty(Color("#FF0000"));
+  static DS = new Duty(Color("#00B0F0"));
+  static LATE_DS = new Duty(Color("#0070C0"));
+  static SS = new Duty(Color("#FFC000"));
   static _ = Duty.closeEnum();
-
-  getTaskCount(shift: Shift): number {
-    return this.tasksPerShift[shift.enumOrdinal];
-  }
 
   toJSON() {
     return this.enumKey;

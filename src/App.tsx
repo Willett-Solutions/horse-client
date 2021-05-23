@@ -45,6 +45,7 @@ class App extends React.Component<{}, AppState> {
               <Col xl={3} md={6}>
                 <section>
                   <ControlPanel
+                    settings={this.state.settings}
                     hasFinished={this.state.isSolved}
                     onSheetSelected={table => this.setState({table: table})}
                     onFinished={() => this.setState({isSolved: true})}

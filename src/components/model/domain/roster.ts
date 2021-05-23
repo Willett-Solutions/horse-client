@@ -1,6 +1,7 @@
 import {Duty, Shift, Task} from "./task";
 import {Employee, Team} from "./employee";
 import {ShiftTable} from "../rota/table";
+import Settings from "../settings";
 
 /**
  * All the data constituting a problem for solution by Optaplanner.
@@ -9,25 +10,11 @@ import {ShiftTable} from "../rota/table";
 export class Roster {
   constructor(readonly employees: Employee[], readonly tasks: Task[]) {}
 
-  static fromTable(table: ShiftTable): Roster {
+  static fromTable(settings: Settings, table: ShiftTable): Roster {
     const employees = table.employees;
     const tasks = table.tasks;
-    this.addUnassignedTasksTo(tasks);
+    settings.addUnassignedTasksTo(tasks);
     return new Roster(employees, tasks);
-  }
-
-  private static addUnassignedTasksTo(tasks: Task[]) {
-    // @ts-ignore
-    for (const duty of Duty) {
-      // @ts-ignore
-      for (const shift of Shift) {
-        const tasksRequired = duty.getTaskCount(shift);
-        const tasksPresent = tasks.filter(task => task.duty === duty && task.shift === shift).length;
-        for (let i = 0; i < tasksRequired - tasksPresent; i++) {
-          tasks.push(new Task(duty, shift));
-        }
-      }
-    }
   }
 
   static fromJSON(text: string) {
