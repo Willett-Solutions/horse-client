@@ -7,8 +7,10 @@ import InstructionPanel from "./components/InstructionPanel";
 import RotaView from "./components/RotaView";
 import StatisticsView from "./components/StatisticsView";
 import * as Rota from "./components/model/rota";
+import Settings from "./components/model/settings";
 
 type AppState = {
+  settings: Settings,
   table: Rota.ShiftTable | null,
   isSolved: boolean,
 };
@@ -17,6 +19,7 @@ class App extends React.Component<{}, AppState> {
   constructor(props: {}) {
     super(props);
     this.state = {
+      settings: new Settings(),
       table: null,
       isSolved: false,
     }
@@ -52,7 +55,7 @@ class App extends React.Component<{}, AppState> {
                 <section>
                   <Tabs defaultActiveKey="rota">
                     <Tab eventKey="rota" title="Rota">
-                      <RotaView table={this.state.table}/>
+                      <RotaView settings={this.state.settings} table={this.state.table}/>
                     </Tab>
                     <Tab eventKey="statistics" title="Statistics">
                       <StatisticsView table={this.state.table}/>

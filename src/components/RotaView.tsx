@@ -1,8 +1,14 @@
 import React from "react";
 import {Table} from "react-bootstrap";
 import * as Rota from "./model/rota";
+import Settings from "./model/settings";
 
-function RotaView(props: { table: Rota.ShiftTable | null }) {
+interface RotaViewParams {
+  settings: Settings;
+  table: Rota.ShiftTable | null;
+}
+
+function RotaView(props: RotaViewParams) {
   return (
     <React.Fragment>
       <Table bordered size="sm">
@@ -47,7 +53,7 @@ function RotaView(props: { table: Rota.ShiftTable | null }) {
       {
         props.table !== null &&
         <h5>
-          Unassigned duties: {props.table.unassignedTaskCount}
+          Unassigned duties: {props.settings.getUnassignedTaskCount(props.table)}
         </h5>
       }
     </React.Fragment>

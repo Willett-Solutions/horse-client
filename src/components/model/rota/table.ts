@@ -1,5 +1,5 @@
 import Excel from "exceljs";
-import {Duty, Employee, Preferences, Roster, Shift, Task, Team} from "../domain";
+import {Employee, Preferences, Roster, Task, Team} from "../domain";
 import {Document} from "./document";
 import {PrefsRecord, ShiftRecord} from "./record";
 import {PrefsColumns, ShiftColumns} from "./columns";
@@ -39,7 +39,7 @@ export class ShiftTable {
   get tasks(): Task[] {
     if (this._tasks === undefined) {
       this._tasks = this.createTasks(this.employees);
-      this.addUnassignedTasksTo(this._tasks);
+      // this.addUnassignedTasksTo(this._tasks);
     }
     return this._tasks;
   }
@@ -62,24 +62,6 @@ export class ShiftTable {
       }
     }
     return tasks.flat();
-  }
-
-  private addUnassignedTasksTo(tasks: Task[]) {
-    // @ts-ignore
-    for (const duty of Duty) {
-      // @ts-ignore
-      for (const shift of Shift) {
-        const tasksRequired: number = duty.getTaskCount(shift);
-        const tasksPresent = tasks.filter(task => task.duty === duty && task.shift === shift).length;
-        for (let i = 0; i < tasksRequired - tasksPresent; i++) {
-          tasks.push(new Task(duty, shift));
-        }
-      }
-    }
-  }
-
-  get unassignedTaskCount(): number {
-    return this.tasks.filter(task => task.employee === null).length;
   }
 
   applyRoster(roster: Roster) {
