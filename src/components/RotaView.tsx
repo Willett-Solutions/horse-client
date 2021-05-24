@@ -2,6 +2,7 @@ import React from "react";
 import {Table} from "react-bootstrap";
 import * as Rota from "./model/rota";
 import Settings from "./model/settings";
+import {Shift} from "./model/domain/task";
 
 interface RotaViewParams {
   settings: Settings;
@@ -23,16 +24,11 @@ function RotaView(props: RotaViewParams) {
           </tr>
           <tr>
             <th style={{width: "10%"}}/>
-            <th style={{width: "9%"}}>AM</th>
-            <th style={{width: "9%"}}>PM</th>
-            <th style={{width: "9%"}}>AM</th>
-            <th style={{width: "9%"}}>PM</th>
-            <th style={{width: "9%"}}>AM</th>
-            <th style={{width: "9%"}}>PM</th>
-            <th style={{width: "9%"}}>AM</th>
-            <th style={{width: "9%"}}>PM</th>
-            <th style={{width: "9%"}}>AM</th>
-            <th style={{width: "9%"}}>PM</th>
+            {
+              Shift.enumValues.map(value =>
+                <th style={{width: "9%"}}>{value.enumOrdinal % 2 === 0 ? "AM" : "PM"}</th>
+              )
+            }
           </tr>
         </thead>
         <tbody>

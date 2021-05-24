@@ -2,6 +2,7 @@ import React from "react";
 import {Table} from "react-bootstrap";
 import Settings from "./model/settings";
 import Form from "react-bootstrap/Form";
+import {Shift} from "./model/domain/task";
 
 type SettingsPanelProps = {
   settings: Settings,
@@ -25,16 +26,9 @@ class SettingsPanel extends React.Component<SettingsPanelProps, SettingsPanelSta
           </thead>
           <thead>
             <th/>
-            <th>AM</th>
-            <th>PM</th>
-            <th>AM</th>
-            <th>PM</th>
-            <th>AM</th>
-            <th>PM</th>
-            <th>AM</th>
-            <th>PM</th>
-            <th>AM</th>
-            <th>PM</th>
+            {
+              Shift.enumValues.map(value => <th>{value.enumOrdinal % 2 === 0 ? "AM" : "PM"}</th>)
+            }
           </thead>
           <tbody>
             {
