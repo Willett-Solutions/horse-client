@@ -9,14 +9,14 @@ export class Task {
 }
 
 export class Duty extends Enumify {
-  constructor(readonly color: Color) {
+  constructor(readonly description: string, readonly color: Color) {
     super();
   }
 
-  static FISH = new Duty(Color("#FF0000"));
-  static DS = new Duty(Color("#00B0F0"));
-  static LATE_DS = new Duty(Color("#0070C0"));
-  static SS = new Duty(Color("#FFC000"));
+  static FISH = new Duty("FISH", Color("#FF0000"));
+  static DS = new Duty("DS", Color("#00B0F0"));
+  static LATE_DS = new Duty("Late DS", Color("#0070C0"));
+  static SS = new Duty("SS", Color("#FFC000"));
   static _ = Duty.closeEnum();
 
   toJSON() {

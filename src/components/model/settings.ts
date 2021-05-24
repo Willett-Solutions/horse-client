@@ -3,7 +3,7 @@ import {Duty, Shift, Task} from "./domain/task";
 
 class Settings {
 
-  private tasksPerShift = new Map<Duty, Array<number>>([
+  readonly tasksPerShift = new Map<Duty, Array<number>>([
     [Duty.FISH, [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]],
     [Duty.DS, [1, 0, 1, 0, 1, 1, 1, 1, 1, 1]],
     [Duty.LATE_DS, [0, 1, 0, 1, 0, 1, 0, 1, 0, 1]],

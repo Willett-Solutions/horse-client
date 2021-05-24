@@ -8,6 +8,7 @@ import RotaView from "./components/RotaView";
 import StatisticsView from "./components/StatisticsView";
 import * as Rota from "./components/model/rota";
 import Settings from "./components/model/settings";
+import SettingsPanel from "./components/SettingsPanel";
 
 type AppState = {
   settings: Settings,
@@ -44,12 +45,18 @@ class App extends React.Component<{}, AppState> {
               </Col>
               <Col xl={3} md={6}>
                 <section>
-                  <ControlPanel
-                    settings={this.state.settings}
-                    hasFinished={this.state.isSolved}
-                    onSheetSelected={table => this.setState({table: table})}
-                    onFinished={() => this.setState({isSolved: true})}
-                  />
+                  <Tabs defaultActiveKey="control">
+                    <Tab eventKey="control" title="Control">
+                      <ControlPanel
+                        settings={this.state.settings}
+                        hasFinished={this.state.isSolved}
+                        onSheetSelected={table => this.setState({table: table})}
+                        onFinished={() => this.setState({isSolved: true})}/>
+                    </Tab>
+                    <Tab eventKey="settings" title="Settings">
+                      <SettingsPanel settings={this.state.settings}/>
+                    </Tab>
+                  </Tabs>
                 </section>
               </Col>
               <Col xl={6}>

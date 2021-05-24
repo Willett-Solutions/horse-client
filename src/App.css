@@ -23,7 +23,7 @@ main {
 section, aside {
   display: flex;
   flex-direction: column;
-  min-height: 30rem;
+  min-height: 32rem;
   margin: 1rem;
   border: 1px solid lightgray;
   border-radius: 0.5rem;
