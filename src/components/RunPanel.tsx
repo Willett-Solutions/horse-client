@@ -18,22 +18,22 @@ enum Phase {
   FINISHED,
 }
 
-type ControlPanelProps = {
+type RunPanelProps = {
   settings: Settings,
   hasFinished: boolean,
   onSheetSelected: (table: Rota.ShiftTable | null) => void,
   onFinished: () => void,
 };
 
-type ControlPanelState = {
+type RunPanelState = {
   hasStartedSolving: boolean,
 };
 
-class ControlPanel extends React.Component<ControlPanelProps, ControlPanelState> {
+class RunPanel extends React.Component<RunPanelProps, RunPanelState> {
   private readonly solver = new Solver();
   private table: Rota.ShiftTable | null = null;
 
-  constructor(props: ControlPanelProps) {
+  constructor(props: RunPanelProps) {
     super(props);
     this.handleSheetSelected = this.handleSheetSelected.bind(this);
     this.handlePlanRotaSheet = this.handlePlanRotaSheet.bind(this);
@@ -96,9 +96,7 @@ class ControlPanel extends React.Component<ControlPanelProps, ControlPanelState>
 function SolvedNotice(props: { onSaveRotaFile: () => void }) {
   return (
     <div>
-      <p>All done! HORSE has successfully completed the rota sheet for the specified week. If you are happy with
-        the assignments shown in the preview, click the "Save rota file" button to save the file containing the
-        completed rota, then follow the instructions.</p>
+      <p>All done! HORSE has successfully completed the rota sheet for the specified week.</p>
       <Button onClick={props.onSaveRotaFile}>Save rota file</Button>
     </div>
   );
@@ -115,4 +113,4 @@ function HorseAnimation(props: { phase: Phase }) {
   }
 }
 
-export default ControlPanel;
+export default RunPanel;

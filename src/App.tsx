@@ -2,7 +2,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 import React from "react";
 import {Col, Container, Row, Tab, Tabs} from "react-bootstrap";
-import ControlPanel from "./components/ControlPanel";
+import RunPanel from "./components/RunPanel";
 import InstructionPanel from "./components/InstructionPanel";
 import RotaView from "./components/RotaView";
 import StatisticsView from "./components/StatisticsView";
@@ -45,19 +45,19 @@ class App extends React.Component<{}, AppState> {
               </Col>
               <Col xl={3} md={6}>
                 <section>
-                  <Tabs defaultActiveKey="control">
-                    <Tab eventKey="control" title="Control">
-                      <ControlPanel
-                        settings={this.state.settings}
-                        hasFinished={this.state.isSolved}
-                        onSheetSelected={table => this.setState({table: table})}
-                        onFinished={() => this.setState({isSolved: true})}/>
-                    </Tab>
+                  <Tabs defaultActiveKey="settings">
                     <Tab eventKey="settings" title="Settings">
                       <SettingsPanel
                         settings={this.state.settings}
                         onChange={settings => this.setState({settings: settings})}
                       />
+                    </Tab>
+                    <Tab eventKey="run" title="Run">
+                      <RunPanel
+                        settings={this.state.settings}
+                        hasFinished={this.state.isSolved}
+                        onSheetSelected={table => this.setState({table: table})}
+                        onFinished={() => this.setState({isSolved: true})}/>
                     </Tab>
                   </Tabs>
                 </section>

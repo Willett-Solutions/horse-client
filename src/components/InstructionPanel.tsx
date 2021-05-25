@@ -8,10 +8,15 @@ function InstructionPanel(props: { hasFinished: boolean }) {
       {!props.hasFinished ? (
         <ul className="horseshoe">
           <li>
-            Start by clicking the "Choose file" button. A file selection window will open.
+            Start by checking under the "Settings" tab that the numbers of each duty to assign are set correctly. If
+            not, click the buttons in the grid to change the numbers of duties to be assigned.
           </li>
           <li>
-            Browse to the folder containing the shift rota file (e.g. "Shifts.xlsx") and select that file. Click
+            When you are happy with the settings, select the "Run" tab. Click the "Choose file" button, and a
+            file selection window will open.
+          </li>
+          <li>
+            Browse to the folder containing the shift rota file and select that file. Click
             "Open". The file selection window will close, and you will see the name of the selected file next to the
             "Choose file" button.
           </li>
@@ -26,8 +31,12 @@ function InstructionPanel(props: { hasFinished: boolean }) {
       ) : (
         <ul className="horseshoe">
           <li>
-            When the "Save As" window opens, click "Save". The rota file will then be saved with a "(1)" suffix, e.g.
-            "Shifts (1).xlsx".
+            The "Rota" tab shows a preview of the duties that HORSE has assigned. Click the "Save rota file" button
+            to save the file containing the completed rota.
+          </li>
+          <li>
+            When the "Save As" window opens, click "Save". The rota file will then be saved under the same name as the
+            input file, but with a "(1)" suffix.
           </li>
           <li>
             Finally, open the saved file and check that the rota has been planned as desired. If all is well, save the
