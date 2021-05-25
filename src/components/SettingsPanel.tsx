@@ -3,11 +3,17 @@ import Settings from "./model/settings";
 import Form from "react-bootstrap/Form";
 import DutyGrid from "./DutyGrid";
 
-function SettingsPanel({settings}: { settings: Settings }) {
+function SettingsPanel({settings, onChange}: {
+  settings: Settings,
+  onChange: (settings: Settings) => void,
+}) {
   return (
     <Form.Group>
-      <Form.Label>Duties to be assigned:</Form.Label>
-      <DutyGrid tasksPerShift={settings.tasksPerShift}/>
+      <Form.Label>Number of duties to be assigned:</Form.Label>
+      <DutyGrid
+        settings={settings}
+        onChange={onChange}
+      />
     </Form.Group>
   );
 }

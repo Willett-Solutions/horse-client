@@ -10,6 +10,11 @@ class Settings {
     [Duty.SS, [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]],
   ]);
 
+  incrementTasks(duty: Duty, shift: Shift) {
+    const row = this.tasksPerShift.get(duty as Duty)!
+    row[shift.enumOrdinal] = (row[shift.enumOrdinal] + 1) % 3;
+  }
+
   getUnassignedTaskCount(table: ShiftTable): number {
     const taskCounts = Duty.enumValues.map(() => new Array(Shift.enumValues.length).fill(0));
     for (const task of table.tasks) {

@@ -54,7 +54,10 @@ class App extends React.Component<{}, AppState> {
                         onFinished={() => this.setState({isSolved: true})}/>
                     </Tab>
                     <Tab eventKey="settings" title="Settings">
-                      <SettingsPanel settings={this.state.settings}/>
+                      <SettingsPanel
+                        settings={this.state.settings}
+                        onChange={settings => this.setState({settings: settings})}
+                      />
                     </Tab>
                   </Tabs>
                 </section>
