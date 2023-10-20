@@ -1,6 +1,6 @@
 {
   "name": "horse-client",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.11.9",
@@ -16,6 +16,7 @@
     "@types/react-bootstrap": "^0.32.25",
     "@types/react-dom": "^17.0.1",
     "@types/react-select": "^4.0.13",
+    "assert": "^2.1.0",
     "bootstrap": "^4.6.0",
     "color": "^3.1.3",
     "color-convert": "^2.0.1",
@@ -26,7 +27,7 @@
     "react": "^17.0.1",
     "react-bootstrap": "^1.5.0",
     "react-dom": "^17.0.1",
-    "react-scripts": "4.0.3",
+    "react-scripts": "5.0.1",
     "react-select": "^4.1.0",
     "typescript": "^4.2.2",
     "web-vitals": "^1.1.0"

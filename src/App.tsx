@@ -78,7 +78,7 @@ class App extends React.Component<{}, AppState> {
           </Container>
         </main>
         <footer>
-          <p>Released from the stable by David Willett (<a
+          <p>Released from the stable by Willett Solutions (<a
             href="mailto:david.m.willett@gmail.com">david.m.willett@gmail.com</a>)</p>
         </footer>
       </React.Fragment>

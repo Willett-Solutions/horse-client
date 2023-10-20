@@ -58,7 +58,7 @@ abstract class ColoredField extends Field {
 
   private getColor(): Color {
     const fill = this.cell.fill;
-    return fill.type === "pattern" && fill.pattern === "solid"
+    return fill.type === "pattern" && fill.pattern === "solid" && fill.fgColor
       ? this.getSolidColor(fill.fgColor)
       : Color("#FFFFFF");
   }
