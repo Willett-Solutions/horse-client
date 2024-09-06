@@ -6,7 +6,7 @@ class Solver {
   async solve(settings: Settings, table: Rota.ShiftTable) {
     const problem = Roster.fromTable(settings, table);
     const authority = process.env.REACT_APP_AUTHORITY;
-    const response = await fetch("http://" + authority + "/solve", {
+    const response = await fetch(authority + "/solve", {
       method: "POST",
       headers: {"Content-Type": "application/json"},
       body: JSON.stringify(problem),
